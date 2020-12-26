@@ -1,4 +1,5 @@
 import 'package:CameraPlus/video_recording_page/recording_button.dart';
+import 'package:CameraPlus/video_recording_page/time_count_text.dart';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
@@ -27,14 +28,15 @@ class CameraPlusApp extends StatefulWidget {
   _CameraPlusAppState createState() => _CameraPlusAppState();
 }
 
-class _CameraPlusAppState extends State<CameraPlusApp>
-    with SingleTickerProviderStateMixin {
+class _CameraPlusAppState extends State<CameraPlusApp> {
   CameraController controller;
   Future<void> _initializeControllerFuture;
+  bool isRecording;
 
   @override
   void initState() {
     super.initState();
+    isRecording = false;
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
       DeviceOrientation.portraitDown,
@@ -67,10 +69,6 @@ class _CameraPlusAppState extends State<CameraPlusApp>
 
   @override
   Widget build(BuildContext context) {
-    final Animation<double> controller = AnimationController(
-      value: 0.0,
-      vsync: this,
-    );
     return MaterialApp(
       theme: ThemeData(brightness: Brightness.dark, primaryColor: Colors.blue),
       title: 'Camera+',
@@ -80,14 +78,23 @@ class _CameraPlusAppState extends State<CameraPlusApp>
           // ),
           body: Center(
               child: Stack(alignment: Alignment.center, children: <Widget>[
-        AspectRatio(aspectRatio: 3 / 4, child: Placeholder()),
+        AspectRatio(
+            aspectRatio: 3 / 4,
+            child: Placeholder(
+              color: Colors.white,
+            )),
         Positioned(
             bottom: 10.0,
             child: RecordingButton(
-              isRecording: false,
-              onPressed: () {},
-              animation: controller,
-            ))
+              isRecording: isRecording,
+              onPressed: () {
+                setState(() {
+                  isRecording = !isRecording;
+                });
+              },
+            )),
+        Positioned(
+            top: 10.0, child: TimeCountText.fromDuration(Duration(seconds: 10)))
       ]))),
     );
   }
