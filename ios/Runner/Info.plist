@@ -44,6 +44,10 @@
 
 	<key>NSCameraUsageDescription</key>
 	<string>CameraPlus requests camera access for taking videos.</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>CameraPlus requests mic access for audio recording.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>CameraPlus requests Photos access for saving videos.</string>
 
 	<key>NSAppTransportSecurity</key>
 	<dict>
