@@ -1,10 +1,14 @@
+import 'package:CameraPlus/action_sheet/action_description.dart';
 import 'package:CameraPlus/action_sheet/action_sheet.dart';
+import 'package:CameraPlus/action_sheet/action_text.dart';
+import 'package:CameraPlus/action_video_player/action_video_player.dart';
 import 'package:CameraPlus/video_recording_page/recording_button.dart';
 import 'package:CameraPlus/video_recording_page/time_count_text.dart';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:gallery_saver/gallery_saver.dart';
+import 'package:path_provider/path_provider.dart';
 
 class VideoRecordingPage extends StatefulWidget {
   // Path to action sheet.
@@ -28,17 +32,17 @@ class _VideoRecordingPageState extends State<VideoRecordingPage> {
     super.initState();
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
-      DeviceOrientation.landscapeLeft,
+      DeviceOrientation.landscapeRight,
     ]);
 
     isRecording = false;
 
-    controller = CameraController(
-      widget.availableCameras.first,
-      ResolutionPreset.medium,
-      enableAudio: true,
-    );
-    _initializeControllerFuture = controller.initialize();
+    // controller = CameraController(
+    //   widget.availableCameras.first,
+    //   ResolutionPreset.medium,
+    //   enableAudio: true,
+    // );
+    // _initializeControllerFuture = controller.initialize();
   }
 
   Widget waitingCameraWidget() {
@@ -75,7 +79,7 @@ class _VideoRecordingPageState extends State<VideoRecordingPage> {
     return Scaffold(
       body: Center(
           child: Stack(alignment: Alignment.center, children: <Widget>[
-        futureCamera(),
+        // futureCamera(),
         Positioned(
             bottom: 10.0,
             child: RecordingButton(
@@ -92,8 +96,8 @@ class _VideoRecordingPageState extends State<VideoRecordingPage> {
                   } else {
                     controller.stopVideoRecording().then((XFile v) {
                       print(v.path);
-                      GallerySaver.saveVideo(v.path).then((ok) {
-                        print(ok);
+                      getApplicationDocumentsDirectory().then((d) {
+                        print(d.path);
                       });
                     });
                   }
@@ -102,11 +106,9 @@ class _VideoRecordingPageState extends State<VideoRecordingPage> {
             )),
         Positioned(
             top: 10.0,
-            child: TimeCountText.fromDuration(Duration(seconds: 10000)))
+            child: TimeCountText.fromDuration(Duration(seconds: 10000))),
+        ActionVideoPlayer()
       ])),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {},
-      ),
     );
   }
 }

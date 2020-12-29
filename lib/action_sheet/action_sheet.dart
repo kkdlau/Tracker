@@ -1,4 +1,4 @@
-import 'action.dart';
+import 'action_description.dart';
 import 'dart:convert';
 
 class ActionSheet {
@@ -6,13 +6,13 @@ class ActionSheet {
   String sheetName;
 
   // action list.
-  List<Action> actions;
+  List<ActionDescription> actions;
 
   ActionSheet({this.actions = const [], this.sheetName = ""}) {
     // placeholder
   }
 
-  /// Returns [Action] list in Plain Map foramt.
+  /// Returns [ActionDescription] list in Plain Map foramt.
   List<Map<String, String>> getPlainActionList() {
     List<Map<String, String>> actionList;
     actions.forEach((element) {

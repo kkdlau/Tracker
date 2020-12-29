@@ -1,5 +1,3 @@
-import 'package:CameraPlus/video_recording_page/recording_button.dart';
-import 'package:CameraPlus/video_recording_page/time_count_text.dart';
 import 'package:CameraPlus/video_recording_page/video_recording_page.dart';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
