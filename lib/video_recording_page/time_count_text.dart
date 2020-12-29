@@ -1,3 +1,4 @@
+import 'package:CameraPlus/widgets/hightlighted_container.dart';
 import 'package:flutter/material.dart';
 
 class TimeCountText extends StatelessWidget {
@@ -8,12 +9,8 @@ class TimeCountText extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     ThemeData theme = Theme.of(context);
-    return Container(
-      padding: EdgeInsets.all(5.0),
+    return HighlightedContainer(
       child: Text(data, style: theme.textTheme.headline5),
-      decoration: BoxDecoration(
-          color: theme.primaryColorDark.withAlpha(100),
-          borderRadius: BorderRadius.circular(7.0)),
     );
   }
 
