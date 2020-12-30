@@ -1,6 +1,5 @@
 import 'package:CameraPlus/action_sheet/action_description.dart';
 import 'package:CameraPlus/action_sheet/action_sheet.dart';
-import 'package:CameraPlus/action_sheet/action_text.dart';
 import 'package:CameraPlus/action_video_player/action_video_player.dart';
 import 'package:CameraPlus/video_recording_page/recording_button.dart';
 import 'package:CameraPlus/video_recording_page/time_count_text.dart';
@@ -37,12 +36,12 @@ class _VideoRecordingPageState extends State<VideoRecordingPage> {
 
     isRecording = false;
 
-    // controller = CameraController(
-    //   widget.availableCameras.first,
-    //   ResolutionPreset.medium,
-    //   enableAudio: true,
-    // );
-    // _initializeControllerFuture = controller.initialize();
+    controller = CameraController(
+      widget.availableCameras.first,
+      ResolutionPreset.medium,
+      enableAudio: true,
+    );
+    _initializeControllerFuture = controller.initialize();
   }
 
   Widget waitingCameraWidget() {
@@ -56,9 +55,12 @@ class _VideoRecordingPageState extends State<VideoRecordingPage> {
       future: _initializeControllerFuture,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.done) {
-          return AspectRatio(
-              aspectRatio: controller.value.aspectRatio,
-              child: CameraPreview(controller));
+          return Transform.rotate(
+            angle: 3.1415 / 2,
+            child: AspectRatio(
+                aspectRatio: controller.value.aspectRatio,
+                child: CameraPreview(controller)),
+          );
         } else {
           return waitingCameraWidget();
         }
@@ -96,9 +98,6 @@ class _VideoRecordingPageState extends State<VideoRecordingPage> {
                   } else {
                     controller.stopVideoRecording().then((XFile v) {
                       print(v.path);
-                      getApplicationDocumentsDirectory().then((d) {
-                        print(d.path);
-                      });
                     });
                   }
                 });

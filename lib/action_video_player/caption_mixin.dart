@@ -1,32 +1,86 @@
 import 'package:CameraPlus/action_sheet/action_description.dart';
 import 'package:CameraPlus/action_video_player/action_video_player.dart';
+import 'package:async/async.dart';
+import 'package:better_player/better_player.dart';
+import 'package:chewie/chewie.dart';
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
+import 'dart:async';
 
-mixin CaptionControlMixin<T extends StatefulWidget> on State<T> {
+mixin CaptionSchedularMixin<T extends StatefulWidget> on State<T> {
   int currentCaption = -1;
   bool interrupt = false;
   List<ActionDescription> captionList;
   Widget captionWidget;
+  CancelableOperation<void> _displayCpationOperation;
+  CancelableOperation<void> _hideCpationOperation;
+  bool disposed = false;
 
-  void initializeCaptionMixin(
+  void schedularInitialize(
       List<ActionDescription> captionList, Widget captionWidget) {
     this.captionList = captionList;
     this.captionWidget = captionWidget;
   }
 
-  void scheduleCpation(VideoPlayerController controller) async {
+  void scheduleDisplayCpation(BetterPlayerController controller) {
     if (currentCaption + 1 == sheet.actions.length)
       return; // out of bound checking
-    final Duration delay =
-        captionList[currentCaption + 1].targetTime - controller.value.position;
-    await Future.delayed(delay);
-    if (interrupt) return; // don't update caption if interrupt flag is raised
+    final Duration delay = captionList[currentCaption + 1].targetTime -
+        controller.videoPlayerController.value.position;
 
+    _displayCpationOperation =
+        CancelableOperation.fromFuture(Future.delayed(delay, () {
+      if (interrupt) return;
+
+      _displayCpationOperation = null;
+      displayCaption(controller, ++currentCaption);
+
+      scheduleDisplayCpation(controller);
+    }));
+  }
+
+  int calculateCaptionDisplayTime(int wordLength) {
+    print('display time:${(wordLength ~/ (200 / 60)) * 1000 + 500} ms');
+    return (wordLength ~/ (200 / 60)) * 1000 + 500;
+  }
+
+  void displayCaption(BetterPlayerController controller, int cpationIndex) {
+    if (disposed) return;
+    _displayCpationOperation?.cancel();
     setState(() {
-      ++currentCaption;
-      captionWidget = captionList[currentCaption].buildCaptionWidget();
+      final ActionDescription action = captionList[cpationIndex];
+
+      captionWidget = action.buildCaptionWidget();
+      int wordCount = action.description.split(' ').length;
+
+      scheduleHideCaption(
+          Duration(milliseconds: calculateCaptionDisplayTime(wordCount)),
+          cpationIndex);
     });
-    scheduleCpation(controller);
+  }
+
+  void scheduleHideCaption(Duration d, int cancelCaptionIndex) {
+    _hideCpationOperation =
+        CancelableOperation.fromFuture(Future.delayed(d, () {
+      if (interrupt) return;
+
+      _hideCpationOperation = null;
+
+      hideCaption(cancelCaptionIndex);
+    }));
+  }
+
+  void hideCaption(int cancelCaptionIndex) {
+    if (disposed || currentCaption != cancelCaptionIndex) return;
+    _hideCpationOperation?.cancel();
+    setState(() {
+      captionWidget = Container();
+    });
+  }
+
+  @override
+  void dispose() {
+    disposed = true;
+    super.dispose();
   }
 }
