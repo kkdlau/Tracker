@@ -6,6 +6,9 @@ PODS:
     - Flutter
   - CocoaAsyncSocket (7.6.5)
   - Flutter (1.0.0)
+  - flutter_ffmpeg/video-lts (0.3.0):
+    - Flutter
+    - mobile-ffmpeg-video (= 4.4.LTS)
   - flutter_hls_parser (0.0.1):
     - Flutter
   - gallery_saver (0.0.1):
@@ -14,11 +17,10 @@ PODS:
     - CocoaAsyncSocket
   - KTVHTTPCache (2.0.1):
     - KTVCocoaHTTPServer
+  - mobile-ffmpeg-video (4.4.LTS)
   - native_device_orientation (0.0.1):
     - Flutter
   - path_provider (0.0.1):
-    - Flutter
-  - video_player (0.0.1):
     - Flutter
   - wakelock (0.0.1):
     - Flutter
@@ -27,11 +29,11 @@ DEPENDENCIES:
   - better_player (from `.symlinks/plugins/better_player/ios`)
   - camera (from `.symlinks/plugins/camera/ios`)
   - Flutter (from `Flutter`)
+  - flutter_ffmpeg/video-lts (from `.symlinks/plugins/flutter_ffmpeg/ios`)
   - flutter_hls_parser (from `.symlinks/plugins/flutter_hls_parser/ios`)
   - gallery_saver (from `.symlinks/plugins/gallery_saver/ios`)
   - native_device_orientation (from `.symlinks/plugins/native_device_orientation/ios`)
   - path_provider (from `.symlinks/plugins/path_provider/ios`)
-  - video_player (from `.symlinks/plugins/video_player/ios`)
   - wakelock (from `.symlinks/plugins/wakelock/ios`)
 
 SPEC REPOS:
@@ -39,6 +41,7 @@ SPEC REPOS:
     - CocoaAsyncSocket
     - KTVCocoaHTTPServer
     - KTVHTTPCache
+    - mobile-ffmpeg-video
 
 EXTERNAL SOURCES:
   better_player:
@@ -47,6 +50,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/camera/ios"
   Flutter:
     :path: Flutter
+  flutter_ffmpeg:
+    :path: ".symlinks/plugins/flutter_ffmpeg/ios"
   flutter_hls_parser:
     :path: ".symlinks/plugins/flutter_hls_parser/ios"
   gallery_saver:
@@ -55,8 +60,6 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/native_device_orientation/ios"
   path_provider:
     :path: ".symlinks/plugins/path_provider/ios"
-  video_player:
-    :path: ".symlinks/plugins/video_player/ios"
   wakelock:
     :path: ".symlinks/plugins/wakelock/ios"
 
@@ -65,15 +68,16 @@ SPEC CHECKSUMS:
   camera: a0ca5080336f7af47b88436e5e26da3dee5568f0
   CocoaAsyncSocket: 065fd1e645c7abab64f7a6a2007a48038fdc6a99
   Flutter: 0e3d915762c693b495b44d77113d4970485de6ec
+  flutter_ffmpeg: 657ce8a1502c3d25bf34efc58b380b248836f772
   flutter_hls_parser: be41df963ec4f909fb5c318d483c4483556553e0
   gallery_saver: 9fc173c9f4fcc48af53b2a9ebea1b643255be542
   KTVCocoaHTTPServer: df8d7b861e603ff8037e9b2138aca2563a6b768d
   KTVHTTPCache: 588c3eb16f6bd1e6fde1e230dabfb7bd4e490a4d
+  mobile-ffmpeg-video: f14c9680812ecfc68a3c95396b3ca4f61484f5e7
   native_device_orientation: 3b4cfc9565a7b879cc4fde282b3e27745e852d0d
   path_provider: abfe2b5c733d04e238b0d8691db0cfd63a27a93c
-  video_player: 9cc823b1d9da7e8427ee591e8438bfbcde500e6e
   wakelock: bfc7955c418d0db797614075aabbc58a39ab5107
 
-PODFILE CHECKSUM: aafe91acc616949ddb318b77800a7f51bffa2a4c
+PODFILE CHECKSUM: 9ca8ec40eab453fbb4e62a47f11bb6a298e94353
 
 COCOAPODS: 1.8.4

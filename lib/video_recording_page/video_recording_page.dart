@@ -8,6 +8,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:gallery_saver/gallery_saver.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:flutter_ffmpeg/flutter_ffmpeg.dart';
+
+final FlutterFFmpeg _flutterFFmpeg = new FlutterFFmpeg();
 
 class VideoRecordingPage extends StatefulWidget {
   // Path to action sheet.
@@ -30,18 +33,18 @@ class _VideoRecordingPageState extends State<VideoRecordingPage> {
   void initState() {
     super.initState();
     SystemChrome.setPreferredOrientations([
-      // DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitUp,
       DeviceOrientation.landscapeRight,
     ]);
 
     isRecording = false;
 
-    controller = CameraController(
-      widget.availableCameras.first,
-      ResolutionPreset.medium,
-      enableAudio: true,
-    );
-    _initializeControllerFuture = controller.initialize();
+    // controller = CameraController(
+    //   widget.availableCameras.first,
+    //   ResolutionPreset.medium,
+    //   enableAudio: true,
+    // );
+    // _initializeControllerFuture = controller.initialize();
   }
 
   Widget waitingCameraWidget() {
@@ -78,7 +81,7 @@ class _VideoRecordingPageState extends State<VideoRecordingPage> {
     return Scaffold(
       body: Center(
           child: Stack(alignment: Alignment.center, children: <Widget>[
-        futureCamera(),
+        // futureCamera(),
         Positioned(
             bottom: 10.0,
             child: RecordingButton(
@@ -93,10 +96,7 @@ class _VideoRecordingPageState extends State<VideoRecordingPage> {
                       print((e as CameraException).description);
                     }
                   } else {
-                    controller.stopVideoRecording().then((XFile v) {
-                      GallerySaver.saveVideo(v.path)
-                          .then((value) => print('done'));
-                    });
+                    controller.stopVideoRecording().then((XFile v) {});
                   }
                 });
               },
@@ -104,9 +104,9 @@ class _VideoRecordingPageState extends State<VideoRecordingPage> {
         Positioned(
             top: 10.0,
             child: TimeCountText.fromDuration(Duration(seconds: 10000))),
-        // ActionVideoPlayer(
-        //   videoPath: '',
-        // )
+        ActionVideoPlayer(
+          videoPath: '',
+        )
       ])),
     );
   }

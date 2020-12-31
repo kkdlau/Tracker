@@ -2,9 +2,7 @@ import 'package:CameraPlus/action_sheet/action_description.dart';
 import 'package:CameraPlus/action_video_player/action_video_player.dart';
 import 'package:async/async.dart';
 import 'package:better_player/better_player.dart';
-import 'package:chewie/chewie.dart';
 import 'package:flutter/material.dart';
-import 'package:video_player/video_player.dart';
 import 'dart:async';
 
 mixin CaptionSchedularMixin<T extends StatefulWidget> on State<T> {
