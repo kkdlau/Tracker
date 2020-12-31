@@ -15,11 +15,26 @@ mixin CaptionSchedularMixin<T extends StatefulWidget> on State<T> {
   CancelableOperation<void> _displayCpationOperation;
   CancelableOperation<void> _hideCpationOperation;
   bool disposed = false;
+  BetterPlayerController _controller;
 
-  void schedularInitialize(
-      List<ActionDescription> captionList, Widget captionWidget) {
+  void schedularInitialize(List<ActionDescription> captionList,
+      Widget captionWidget, BetterPlayerController controller) {
+    _controller = controller;
     this.captionList = captionList;
     this.captionWidget = captionWidget;
+  }
+
+  void startScheduleCaption() {
+    _controller.addEventsListener(_controllerEventHandler);
+  }
+
+  void _controllerEventHandler(BetterPlayerEvent e) {
+    print(e.betterPlayerEventType);
+    switch (e.betterPlayerEventType) {
+      case BetterPlayerEventType.progress:
+        break;
+      default:
+    }
   }
 
   void scheduleDisplayCpation(BetterPlayerController controller) {

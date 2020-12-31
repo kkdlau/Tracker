@@ -30,7 +30,7 @@ class _VideoRecordingPageState extends State<VideoRecordingPage> {
   void initState() {
     super.initState();
     SystemChrome.setPreferredOrientations([
-      DeviceOrientation.portraitUp,
+      // DeviceOrientation.portraitUp,
       DeviceOrientation.landscapeRight,
     ]);
 
@@ -55,12 +55,9 @@ class _VideoRecordingPageState extends State<VideoRecordingPage> {
       future: _initializeControllerFuture,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.done) {
-          return Transform.rotate(
-            angle: 3.1415 / 2,
-            child: AspectRatio(
-                aspectRatio: controller.value.aspectRatio,
-                child: CameraPreview(controller)),
-          );
+          return AspectRatio(
+              aspectRatio: controller.value.aspectRatio,
+              child: CameraPreview(controller));
         } else {
           return waitingCameraWidget();
         }
@@ -81,7 +78,7 @@ class _VideoRecordingPageState extends State<VideoRecordingPage> {
     return Scaffold(
       body: Center(
           child: Stack(alignment: Alignment.center, children: <Widget>[
-        // futureCamera(),
+        futureCamera(),
         Positioned(
             bottom: 10.0,
             child: RecordingButton(
@@ -97,7 +94,8 @@ class _VideoRecordingPageState extends State<VideoRecordingPage> {
                     }
                   } else {
                     controller.stopVideoRecording().then((XFile v) {
-                      print(v.path);
+                      GallerySaver.saveVideo(v.path)
+                          .then((value) => print('done'));
                     });
                   }
                 });
@@ -106,7 +104,9 @@ class _VideoRecordingPageState extends State<VideoRecordingPage> {
         Positioned(
             top: 10.0,
             child: TimeCountText.fromDuration(Duration(seconds: 10000))),
-        ActionVideoPlayer()
+        // ActionVideoPlayer(
+        //   videoPath: '',
+        // )
       ])),
     );
   }

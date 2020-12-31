@@ -28,9 +28,8 @@ final ActionSheet sheet = ActionSheet(
 );
 
 class ActionVideoPlayer extends StatefulWidget {
-  @required
   final String videoPath;
-  ActionVideoPlayer({Key key, this.videoPath}) : super(key: key);
+  ActionVideoPlayer({Key key, @required this.videoPath}) : super(key: key);
 
   @override
   _ActionVideoPlayerState createState() => _ActionVideoPlayerState();
@@ -43,13 +42,12 @@ class _ActionVideoPlayerState extends State<ActionVideoPlayer>
   BetterPlayerController bpController;
   bool loaded = false;
   Future<String> controllerInitializationFuture;
-  double _captionPadding = 100.0;
+  double _captionPadding = 20.0;
 
   @override
   void initState() {
     super.initState();
 
-    schedularInitialize(sheet.actions, Container());
     Utils.getFileUrl(
             'camera/videos/CAP_2F505A82-36EC-4EC5-8795-E24B9E1AB0B1.mp4')
         .then((value) {
@@ -61,6 +59,7 @@ class _ActionVideoPlayerState extends State<ActionVideoPlayer>
             ),
             betterPlayerDataSource:
                 BetterPlayerDataSource(BetterPlayerDataSourceType.file, value));
+        schedularInitialize(sheet.actions, Container(), bpController);
         bpController.addEventsListener((e) {
           if (e.betterPlayerEventType == BetterPlayerEventType.initialized) {
             bpController.setOverriddenAspectRatio(
@@ -68,6 +67,7 @@ class _ActionVideoPlayerState extends State<ActionVideoPlayer>
             setState(() {
               loaded = true;
               scheduleDisplayCpation(bpController);
+              startScheduleCaption();
             });
           }
         });
@@ -78,46 +78,41 @@ class _ActionVideoPlayerState extends State<ActionVideoPlayer>
   }
 
   void playerEventHandler(BetterPlayerEvent e) {
-    print(e.betterPlayerEventType);
     switch (e.betterPlayerEventType) {
       case BetterPlayerEventType.controlsHidden:
         setState(() {
-          _captionPadding = 30.0;
+          _captionPadding = 20.0;
         });
         break;
       case BetterPlayerEventType.controlsVisible:
         setState(() {
-          _captionPadding = 100.0;
+          _captionPadding = 60.0;
         });
         break;
       default:
     }
   }
 
+  Widget animatedCpationWidget(double padding) {
+    return Positioned.fill(
+      child: AnimatedPadding(
+        padding: EdgeInsets.only(bottom: padding),
+        duration: const Duration(milliseconds: 100),
+        child: Align(alignment: Alignment.bottomCenter, child: captionWidget),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      bottom: false,
-      top: false,
-      child: Stack(children: <Widget>[
-        Center(
-            child: loaded
-                ? BetterPlayer(
-                    controller: bpController,
-                    overlayWidget: TweenAnimationBuilder(
-                      child: Align(
-                          alignment: Alignment.bottomCenter,
-                          child: captionWidget),
-                      duration: const Duration(milliseconds: 100),
-                      tween: Tween<double>(begin: 30.0, end: _captionPadding),
-                      builder:
-                          (BuildContext context, double value, Widget child) {
-                        return Positioned.fill(child: child, bottom: value);
-                      },
-                    ))
-                : Container())
-      ]),
-    );
+    return Stack(children: <Widget>[
+      Center(
+          child: loaded
+              ? BetterPlayer(
+                  controller: bpController,
+                  overlayWidget: animatedCpationWidget(_captionPadding))
+              : Container())
+    ]);
   }
 
   @override
