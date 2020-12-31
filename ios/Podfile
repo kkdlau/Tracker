@@ -60,6 +60,8 @@ def flutter_install_ios_plugin_pods(ios_application_path = nil)
 end
 
 target 'Runner' do
+  use_frameworks!
+  use_modular_headers!
   flutter_install_all_ios_pods File.dirname(File.realpath(__FILE__))
 end
 
