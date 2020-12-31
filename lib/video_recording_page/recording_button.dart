@@ -1,5 +1,28 @@
 import 'package:flutter/material.dart';
 
+class _CustomBoxShadow extends BoxShadow {
+  final BlurStyle blurStyle;
+
+  const _CustomBoxShadow({
+    Color color = const Color(0xFF000000),
+    Offset offset = Offset.zero,
+    double blurRadius = 0.0,
+    this.blurStyle = BlurStyle.normal,
+  }) : super(color: color, offset: offset, blurRadius: blurRadius);
+
+  @override
+  Paint toPaint() {
+    final Paint result = Paint()
+      ..color = color
+      ..maskFilter = MaskFilter.blur(this.blurStyle, blurSigma);
+    assert(() {
+      if (debugDisableShadows) result.maskFilter = null;
+      return true;
+    }());
+    return result;
+  }
+}
+
 class RecordingButton extends StatefulWidget {
   final void Function() onPressed;
   final bool isRecording;
@@ -41,6 +64,9 @@ class _RecordingButtonState extends State<RecordingButton> {
           height: RecordingButton.BUTTON_SIZE,
           padding: EdgeInsets.all(3.0),
           decoration: BoxDecoration(
+              boxShadow: <BoxShadow>[
+                _CustomBoxShadow(blurRadius: 3.0, blurStyle: BlurStyle.outer)
+              ],
               shape: BoxShape.circle,
               border: Border.all(color: Colors.white, width: 5.0)),
           child: InnerButton(isRecording: widget.isRecording, isHolding: false),

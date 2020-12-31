@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 class CameraViewer extends StatefulWidget {
   final CameraController controller;
-  CameraViewer({Key key, this.controller}) : super(key: key);
+  CameraViewer(this.controller, {Key key}) : super(key: key);
 
   @override
   _CameraViewerState createState() => _CameraViewerState();

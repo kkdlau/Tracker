@@ -25,7 +25,10 @@ class CameraPlusApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      theme: ThemeData(brightness: Brightness.dark, primaryColor: Colors.blue),
+      theme: ThemeData(
+          brightness: Brightness.dark,
+          primaryColor: Colors.blue,
+          visualDensity: VisualDensity.adaptivePlatformDensity),
       title: 'Camera+',
       home: VideoRecordingPage(
         availableCameras: cameras,

@@ -1,6 +1,7 @@
 import 'package:CameraPlus/action_sheet/action_description.dart';
 import 'package:CameraPlus/action_sheet/action_sheet.dart';
 import 'package:CameraPlus/action_video_player/action_video_player.dart';
+import 'package:CameraPlus/video_recording_page/camera_viewer.dart';
 import 'package:CameraPlus/video_recording_page/recording_button.dart';
 import 'package:CameraPlus/video_recording_page/time_count_text.dart';
 import 'package:camera/camera.dart';
@@ -39,12 +40,12 @@ class _VideoRecordingPageState extends State<VideoRecordingPage> {
 
     isRecording = false;
 
-    // controller = CameraController(
-    //   widget.availableCameras.first,
-    //   ResolutionPreset.medium,
-    //   enableAudio: true,
-    // );
-    // _initializeControllerFuture = controller.initialize();
+    controller = CameraController(
+      widget.availableCameras.first,
+      ResolutionPreset.medium,
+      enableAudio: true,
+    );
+    _initializeControllerFuture = controller.initialize();
   }
 
   Widget waitingCameraWidget() {
@@ -58,9 +59,7 @@ class _VideoRecordingPageState extends State<VideoRecordingPage> {
       future: _initializeControllerFuture,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.done) {
-          return AspectRatio(
-              aspectRatio: controller.value.aspectRatio,
-              child: CameraPreview(controller));
+          return CameraViewer(controller);
         } else {
           return waitingCameraWidget();
         }
@@ -81,7 +80,7 @@ class _VideoRecordingPageState extends State<VideoRecordingPage> {
     return Scaffold(
       body: Center(
           child: Stack(alignment: Alignment.center, children: <Widget>[
-        // futureCamera(),
+        futureCamera(),
         Positioned(
             bottom: 10.0,
             child: RecordingButton(
@@ -104,9 +103,6 @@ class _VideoRecordingPageState extends State<VideoRecordingPage> {
         Positioned(
             top: 10.0,
             child: TimeCountText.fromDuration(Duration(seconds: 10000))),
-        ActionVideoPlayer(
-          videoPath: '',
-        )
       ])),
     );
   }

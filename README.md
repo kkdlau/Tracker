@@ -5,7 +5,7 @@ CmeraPlus an app which spports recording videos with timestamps.
 ## **Important**
 
 The source code of Plugin `BetterPlayer`(`v0.0.41`) is modified in order to provide additional features, and fixed some bugs. And since this app is still under development, the refactored plugin will be released on the first stable release.
-## Front-end Development
+## UI Development
 ### Main Page
 
 - [X] Video recording
@@ -27,6 +27,11 @@ The source code of Plugin `BetterPlayer`(`v0.0.41`) is modified in order to prov
 - [ ] Comparsion between different sheets
 
 ## Back-end Development
+
+### Camera
+
+- [ ] Support Zoom
+- [ ] Support Focus
 ### Video editing
 
 - [ ] Support embedded Text Overlay
