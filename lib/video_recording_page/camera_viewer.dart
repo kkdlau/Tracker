@@ -1,5 +1,21 @@
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
+import 'package:native_device_orientation/native_device_orientation.dart';
+
+extension on NativeDeviceOrientation {
+  toQuarterTurns() {
+    switch (this) {
+      case NativeDeviceOrientation.landscapeLeft:
+        return -1;
+      case NativeDeviceOrientation.landscapeRight:
+        return 1;
+      case NativeDeviceOrientation.portraitDown:
+        return -2;
+      default:
+        return 0;
+    }
+  }
+}
 
 class CameraViewer extends StatefulWidget {
   final CameraController controller;
@@ -12,22 +28,30 @@ class CameraViewer extends StatefulWidget {
 class _CameraViewerState extends State<CameraViewer> {
   CameraController _controller;
 
-  double _baseScaleFactor;
-  double _scaleFactor;
-
   @override
   void initState() {
-    _baseScaleFactor = _scaleFactor = 1.0;
     _controller = widget.controller;
     super.initState();
+  }
+
+  double get screenHeight {
+    return MediaQuery.of(context).size.height;
+  }
+
+  double get screenWidth {
+    return MediaQuery.of(context).size.width;
+  }
+
+  double get cameraHeight {
+    // just assume camera width = screen width
+    return screenWidth / _controller.value.aspectRatio;
   }
 
   @override
   Widget build(BuildContext context) {
     return OrientationBuilder(
         builder: (BuildContext context, Orientation orientation) {
-      return Center(
-          child: GestureDetector(
+      return GestureDetector(
         child: RotatedBox(
           quarterTurns:
               MediaQuery.of(context).orientation == Orientation.landscape
@@ -35,10 +59,12 @@ class _CameraViewerState extends State<CameraViewer> {
                   : 0,
           child: AspectRatio(
             aspectRatio: _controller.value.aspectRatio,
-            child: CameraPreview(_controller),
+            child: Transform.scale(
+                scale: screenHeight / cameraHeight,
+                child: CameraPreview(_controller)),
           ),
         ),
-      ));
+      );
     });
   }
 }

@@ -47,30 +47,33 @@ class _RecordingButtonState extends State<RecordingButton> {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-        onTap: widget.onPressed,
-        onTapDown: (_) {
-          setState(() {
-            isHolding = true;
-          });
-        },
-        onTapUp: (_) {
-          setState(() {
-            isHolding = false;
-          });
-        },
-        child: Container(
-          width: RecordingButton.BUTTON_SIZE,
-          height: RecordingButton.BUTTON_SIZE,
-          padding: EdgeInsets.all(3.0),
-          decoration: BoxDecoration(
-              boxShadow: <BoxShadow>[
-                _CustomBoxShadow(blurRadius: 3.0, blurStyle: BlurStyle.outer)
-              ],
-              shape: BoxShape.circle,
-              border: Border.all(color: Colors.white, width: 5.0)),
-          child: InnerButton(isRecording: widget.isRecording, isHolding: false),
-        ));
+    return UnconstrainedBox(
+      child: GestureDetector(
+          onTap: widget.onPressed,
+          onTapDown: (_) {
+            setState(() {
+              isHolding = true;
+            });
+          },
+          onTapUp: (_) {
+            setState(() {
+              isHolding = false;
+            });
+          },
+          child: Container(
+            width: RecordingButton.BUTTON_SIZE,
+            height: RecordingButton.BUTTON_SIZE,
+            padding: EdgeInsets.all(3.0),
+            decoration: BoxDecoration(
+                boxShadow: <BoxShadow>[
+                  _CustomBoxShadow(blurRadius: 3.0, blurStyle: BlurStyle.outer)
+                ],
+                shape: BoxShape.circle,
+                border: Border.all(color: Colors.white, width: 5.0)),
+            child:
+                InnerButton(isRecording: widget.isRecording, isHolding: false),
+          )),
+    );
   }
 }
 

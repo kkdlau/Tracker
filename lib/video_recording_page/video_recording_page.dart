@@ -1,14 +1,13 @@
-import 'package:CameraPlus/action_sheet/action_description.dart';
+import 'dart:async';
+
 import 'package:CameraPlus/action_sheet/action_sheet.dart';
-import 'package:CameraPlus/action_video_player/action_video_player.dart';
+import 'package:CameraPlus/video_recording_page/bottom_tool_bar.dart';
 import 'package:CameraPlus/video_recording_page/camera_viewer.dart';
-import 'package:CameraPlus/video_recording_page/recording_button.dart';
 import 'package:CameraPlus/video_recording_page/time_count_text.dart';
+import 'package:CameraPlus/video_recording_page/top_tool_bar.dart';
+import 'package:CameraPlus/widgets/hightlighted_container.dart';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:gallery_saver/gallery_saver.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:flutter_ffmpeg/flutter_ffmpeg.dart';
 
 final FlutterFFmpeg _flutterFFmpeg = new FlutterFFmpeg();
@@ -29,19 +28,21 @@ class _VideoRecordingPageState extends State<VideoRecordingPage> {
   CameraController controller;
   Future<void> _initializeControllerFuture;
   bool isRecording;
+  bool useFlashLight;
+
+  int _camidx;
 
   @override
   void initState() {
     super.initState();
-    SystemChrome.setPreferredOrientations([
-      DeviceOrientation.portraitUp,
-      DeviceOrientation.landscapeRight,
-    ]);
+
+    _camidx = 0;
 
     isRecording = false;
+    useFlashLight = false;
 
     controller = CameraController(
-      widget.availableCameras.first,
+      widget.availableCameras[_camidx],
       ResolutionPreset.medium,
       enableAudio: true,
     );
@@ -67,43 +68,84 @@ class _VideoRecordingPageState extends State<VideoRecordingPage> {
     );
   }
 
-  Widget debuggerPlaceholder() {
-    return AspectRatio(
-        aspectRatio: 3 / 4,
-        child: Placeholder(
-          color: Colors.white,
-        ));
+  void onRecordingBtnPressed() {
+    setState(() {
+      isRecording = !isRecording;
+      if (isRecording) {
+        try {
+          controller.startVideoRecording();
+        } catch (e) {
+          print((e as CameraException).description);
+        }
+      } else {
+        controller.stopVideoRecording().then((XFile v) {});
+      }
+    });
+  }
+
+  void flashBtnHandler() {
+    setState(() {
+      useFlashLight = !useFlashLight;
+      // todo: enable flash light. (https://pub.dev/packages/lamp)
+    });
+  }
+
+  void switchCameraHandler() {
+    setState(() {
+      _camidx = (_camidx + 1) % widget.availableCameras.length;
+
+      controller = CameraController(
+        widget.availableCameras[_camidx],
+        ResolutionPreset.medium,
+        enableAudio: true,
+      );
+      _initializeControllerFuture = controller.initialize();
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-          child: Stack(alignment: Alignment.center, children: <Widget>[
-        futureCamera(),
-        Positioned(
-            bottom: 10.0,
-            child: RecordingButton(
-              isRecording: isRecording,
-              onPressed: () {
-                setState(() {
-                  isRecording = !isRecording;
-                  if (isRecording) {
-                    try {
-                      controller.startVideoRecording();
-                    } catch (e) {
-                      print((e as CameraException).description);
-                    }
-                  } else {
-                    controller.stopVideoRecording().then((XFile v) {});
-                  }
-                });
-              },
-            )),
-        Positioned(
-            top: 10.0,
-            child: TimeCountText.fromDuration(Duration(seconds: 10000))),
-      ])),
-    );
+        body: SafeArea(
+      child: Stack(
+          fit: StackFit.loose,
+          alignment: Alignment.center,
+          children: <Widget>[
+            Positioned(child: futureCamera()),
+            Align(
+              alignment: Alignment.topLeft,
+              child: Padding(
+                  padding: EdgeInsets.only(left: 10.0),
+                  child: ConstrainedBox(
+                    constraints: BoxConstraints(
+                        maxWidth: MediaQuery.of(context).size.width * 0.3),
+                    child: HighlightedContainer(
+                        highlightedColor: Colors.cyan.withAlpha(100),
+                        child: Text(
+                          'Selected: Robocon 2021',
+                          overflow: TextOverflow.ellipsis,
+                          style: Theme.of(context).textTheme.headline5,
+                        )),
+                  )),
+            ),
+            Align(
+              alignment: Alignment.topRight,
+              child: TopToolBar(
+                enableFlash: useFlashLight,
+                onFlashBtnPressed: flashBtnHandler,
+                onSwitchBtnPressed: switchCameraHandler,
+              ),
+            ),
+            Align(
+                alignment: Alignment.topCenter,
+                child: TimeCountText.fromDuration(Duration(seconds: 10000))),
+            Align(
+                alignment: Alignment.bottomCenter,
+                child: BottomToolBar(
+                  isRecording: isRecording,
+                  onRecordingButtonPressed: onRecordingBtnPressed,
+                )),
+          ]),
+    ));
   }
 }

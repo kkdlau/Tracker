@@ -8,9 +8,9 @@ import 'package:flutter/services.dart';
 List<CameraDescription> cameras = [];
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  // SystemChrome.setEnabledSystemUIOverlays([]);
 
   try {
-    WidgetsFlutterBinding.ensureInitialized();
     cameras = await availableCameras();
   } on CameraException catch (e) {
     print('camera error' + e.code);
@@ -25,6 +25,7 @@ class CameraPlusApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
           brightness: Brightness.dark,
           primaryColor: Colors.blue,

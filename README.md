@@ -1,10 +1,6 @@
 # CameraPlus
 
 CmeraPlus an app which spports recording videos with timestamps.
-
-## **Important**
-
-The source code of Plugin `BetterPlayer`(`v0.0.41`) is modified in order to provide additional features, and fixed some bugs. And since this app is still under development, the refactored plugin will be released on the first stable release.
 ## UI Development
 ### Main Page
 
@@ -12,6 +8,7 @@ The source code of Plugin `BetterPlayer`(`v0.0.41`) is modified in order to prov
 - [ ] Different recording modes
 - [ ] Different camera cofiguration
 - [ ] Select different action sheets
+- [ ] Generate Video thumbnail (https://pub.dev/packages/video_thumbnail) 
 
 ### Video Player
 
@@ -32,6 +29,8 @@ The source code of Plugin `BetterPlayer`(`v0.0.41`) is modified in order to prov
 
 - [ ] Support Zoom
 - [ ] Support Focus
+- [ ] Flash Light (Currently not supported because of bugs)
+- [X] Camera Switching
 ### Video editing
 
 - [ ] Support embedded Text Overlay
