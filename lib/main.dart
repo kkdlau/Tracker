@@ -1,3 +1,4 @@
+import 'package:CameraPlus/file_manager/file_manager_page.dart';
 import 'package:CameraPlus/video_recording_page/video_recording_page.dart';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
@@ -8,6 +9,7 @@ import 'package:flutter/services.dart';
 List<CameraDescription> cameras = [];
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
   // SystemChrome.setEnabledSystemUIOverlays([]);
 
   try {
@@ -25,15 +27,11 @@ class CameraPlusApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-          brightness: Brightness.dark,
-          primaryColor: Colors.blue,
-          visualDensity: VisualDensity.adaptivePlatformDensity),
-      title: 'Camera+',
-      home: VideoRecordingPage(
-        availableCameras: cameras,
-      ),
-    );
+        debugShowCheckedModeBanner: false,
+        theme: ThemeData(
+            brightness: Brightness.dark,
+            visualDensity: VisualDensity.adaptivePlatformDensity),
+        title: 'Camera+',
+        home: FileManagerPage());
   }
 }

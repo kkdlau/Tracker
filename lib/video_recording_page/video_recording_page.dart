@@ -7,6 +7,7 @@ import 'package:CameraPlus/video_recording_page/time_count_text.dart';
 import 'package:CameraPlus/video_recording_page/top_tool_bar.dart';
 import 'package:CameraPlus/widgets/hightlighted_container.dart';
 import 'package:camera/camera.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_ffmpeg/flutter_ffmpeg.dart';
 
@@ -121,10 +122,13 @@ class _VideoRecordingPageState extends State<VideoRecordingPage> {
                         maxWidth: MediaQuery.of(context).size.width * 0.3),
                     child: HighlightedContainer(
                         highlightedColor: Colors.cyan.withAlpha(100),
-                        child: Text(
-                          'Selected: Robocon 2021',
-                          overflow: TextOverflow.ellipsis,
-                          style: Theme.of(context).textTheme.headline5,
+                        child: FittedBox(
+                          fit: BoxFit.contain,
+                          child: Text(
+                            'Selected: Robocon 2021',
+                            overflow: TextOverflow.ellipsis,
+                            style: Theme.of(context).textTheme.headline5,
+                          ),
                         )),
                   )),
             ),
@@ -142,9 +146,8 @@ class _VideoRecordingPageState extends State<VideoRecordingPage> {
             Align(
                 alignment: Alignment.bottomCenter,
                 child: BottomToolBar(
-                  isRecording: isRecording,
-                  onRecordingButtonPressed: onRecordingBtnPressed,
-                )),
+                    isRecording: isRecording,
+                    onRecordingButtonPressed: onRecordingBtnPressed)),
           ]),
     ));
   }
