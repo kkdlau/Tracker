@@ -79,6 +79,9 @@ class _FileManagerPageState extends State<FileManagerPage> {
                   itemBuilder: (context, idx) {
                     File f = _availableFiles[idx];
                     return InfoCard(
+                      onActionSelected: (action) {
+                        print(action);
+                      },
                       fullPath: f.path,
                       date: f.lastModifiedSync(),
                     );

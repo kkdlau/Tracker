@@ -1,9 +1,15 @@
+import 'package:CameraPlus/file_manager/card_pop_up_action.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+
+enum INFO_CARD_ACTION { CLONE, DELETE, SELECT }
 
 class InfoCard extends StatelessWidget {
   final String fullPath;
   final DateTime date;
-  const InfoCard({Key key, this.fullPath, this.date}) : super(key: key);
+  final void Function(INFO_CARD_ACTION) onActionSelected;
+  const InfoCard({Key key, this.fullPath, this.date, this.onActionSelected})
+      : super(key: key);
 
   String _displayDate() {
     final String day = date.day.toString().padLeft(2, '0');
@@ -17,48 +23,93 @@ class InfoCard extends StatelessWidget {
     return fullPath.split('/').last.split('.')[0];
   }
 
+  Widget _fileIntroTextSpan(BuildContext context) {
+    final TextTheme theme = Theme.of(context).textTheme;
+    return ConstrainedBox(
+      constraints:
+          BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.7),
+      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        Text(
+          fileAlias,
+          style: theme.subtitle1,
+          overflow: TextOverflow.ellipsis,
+        ),
+        Text(
+          'Last modified: ${_displayDate()}',
+          style: theme.caption,
+        ),
+      ]),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final TextTheme theme = Theme.of(context).textTheme;
-    return Dismissible(
-      direction: DismissDirection.endToStart, // swipe left to dismiss
-      background: Container(
-        color: Colors.red,
-        child: Align(
-          alignment: Alignment.centerRight,
-          child: Padding(
-            padding: const EdgeInsets.only(right: 8.0),
-            child: Icon(Icons.delete),
-          ),
-        ),
-      ),
-      key: Key(fileAlias),
-      child: Padding(
-        padding: const EdgeInsets.only(top: 20.0, bottom: 20.0),
+    return RawMaterialButton(
+        padding: EdgeInsets.only(top: 20.0, bottom: 20.0),
+        onPressed: () {
+          if (onActionSelected != null)
+            onActionSelected(INFO_CARD_ACTION.SELECT);
+        },
         child: Row(
           mainAxisAlignment: MainAxisAlignment.start,
           mainAxisSize: MainAxisSize.max,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Padding(
-              padding: const EdgeInsets.only(right: 8.0, left: 8.0),
-              child: Icon(Icons.description, size: theme.headline5.fontSize),
+              padding: const EdgeInsets.only(right: 15.0, left: 15.0),
+              child: Icon(Icons.description, size: theme.headline4.fontSize),
             ),
-            ConstrainedBox(
-              constraints: BoxConstraints(
-                  maxWidth: MediaQuery.of(context).size.width * 0.45),
-              child: Text(
-                fileAlias,
-                style: theme.subtitle1,
-                overflow: TextOverflow.ellipsis,
-              ),
-            ),
+            _fileIntroTextSpan(context),
             Expanded(child: SizedBox()),
-            Text('Last modified: ${_displayDate()}'),
+            IconButton(
+                icon: Icon(Icons.more_horiz),
+                onPressed: () {
+                  showCupertinoModalPopup(
+                      context: context,
+                      builder: (context) {
+                        return CupertinoActionSheet(
+                          title: Text(
+                              'Select the following action for $fileAlias'),
+                          actions: [
+                            CardPopupAction(
+                              onPressed: () {
+                                if (Navigator.canPop(context))
+                                  Navigator.pop(context);
+                                if (onActionSelected != null)
+                                  onActionSelected(INFO_CARD_ACTION.CLONE);
+                              },
+                              children: [Icon(Icons.copy), Text('Clone')],
+                            ),
+                            CardPopupAction(
+                              onPressed: () {
+                                if (Navigator.canPop(context))
+                                  Navigator.pop(context);
+                                if (onActionSelected != null)
+                                  onActionSelected(INFO_CARD_ACTION.DELETE);
+                              },
+                              children: [
+                                Icon(
+                                  Icons.delete,
+                                  color: Colors.red,
+                                ),
+                                Text('Delete',
+                                    style: TextStyle(color: Colors.red))
+                              ],
+                            ),
+                          ],
+                          cancelButton: CardPopupAction(
+                            onPressed: () {
+                              if (Navigator.canPop(context))
+                                Navigator.pop(context);
+                            },
+                            children: [Text('Cancel')],
+                          ),
+                        );
+                      });
+                }),
             SizedBox(width: 10.0)
           ],
-        ),
-      ),
-    );
+        ));
   }
 }
