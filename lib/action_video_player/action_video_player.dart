@@ -3,9 +3,7 @@ import 'package:CameraPlus/action_sheet/action_sheet.dart';
 import 'package:CameraPlus/action_video_player/caption_mixin.dart';
 import 'package:CameraPlus/utils.dart';
 import 'package:flutter/material.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:after_layout/after_layout.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:better_player/better_player.dart';
 
 final ActionSheet sheet = ActionSheet(

@@ -20,7 +20,6 @@ class _ShadowIconButtonState extends State<ShadowIconButton> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     focusing = false;
   }

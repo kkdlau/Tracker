@@ -42,6 +42,6 @@ CmeraPlus an app which spports recording videos with timestamps.
 ### Action Sheet
 
 * Support export action sheet into different format
-  - [ ] `Splitty` / `JSON`
-  - [ ] `.rst`
+  - [x] `Splitty` / `JSON`
+  - [x] `.rst`
   - [ ] `pure text message` (for sharing)

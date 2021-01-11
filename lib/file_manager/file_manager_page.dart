@@ -19,10 +19,13 @@ class _FileManagerPageState extends State<FileManagerPage> {
   Directory dir;
   Future<void> _dirFuture;
   List<File> _availableFiles;
+  GlobalKey<AnimatedListState> _fileListState;
 
   @override
   void initState() {
     super.initState();
+
+    _fileListState = GlobalKey();
 
     _dirFuture = requestAvailableFiles(ACTION_SHEET_DIR);
   }
@@ -34,13 +37,45 @@ class _FileManagerPageState extends State<FileManagerPage> {
 
     _availableFiles = [];
 
+    // await File(d.path + 'Robocon 2023.json').createSync();
+
     await Future.wait(entity.map((f) async {
       print(f.path);
       print((await f.stat()).type);
       _availableFiles.add(File(f.path));
     }));
 
+    _availableFiles
+        .sort((a, b) => b.lastModifiedSync().compareTo(a.lastModifiedSync()));
+
     return;
+  }
+
+  Widget _fileCard(File f) {
+    return InfoCard(
+      onActionSelected: (action) {
+        if (action == INFO_CARD_ACTION.DELETE) {
+          int index = _availableFiles.indexOf(f);
+
+          _fileListState.currentState.removeItem(index, (context, animation) {
+            Widget transitionWidget = SizeTransition(
+              child: _fileCard(f),
+              sizeFactor: Tween<double>(
+                begin: 0,
+                end: 1,
+              ).animate(animation),
+            );
+
+            _availableFiles.remove(f);
+            f.delete();
+
+            return transitionWidget;
+          }, duration: const Duration(milliseconds: 200));
+        }
+      },
+      fullPath: f.path,
+      date: f.lastModifiedSync(),
+    );
   }
 
   @override
@@ -74,18 +109,13 @@ class _FileManagerPageState extends State<FileManagerPage> {
           future: _dirFuture,
           builder: (context, asyncSnapshot) {
             if (asyncSnapshot.connectionState == ConnectionState.done) {
-              return ListView.builder(
-                  itemCount: _availableFiles.length,
-                  itemBuilder: (context, idx) {
-                    File f = _availableFiles[idx];
-                    return InfoCard(
-                      onActionSelected: (action) {
-                        print(action);
-                      },
-                      fullPath: f.path,
-                      date: f.lastModifiedSync(),
-                    );
-                  });
+              return AnimatedList(
+                key: _fileListState,
+                initialItemCount: _availableFiles.length,
+                itemBuilder: (context, idx, animation) {
+                  return _fileCard(_availableFiles[idx]);
+                },
+              );
             } else {
               return Container();
             }
