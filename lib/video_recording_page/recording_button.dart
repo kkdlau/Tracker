@@ -42,7 +42,6 @@ class _RecordingButtonState extends State<RecordingButton> {
   void initState() {
     super.initState();
     isHolding = false;
-    print('rebuild');
   }
 
   @override

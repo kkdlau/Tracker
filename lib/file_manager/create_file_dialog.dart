@@ -25,6 +25,8 @@ class _CreateFileDialogState extends State<CreateFileDialog> {
       return 'Please enter file name to create.';
     else if (widget.usedFileAlias.contains(input))
       return 'You\'ve already created a file with this name.';
+    else if (input.contains(RegExp(r'/[-!$%^&*()_+|~=`{}\[\]:"<>?;,.\/]/')))
+      return 'File alias cannot contain any symbol.';
     return '';
   }
 
@@ -86,7 +88,6 @@ class _CreateFileDialogState extends State<CreateFileDialog> {
       onChanged: (input) {
         setState(() {
           _errorMsg = _inputValidationMsg(input);
-          print(_errorMsg);
         });
       },
     );

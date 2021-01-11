@@ -5,8 +5,7 @@ import 'package:CameraPlus/file_manager/info_card.dart';
 import 'package:CameraPlus/utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
-const ACTION_SHEET_DIR = "action_sheets/";
+import '../define.dart';
 
 class FileManagerPage extends StatefulWidget {
   FileManagerPage({Key key}) : super(key: key);
@@ -16,22 +15,23 @@ class FileManagerPage extends StatefulWidget {
 }
 
 class _FileManagerPageState extends State<FileManagerPage> {
-  Directory dir;
+  String _dirFullPath;
   Future<void> _dirFuture;
   List<File> _availableFiles;
-  GlobalKey<AnimatedListState> _fileListState;
+  GlobalKey<AnimatedListState> _fileListKey;
 
   @override
   void initState() {
     super.initState();
 
-    _fileListState = GlobalKey();
+    _fileListKey = GlobalKey();
 
     _dirFuture = requestAvailableFiles(ACTION_SHEET_DIR);
   }
 
   Future<void> requestAvailableFiles(String dir) async {
     Directory d = await Utils.openFolder(dir);
+    _dirFullPath = d.path;
 
     List<FileSystemEntity> entity = await d.list().toList();
 
@@ -40,8 +40,6 @@ class _FileManagerPageState extends State<FileManagerPage> {
     // await File(d.path + 'Robocon 2023.json').createSync();
 
     await Future.wait(entity.map((f) async {
-      print(f.path);
-      print((await f.stat()).type);
       _availableFiles.add(File(f.path));
     }));
 
@@ -51,26 +49,66 @@ class _FileManagerPageState extends State<FileManagerPage> {
     return;
   }
 
+  Future<String> openCreateFilePrompt() async {
+    return showCupertinoDialog<String>(
+        context: context,
+        builder: (context) {
+          return CreateFileDialog(
+            usedFileAlias: [],
+          );
+        });
+  }
+
+  void onDeleteButtonPressed(File f) {
+    int index = _availableFiles.indexOf(f);
+
+    _fileListKey.currentState.removeItem(index, (context, animation) {
+      Widget transitionWidget = SizeTransition(
+        child: _fileCard(f),
+        sizeFactor: Tween<double>(
+          begin: 0,
+          end: 1,
+        ).animate(animation),
+      );
+
+      _availableFiles.removeAt(index);
+      f.delete();
+
+      return transitionWidget;
+    }, duration: const Duration(milliseconds: 200));
+  }
+
+  void onCloneButtonPressed(File f) {
+    openCreateFilePrompt().then((String alias) {
+      print(_dirFullPath + alias + ACTION_SHEET_FILE_EXTENSION);
+      if (alias != null) {
+        f
+            .copy(_dirFullPath + alias + ACTION_SHEET_FILE_EXTENSION)
+            .then((cloned) {
+          cloned.setLastModified(DateTime.now());
+          _availableFiles.insert(0, cloned);
+          _fileListKey.currentState
+              .insertItem(0, duration: const Duration(milliseconds: 200));
+        });
+      }
+    });
+  }
+
+  void onSelectButtonPressed(File f) {}
+
   Widget _fileCard(File f) {
     return InfoCard(
       onActionSelected: (action) {
-        if (action == INFO_CARD_ACTION.DELETE) {
-          int index = _availableFiles.indexOf(f);
-
-          _fileListState.currentState.removeItem(index, (context, animation) {
-            Widget transitionWidget = SizeTransition(
-              child: _fileCard(f),
-              sizeFactor: Tween<double>(
-                begin: 0,
-                end: 1,
-              ).animate(animation),
-            );
-
-            _availableFiles.remove(f);
-            f.delete();
-
-            return transitionWidget;
-          }, duration: const Duration(milliseconds: 200));
+        switch (action) {
+          case INFO_CARD_ACTION.DELETE:
+            onDeleteButtonPressed(f);
+            break;
+          case INFO_CARD_ACTION.CLONE:
+            onCloneButtonPressed(f);
+            break;
+          case INFO_CARD_ACTION.SELECT:
+            onSelectButtonPressed(f);
+            break;
         }
       },
       fullPath: f.path,
@@ -92,15 +130,7 @@ class _FileManagerPageState extends State<FileManagerPage> {
               child: IconButton(
                   icon: Icon(Icons.add),
                   onPressed: () {
-                    showCupertinoDialog<String>(
-                        context: context,
-                        builder: (context) {
-                          return CreateFileDialog(
-                            usedFileAlias: [],
-                          );
-                        }).then((value) {
-                      print(value);
-                    });
+                    openCreateFilePrompt().then((value) => print(value));
                   }),
             )
           ],
@@ -110,10 +140,15 @@ class _FileManagerPageState extends State<FileManagerPage> {
           builder: (context, asyncSnapshot) {
             if (asyncSnapshot.connectionState == ConnectionState.done) {
               return AnimatedList(
-                key: _fileListState,
+                key: _fileListKey,
                 initialItemCount: _availableFiles.length,
                 itemBuilder: (context, idx, animation) {
-                  return _fileCard(_availableFiles[idx]);
+                  return SizeTransition(
+                      sizeFactor: Tween<double>(
+                        begin: 0,
+                        end: 1,
+                      ).animate(animation),
+                      child: _fileCard(_availableFiles[idx]));
                 },
               );
             } else {
