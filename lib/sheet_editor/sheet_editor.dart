@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 
 class SheetEditor extends StatefulWidget {
@@ -10,8 +12,25 @@ class SheetEditor extends StatefulWidget {
 }
 
 class _SheetEditorState extends State<SheetEditor> {
+  File f;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    f = File(widget.filePath);
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return Scaffold(
+      appBar: AppBar(
+        brightness: Theme.of(context).brightness,
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        elevation: 0.0,
+        title: Text(f.path.split('/').last.split('.').first),
+        actions: [],
+      ),
+    );
   }
 }

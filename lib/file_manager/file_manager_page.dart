@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:CameraPlus/file_manager/create_file_dialog.dart';
 import 'package:CameraPlus/file_manager/info_card.dart';
+import 'package:CameraPlus/sheet_editor/sheet_editor.dart';
 import 'package:CameraPlus/utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -80,7 +81,6 @@ class _FileManagerPageState extends State<FileManagerPage> {
 
   void onCloneButtonPressed(File f) {
     openCreateFilePrompt().then((String alias) {
-      print(_dirFullPath + alias + ACTION_SHEET_FILE_EXTENSION);
       if (alias != null) {
         f
             .copy(_dirFullPath + alias + ACTION_SHEET_FILE_EXTENSION)
@@ -89,12 +89,20 @@ class _FileManagerPageState extends State<FileManagerPage> {
           _availableFiles.insert(0, cloned);
           _fileListKey.currentState
               .insertItem(0, duration: const Duration(milliseconds: 200));
+
+          Navigator.push(context, MaterialPageRoute(builder: (context) {
+            return SheetEditor(filePath: cloned.path);
+          }));
         });
       }
     });
   }
 
-  void onSelectButtonPressed(File f) {}
+  void onSelectButtonPressed(File f) {
+    Navigator.push(context, MaterialPageRoute(builder: (context) {
+      return SheetEditor(filePath: f.path);
+    }));
+  }
 
   Widget _fileCard(File f) {
     return InfoCard(
