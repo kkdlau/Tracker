@@ -1,5 +1,5 @@
-import 'package:CameraPlus/video_recording_page/recording_button.dart';
-import 'package:CameraPlus/widgets/shadow_icon_button.dart';
+import 'package:Tracker/video_recording_page/recording_button.dart';
+import 'package:Tracker/widgets/shadow_icon_button.dart';
 import 'package:flutter/material.dart';
 
 class BottomToolBar extends StatefulWidget {

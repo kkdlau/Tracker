@@ -1,4 +1,4 @@
-import 'package:CameraPlus/widgets/hightlighted_container.dart';
+import 'package:Tracker/widgets/hightlighted_container.dart';
 import 'package:flutter/material.dart';
 import 'action_description.dart';
 

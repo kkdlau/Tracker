@@ -1,7 +1,7 @@
-import 'package:CameraPlus/action_sheet/action_description.dart';
-import 'package:CameraPlus/action_sheet/action_sheet.dart';
-import 'package:CameraPlus/action_video_player/caption_mixin.dart';
-import 'package:CameraPlus/utils.dart';
+import 'package:Tracker/action_sheet/action_description.dart';
+import 'package:Tracker/action_sheet/action_sheet.dart';
+import 'package:Tracker/action_video_player/caption_mixin.dart';
+import 'package:Tracker/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:after_layout/after_layout.dart';
 import 'package:better_player/better_player.dart';

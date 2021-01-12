@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:CameraPlus/file_manager/info_card.dart';
+import 'package:Tracker/file_manager/info_card.dart';
 import 'package:flutter/material.dart';
 
 class SheetEditor extends StatefulWidget {

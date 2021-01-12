@@ -1,11 +1,11 @@
 import 'dart:async';
 
-import 'package:CameraPlus/action_sheet/action_sheet.dart';
-import 'package:CameraPlus/video_recording_page/bottom_tool_bar.dart';
-import 'package:CameraPlus/video_recording_page/camera_viewer.dart';
-import 'package:CameraPlus/video_recording_page/time_count_text.dart';
-import 'package:CameraPlus/video_recording_page/top_tool_bar.dart';
-import 'package:CameraPlus/widgets/hightlighted_container.dart';
+import 'package:Tracker/action_sheet/action_sheet.dart';
+import 'package:Tracker/video_recording_page/bottom_tool_bar.dart';
+import 'package:Tracker/video_recording_page/camera_viewer.dart';
+import 'package:Tracker/video_recording_page/time_count_text.dart';
+import 'package:Tracker/video_recording_page/top_tool_bar.dart';
+import 'package:Tracker/widgets/hightlighted_container.dart';
 import 'package:camera/camera.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';

@@ -1,4 +1,4 @@
-import 'package:CameraPlus/action_sheet/action_text.dart';
+import 'package:Tracker/action_sheet/action_text.dart';
 
 class ActionDescription {
   String description;

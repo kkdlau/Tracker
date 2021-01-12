@@ -1,6 +1,6 @@
 # Tracker
 
-Tracker an app which spports recording videos with timestamps.
+Tracker is an app which spports recording videos with timestamps.
 ## UI Development
 ### Main Page
 

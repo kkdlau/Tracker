@@ -1,5 +1,5 @@
-import 'package:CameraPlus/action_sheet/action_sheet_decoder.dart';
-import 'package:CameraPlus/file_manager/file_manager_page.dart';
+import 'package:Tracker/action_sheet/action_sheet_decoder.dart';
+import 'package:Tracker/file_manager/file_manager_page.dart';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
@@ -20,11 +20,11 @@ Future<void> main() async {
     print('camera error' + e.code);
     print(e.description);
   }
-  runApp(CameraPlusApp());
+  runApp(TrackerApp());
 }
 
-class CameraPlusApp extends StatelessWidget {
-  const CameraPlusApp({Key key}) : super(key: key);
+class TrackerApp extends StatelessWidget {
+  const TrackerApp({Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +33,7 @@ class CameraPlusApp extends StatelessWidget {
         theme: ThemeData(
             brightness: Brightness.dark,
             visualDensity: VisualDensity.adaptivePlatformDensity),
-        title: 'Camera+',
+        title: 'Tracker',
         home: FileManagerPage());
   }
 }

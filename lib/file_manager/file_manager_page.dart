@@ -1,11 +1,11 @@
 import 'dart:io';
 
-import 'package:CameraPlus/action_sheet/action_sheet.dart';
-import 'package:CameraPlus/action_sheet/action_sheet_decoder.dart';
-import 'package:CameraPlus/file_manager/create_file_dialog.dart';
-import 'package:CameraPlus/file_manager/info_card.dart';
-import 'package:CameraPlus/sheet_editor/sheet_editor.dart';
-import 'package:CameraPlus/utils.dart';
+import 'package:Tracker/action_sheet/action_sheet.dart';
+import 'package:Tracker/action_sheet/action_sheet_decoder.dart';
+import 'package:Tracker/file_manager/create_file_dialog.dart';
+import 'package:Tracker/file_manager/info_card.dart';
+import 'package:Tracker/sheet_editor/sheet_editor.dart';
+import 'package:Tracker/utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '../define.dart';

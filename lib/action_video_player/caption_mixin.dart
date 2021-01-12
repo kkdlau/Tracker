@@ -1,5 +1,5 @@
-import 'package:CameraPlus/action_sheet/action_description.dart';
-import 'package:CameraPlus/action_video_player/action_video_player.dart';
+import 'package:Tracker/action_sheet/action_description.dart';
+import 'package:Tracker/action_video_player/action_video_player.dart';
 import 'package:async/async.dart';
 import 'package:better_player/better_player.dart';
 import 'package:flutter/material.dart';

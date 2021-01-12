@@ -1,4 +1,4 @@
-import 'package:CameraPlus/file_manager/card_pop_up_action.dart';
+import 'package:Tracker/file_manager/card_pop_up_action.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
