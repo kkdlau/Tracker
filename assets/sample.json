@@ -1,0 +1,14 @@
+{
+    "actions": [
+        {
+            "description": "Description of the action",
+            "expect": 10,
+            "diff": -10
+        },
+        {
+            "description": "Another action",
+            "expect": 100,
+            "diff": 10
+        }
+    ]
+}

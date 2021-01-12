@@ -8,13 +8,13 @@ class ActionSheet {
   // action list.
   List<ActionDescription> actions;
 
-  ActionSheet({this.actions = const [], this.sheetName = ""}) {
-    // placeholder
+  ActionSheet({this.actions, this.sheetName = ""}) {
+    if (actions == null) actions = [];
   }
 
   /// Returns [ActionDescription] list in Plain Map foramt.
   List<Map<String, String>> getPlainActionList() {
-    List<Map<String, String>> actionList;
+    List<Map<String, String>> actionList = [];
     actions.forEach((element) {
       actionList.add(element.toMap());
     });
@@ -46,5 +46,14 @@ class ActionSheet {
     });
 
     return msg;
+  }
+
+  ActionSheet clone() {
+    List<ActionDescription> action_clone = [];
+    actions.forEach((element) {
+      action_clone.add(element);
+    });
+
+    return ActionSheet(sheetName: sheetName, actions: action_clone);
   }
 }

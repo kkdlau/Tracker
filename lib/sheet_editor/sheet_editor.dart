@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:CameraPlus/file_manager/info_card.dart';
 import 'package:flutter/material.dart';
 
 class SheetEditor extends StatefulWidget {
@@ -16,7 +17,6 @@ class _SheetEditorState extends State<SheetEditor> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     f = File(widget.filePath);
   }
@@ -29,8 +29,19 @@ class _SheetEditorState extends State<SheetEditor> {
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         elevation: 0.0,
         title: Text(f.path.split('/').last.split('.').first),
-        actions: [],
+        actions: [
+          Padding(
+            padding: const EdgeInsets.only(right: 15.0),
+            child: IconButton(icon: Icon(Icons.save_alt), onPressed: () {}),
+          )
+        ],
       ),
+      floatingActionButton: FloatingActionButton(
+        child: Icon(Icons.add),
+        onPressed: () {},
+      ),
+      body:
+          ReorderableListView(children: [], onReorder: (int oldIdx, newIdx) {}),
     );
   }
 }

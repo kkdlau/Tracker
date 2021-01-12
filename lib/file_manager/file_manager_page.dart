@@ -1,5 +1,7 @@
 import 'dart:io';
 
+import 'package:CameraPlus/action_sheet/action_sheet.dart';
+import 'package:CameraPlus/action_sheet/action_sheet_decoder.dart';
 import 'package:CameraPlus/file_manager/create_file_dialog.dart';
 import 'package:CameraPlus/file_manager/info_card.dart';
 import 'package:CameraPlus/sheet_editor/sheet_editor.dart';
@@ -24,6 +26,23 @@ class _FileManagerPageState extends State<FileManagerPage> {
   @override
   void initState() {
     super.initState();
+
+    ActionSheet sheet = ActionSheetDecoder.getInstance().decode(r'''{
+    "actions": [
+    {
+      "description": "Description of the action",
+      "expect": 10,
+      "diff": -10
+    },
+    {
+      "description": "Another action",
+      "expect": 100,
+      "diff": 10
+    }
+  ]
+  }''');
+
+    print(sheet);
 
     _fileListKey = GlobalKey();
 

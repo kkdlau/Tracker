@@ -10,6 +10,14 @@ class ActionDescription {
         targetTime = targetTime,
         timeDiff = timeDiff;
 
+  factory ActionDescription.fromJSON(Map<String, dynamic> json) {
+    return ActionDescription(
+      json['description'],
+      Duration(milliseconds: json['expect']),
+      Duration(milliseconds: json['diff']),
+    );
+  }
+
   /// Returns time difference between current time and target time.
   ///
   /// [time] is current time, [oeprator-] will calcuate the time difference by [target time - current time].
@@ -19,14 +27,19 @@ class ActionDescription {
 
   /// Returns string representation of current [ActionDescription] object.
   String toString() {
-    return description + ' - ' + targetTime.toString();
+    return description +
+        ' - Expect: ' +
+        targetTime.toString() +
+        ', Diff: ' +
+        timeDiff.toString();
   }
 
   /// Returns [Map] respresentation of current [ActionDescription] object.
   Map<String, String> toMap() {
     return {
       'description': description,
-      'time': targetTime.toString(),
+      'expect': targetTime.inMilliseconds.toString(),
+      'diff': timeDiff.inMilliseconds.toString()
     };
   }
 

@@ -1,6 +1,6 @@
-# CameraPlus
+# Tracker
 
-CmeraPlus an app which spports recording videos with timestamps.
+Tracker an app which spports recording videos with timestamps.
 ## UI Development
 ### Main Page
 
@@ -45,3 +45,23 @@ CmeraPlus an app which spports recording videos with timestamps.
   - [x] `Splitty` / `JSON`
   - [x] `.rst`
   - [ ] `pure text message` (for sharing)
+
+## JSON Structure
+
+```json
+{
+  "description": "Description of the file",
+  "actions": [
+    {
+      "description": "Description of the action",
+      "expect": 10, // Expected time, in milliseconds
+      "diff": -10 // Time difference between completed time and expected time, in milliseconds
+    },
+    {
+      "description": "Another action",
+      "expect": 100,
+      "diff": 10
+    }
+  ]
+}
+```
