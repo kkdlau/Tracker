@@ -10,6 +10,15 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '../define.dart';
 
+extension on File {
+  String get alias {
+    if (this.path.contains('/'))
+      return this.path.split('/').last.split('.').first;
+    else
+      return this.path.split('.').first;
+  }
+}
+
 class FileManagerPage extends StatefulWidget {
   FileManagerPage({Key key}) : super(key: key);
 
@@ -27,28 +36,19 @@ class _FileManagerPageState extends State<FileManagerPage> {
   void initState() {
     super.initState();
 
-    ActionSheet sheet = ActionSheetDecoder.getInstance().decode(r'''{
-    "actions": [
-    {
-      "description": "Description of the action",
-      "expect": 10,
-      "diff": -10
-    },
-    {
-      "description": "Another action",
-      "expect": 100,
-      "diff": 10
-    }
-  ]
-  }''');
-
-    print(sheet);
-
     _fileListKey = GlobalKey();
 
     _dirFuture = requestAvailableFiles(ACTION_SHEET_DIR);
   }
 
+  /// helper function for getting all file alias.
+  List<String> get _fileAlias {
+    return _availableFiles.map((e) => e.alias).toList();
+  }
+
+  /// Get all available files in the given directory.
+  ///
+  /// [dir] is the directory that want to browse.
   Future<void> requestAvailableFiles(String dir) async {
     Directory d = await Utils.openFolder(dir);
     _dirFullPath = d.path;
@@ -56,8 +56,6 @@ class _FileManagerPageState extends State<FileManagerPage> {
     List<FileSystemEntity> entity = await d.list().toList();
 
     _availableFiles = [];
-
-    // await File(d.path + 'Robocon 2023.json').createSync();
 
     await Future.wait(entity.map((f) async {
       _availableFiles.add(File(f.path));
@@ -74,7 +72,7 @@ class _FileManagerPageState extends State<FileManagerPage> {
         context: context,
         builder: (context) {
           return CreateFileDialog(
-            usedFileAlias: [],
+            usedFileAlias: _fileAlias,
           );
         });
   }

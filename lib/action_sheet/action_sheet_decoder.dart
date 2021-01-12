@@ -33,6 +33,8 @@ class ActionSheetDecoder {
   ///
   /// [rawFileData] is the raw string data from the file.
   ActionSheet decode(String rawFileData) {
+    if (rawFileData.isEmpty) return ActionSheet();
+
     final Map<String, dynamic> mapped = json.decode(rawFileData);
 
     _sheet = ActionSheet();
