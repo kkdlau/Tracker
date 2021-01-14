@@ -1,9 +1,10 @@
 import 'dart:io';
 
+import 'package:Tracker/action_sheet/action_description.dart';
 import 'package:Tracker/action_sheet/action_sheet.dart';
 import 'package:Tracker/action_sheet/action_sheet_decoder.dart';
 import 'package:Tracker/file_manager/info_card.dart';
-import 'package:Tracker/sheet_editor/EditableAction.dart';
+import 'package:Tracker/sheet_editor/ActionCard.dart';
 import 'package:flutter/material.dart';
 
 class SheetEditor extends StatefulWidget {
@@ -28,6 +29,8 @@ class _SheetEditorState extends State<SheetEditor> {
 
   @override
   Widget build(BuildContext context) {
+    final textTheme = Theme.of(context).textTheme;
+
     return Scaffold(
       appBar: AppBar(
         brightness: Theme.of(context).brightness,
@@ -46,10 +49,16 @@ class _SheetEditorState extends State<SheetEditor> {
         onPressed: () {},
       ),
       body: ReorderableListView(children: [
-        EditableAction(
+        ActionCard(
+          heading: Text('1.', style: textTheme.subtitle2),
+          description: ActionDescription('This is description.',
+              Duration(milliseconds: 100000), Duration(milliseconds: 987)),
           key: Key('1'),
         ),
-        EditableAction(
+        ActionCard(
+          heading: Text('2.', style: textTheme.subtitle2),
+          description: ActionDescription('This is description.',
+              Duration(milliseconds: 100000), Duration(milliseconds: 789)),
           key: Key('2'),
         ),
       ], onReorder: (int oldIdx, newIdx) {}),

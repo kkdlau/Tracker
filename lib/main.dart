@@ -1,4 +1,5 @@
 import 'package:Tracker/file_manager/file_manager_page.dart';
+import 'package:Tracker/video_recording_page/video_recording_page.dart';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';

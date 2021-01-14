@@ -122,22 +122,26 @@ class _FileManagerPageState extends State<FileManagerPage> {
   }
 
   Widget _fileCard(File f) {
-    return InfoCard(
-      onActionSelected: (action) {
-        switch (action) {
-          case INFO_CARD_ACTION.DELETE:
-            onDeleteButtonPressed(f);
-            break;
-          case INFO_CARD_ACTION.CLONE:
-            onCloneButtonPressed(f);
-            break;
-          case INFO_CARD_ACTION.SELECT:
-            onSelectButtonPressed(f);
-            break;
-        }
-      },
-      fullPath: f.path,
-      date: f.lastModifiedSync(),
+    return SafeArea(
+      top: false,
+      bottom: false,
+      child: InfoCard(
+        onActionSelected: (action) {
+          switch (action) {
+            case INFO_CARD_ACTION.DELETE:
+              onDeleteButtonPressed(f);
+              break;
+            case INFO_CARD_ACTION.CLONE:
+              onCloneButtonPressed(f);
+              break;
+            case INFO_CARD_ACTION.SELECT:
+              onSelectButtonPressed(f);
+              break;
+          }
+        },
+        fullPath: f.path,
+        date: f.lastModifiedSync(),
+      ),
     );
   }
 

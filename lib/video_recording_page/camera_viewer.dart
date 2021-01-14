@@ -47,20 +47,23 @@ class _CameraViewerState extends State<CameraViewer> {
     return screenWidth / _controller.value.aspectRatio;
   }
 
+  double get cameraWidth {
+    return screenHeight / _controller.value.aspectRatio;
+  }
+
   @override
   Widget build(BuildContext context) {
     return OrientationBuilder(
         builder: (BuildContext context, Orientation orientation) {
       return GestureDetector(
         child: RotatedBox(
-          quarterTurns:
-              MediaQuery.of(context).orientation == Orientation.landscape
-                  ? 3
-                  : 0,
+          quarterTurns: orientation == Orientation.landscape ? 3 : 0,
           child: AspectRatio(
             aspectRatio: _controller.value.aspectRatio,
             child: Transform.scale(
-                scale: screenHeight / cameraHeight,
+                scale: orientation == Orientation.landscape
+                    ? screenWidth / cameraWidth
+                    : screenHeight / cameraHeight,
                 child: CameraPreview(_controller)),
           ),
         ),

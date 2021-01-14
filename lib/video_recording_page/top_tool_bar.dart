@@ -4,13 +4,15 @@ import 'package:flutter/material.dart';
 class TopToolBar extends StatefulWidget {
   final void Function() onSwitchBtnPressed;
   final void Function() onFlashBtnPressed;
+  final Orientation orientation;
   final bool enableFlash;
 
   const TopToolBar(
       {Key key,
       this.onSwitchBtnPressed,
       this.onFlashBtnPressed,
-      this.enableFlash})
+      this.enableFlash,
+      this.orientation})
       : super(key: key);
 
   @override
@@ -37,18 +39,36 @@ class _TopToolBarState extends State<TopToolBar> {
     );
   }
 
+  List<Widget> _toolButtons() {
+    return [
+      _themedIconButton(
+          context,
+          widget.enableFlash ? Icons.flash_on : Icons.flash_off,
+          widget.onFlashBtnPressed),
+      _themedIconButton(
+          context, Icons.flip_camera_ios, widget.onSwitchBtnPressed)
+    ];
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.end,
-      children: [
-        _themedIconButton(
-            context,
-            widget.enableFlash ? Icons.flash_on : Icons.flash_off,
-            widget.onFlashBtnPressed),
-        _themedIconButton(
-            context, Icons.flip_camera_ios, widget.onSwitchBtnPressed)
-      ],
-    );
+    return widget.orientation == Orientation.landscape
+        ? Align(
+            alignment: Alignment.topLeft,
+            child: Padding(
+              padding: const EdgeInsets.only(left: 8.0, top: 8.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: _toolButtons(),
+              ),
+            ),
+          )
+        : Align(
+            alignment: Alignment.topLeft,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: _toolButtons(),
+            ),
+          );
   }
 }

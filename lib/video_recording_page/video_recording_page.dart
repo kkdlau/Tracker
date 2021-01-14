@@ -106,49 +106,33 @@ class _VideoRecordingPageState extends State<VideoRecordingPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        body: SafeArea(
-      child: Stack(
-          fit: StackFit.loose,
-          alignment: Alignment.center,
-          children: <Widget>[
-            Positioned(child: futureCamera()),
-            Align(
-              alignment: Alignment.topLeft,
-              child: Padding(
-                  padding: EdgeInsets.only(left: 10.0),
-                  child: ConstrainedBox(
-                    constraints: BoxConstraints(
-                        maxWidth: MediaQuery.of(context).size.width * 0.3),
-                    child: HighlightedContainer(
-                        highlightedColor: Colors.cyan.withAlpha(100),
-                        child: FittedBox(
-                          fit: BoxFit.contain,
-                          child: Text(
-                            'Selected: Robocon 2021',
-                            overflow: TextOverflow.ellipsis,
-                            style: Theme.of(context).textTheme.headline5,
-                          ),
-                        )),
-                  )),
-            ),
-            Align(
-              alignment: Alignment.topRight,
-              child: TopToolBar(
-                enableFlash: useFlashLight,
-                onFlashBtnPressed: flashBtnHandler,
-                onSwitchBtnPressed: switchCameraHandler,
-              ),
-            ),
-            Align(
-                alignment: Alignment.topCenter,
-                child: TimeCountText.fromDuration(Duration(seconds: 10000))),
-            Align(
-                alignment: Alignment.bottomCenter,
-                child: BottomToolBar(
+    return Scaffold(body: OrientationBuilder(
+      builder: (BuildContext context, Orientation orientation) {
+        return SafeArea(
+          child: Stack(
+              fit: StackFit.loose,
+              alignment: Alignment.center,
+              children: <Widget>[
+                futureCamera(),
+                TopToolBar(
+                  orientation: orientation,
+                  enableFlash: useFlashLight,
+                  onFlashBtnPressed: flashBtnHandler,
+                  onSwitchBtnPressed: switchCameraHandler,
+                ),
+                Align(
+                    alignment: Alignment.topCenter,
+                    child: Padding(
+                        padding: EdgeInsets.only(top: 10.0),
+                        child: TimeCountText.fromDuration(
+                            Duration(seconds: 10000)))),
+                BottomToolBar(
+                    orientation: orientation,
                     isRecording: isRecording,
-                    onRecordingButtonPressed: onRecordingBtnPressed)),
-          ]),
+                    onRecordingButtonPressed: onRecordingBtnPressed)
+              ]),
+        );
+      },
     ));
   }
 }
