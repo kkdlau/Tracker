@@ -2,13 +2,11 @@ import 'dart:io';
 import 'package:Tracker/action_sheet/action_description.dart';
 import 'package:Tracker/action_sheet/action_sheet.dart';
 import 'package:Tracker/action_sheet/action_sheet_decoder.dart';
-import 'package:Tracker/file_manager_template/info_card/info_card.dart';
 import 'package:Tracker/sheet_editor/action_card.dart';
 import 'package:Tracker/sheet_editor/action_edit_dialog.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:implicitly_animated_reorderable_list/implicitly_animated_reorderable_list.dart';
-import 'package:path/path.dart';
 
 extension SwappableList<T> on List<T> {
   void swap(int oldIndex, int newIndex) {

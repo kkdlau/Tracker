@@ -6,6 +6,8 @@ import 'package:Tracker/action_sheet/action_sheet_decoder.dart';
 import 'package:Tracker/file_manager_template/file_manager_page.dart';
 import 'package:Tracker/file_manager_template/info_card/card_config.dart';
 import 'package:Tracker/file_manager_template/manger_config.dart';
+import 'package:Tracker/recording_manager/recording_manager_page.dart';
+import 'package:Tracker/setting/setting_page.dart';
 import 'package:Tracker/sheet_manager/sheet_magaer_page.dart';
 import 'package:Tracker/utils.dart';
 import 'package:Tracker/video_recording_page/bottom_tool_bar.dart';
@@ -122,7 +124,7 @@ class _VideoRecordingPageState extends State<VideoRecordingPage> {
     controller.dispose();
     Navigator.push<File>(context,
         MaterialPageRoute(builder: (BuildContext context) {
-      return SheetManager();
+      return SheetManagerPage();
     })).then((f) => setState(() {
           initializeCamera();
           if (f != null) {
@@ -135,25 +137,19 @@ class _VideoRecordingPageState extends State<VideoRecordingPage> {
 
   void openRecordingManager() {
     controller.dispose();
+
     Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (_) => FileManagerPage(
-                config: FileManagerConfiguration(
-                    allowAddFile: false,
-                    cardConfig: CardConfiguration(
-                      allowEditFile: false,
-                      allowCloneFile: false,
-                    )),
-                title: 'Recordings',
-                rootDir: RECORDING_DIR))).then((_) {
+            context, MaterialPageRoute(builder: (_) => RecordingManagerPage()))
+        .then((_) {
       setState(() {
         initializeCamera();
       });
     });
   }
 
-  void openSetting() {}
+  void openSetting() {
+    Navigator.push(context, MaterialPageRoute(builder: (_) => SettingPage()));
+  }
 
   @override
   Widget build(BuildContext context) {

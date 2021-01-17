@@ -6,14 +6,14 @@ import 'package:Tracker/file_manager_template/info_card/info_card.dart';
 import 'package:Tracker/sheet_editor/sheet_editor.dart';
 import 'package:flutter/material.dart';
 
-class SheetManager extends StatefulWidget {
-  const SheetManager({Key key}) : super(key: key);
+class SheetManagerPage extends StatefulWidget {
+  const SheetManagerPage({Key key}) : super(key: key);
 
   @override
-  _SheetManagerState createState() => _SheetManagerState();
+  _SheetManagerPageState createState() => _SheetManagerPageState();
 }
 
-class _SheetManagerState extends State<SheetManager> {
+class _SheetManagerPageState extends State<SheetManagerPage> {
   GlobalKey<FileManagerPageState> _pageNode;
 
   @override
