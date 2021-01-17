@@ -10,9 +10,9 @@ import 'package:implicitly_animated_reorderable_list/implicitly_animated_reorder
 
 extension SwappableList<T> on List<T> {
   void swap(int oldIndex, int newIndex) {
-    T old_element = this[oldIndex];
+    T oldElement = this[oldIndex];
     this[oldIndex] = this[newIndex];
-    this[newIndex] = old_element;
+    this[newIndex] = oldElement;
   }
 }
 
@@ -60,8 +60,6 @@ class _SheetEditorState extends State<SheetEditor> {
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
-    int index = 1;
-
     return Scaffold(
       appBar: AppBar(
         brightness: Theme.of(context).brightness,

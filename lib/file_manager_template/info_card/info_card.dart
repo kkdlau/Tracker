@@ -104,7 +104,6 @@ class InfoCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final TextTheme theme = Theme.of(context).textTheme;
     final List<Widget> list = _listAvailableButton(context);
     return RawMaterialButton(
         padding: EdgeInsets.only(top: 8.0, bottom: 8.0),

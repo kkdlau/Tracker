@@ -49,11 +49,11 @@ class ActionSheet {
   }
 
   ActionSheet clone() {
-    List<ActionDescription> action_clone = [];
+    List<ActionDescription> clone = [];
     actions.forEach((element) {
-      action_clone.add(element);
+      clone.add(element);
     });
 
-    return ActionSheet(sheetName: sheetName, actions: action_clone);
+    return ActionSheet(sheetName: sheetName, actions: clone);
   }
 }
