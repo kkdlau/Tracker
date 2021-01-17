@@ -1,9 +1,8 @@
 import 'dart:io';
 
-import 'package:Tracker/action_sheet/action_sheet.dart';
-import 'package:Tracker/action_sheet/action_sheet_decoder.dart';
 import 'package:Tracker/file_manager/create_file_dialog.dart';
-import 'package:Tracker/file_manager/info_card.dart';
+import 'package:Tracker/file_manager/info_card/info_card.dart';
+import 'package:Tracker/file_manager/manger_config.dart';
 import 'package:Tracker/sheet_editor/sheet_editor.dart';
 import 'package:Tracker/utils.dart';
 import 'package:flutter/cupertino.dart';
@@ -20,25 +19,39 @@ extension on File {
 }
 
 class FileManagerPage extends StatefulWidget {
-  FileManagerPage({Key key}) : super(key: key);
+  final String title;
+  final String rootDir;
+  final String fileType;
+  final Widget Function(File) headingBuilder;
+  final void Function(INFO_CARD_ACTION, File) actionhandler;
+  final FileManagerConfiguration config;
+  FileManagerPage(
+      {Key key,
+      @required this.title,
+      @required this.rootDir,
+      this.fileType = "file",
+      this.headingBuilder,
+      this.actionhandler,
+      this.config = const FileManagerConfiguration()})
+      : super(key: key);
 
   @override
-  _FileManagerPageState createState() => _FileManagerPageState();
+  FileManagerPageState createState() => FileManagerPageState();
 }
 
-class _FileManagerPageState extends State<FileManagerPage> {
-  String _dirFullPath;
+class FileManagerPageState extends State<FileManagerPage> {
+  String dirFullPath;
   Future<void> _dirFuture;
   List<File> _availableFiles;
-  GlobalKey<AnimatedListState> _fileListKey;
+  GlobalKey<AnimatedListState> _fileListNode;
 
   @override
   void initState() {
     super.initState();
 
-    _fileListKey = GlobalKey();
+    _fileListNode = GlobalKey();
 
-    _dirFuture = requestAvailableFiles(ACTION_SHEET_DIR);
+    _dirFuture = requestAvailableFiles(widget.rootDir);
   }
 
   /// helper function for getting all file alias.
@@ -51,7 +64,7 @@ class _FileManagerPageState extends State<FileManagerPage> {
   /// [dir] is the directory that want to browse.
   Future<void> requestAvailableFiles(String dir) async {
     Directory d = await Utils.openFolder(dir);
-    _dirFullPath = d.path;
+    dirFullPath = d.path;
 
     List<FileSystemEntity> entity = await d.list().toList();
 
@@ -67,20 +80,10 @@ class _FileManagerPageState extends State<FileManagerPage> {
     return;
   }
 
-  Future<String> openCreateFilePrompt() async {
-    return showCupertinoDialog<String>(
-        context: context,
-        builder: (context) {
-          return CreateFileDialog(
-            usedFileAlias: _fileAlias,
-          );
-        });
-  }
-
-  void onDeleteButtonPressed(File f) {
+  void removeFile(File f) {
     int index = _availableFiles.indexOf(f);
 
-    _fileListKey.currentState.removeItem(index, (context, animation) {
+    _fileListNode.currentState.removeItem(index, (context, animation) {
       Widget transitionWidget = SizeTransition(
         child: _fileCard(f),
         sizeFactor: Tween<double>(
@@ -96,48 +99,34 @@ class _FileManagerPageState extends State<FileManagerPage> {
     }, duration: const Duration(milliseconds: 200));
   }
 
-  void onCloneButtonPressed(File f) {
-    openCreateFilePrompt().then((String alias) {
-      if (alias != null) {
-        f
-            .copy(_dirFullPath + alias + ACTION_SHEET_FILE_EXTENSION)
-            .then((cloned) {
-          cloned.setLastModified(DateTime.now());
-          _availableFiles.insert(0, cloned);
-          _fileListKey.currentState
-              .insertItem(0, duration: const Duration(milliseconds: 200));
-
-          Navigator.push(context, MaterialPageRoute(builder: (context) {
-            return SheetEditor(filePath: cloned.path);
-          }));
-        });
-      }
-    });
+  void insertFileToDirectory(File f) {
+    _availableFiles.insert(0, f);
+    _fileListNode.currentState
+        .insertItem(0, duration: const Duration(milliseconds: 200));
   }
 
-  void onSelectButtonPressed(File f) {
-    Navigator.push(context, MaterialPageRoute(builder: (context) {
-      return SheetEditor(filePath: f.path);
-    }));
+  Future<String> openCreateFilePrompt() async {
+    return showCupertinoDialog<String>(
+        context: context,
+        builder: (context) {
+          return CreateFileDialog(
+            usedFileAlias: _fileAlias,
+            fileType: widget.fileType,
+          );
+        });
   }
 
   Widget _fileCard(File f) {
+    Widget headingWidget =
+        widget.headingBuilder != null ? widget.headingBuilder(f) : null;
     return SafeArea(
       top: false,
       bottom: false,
       child: InfoCard(
-        onActionSelected: (action) {
-          switch (action) {
-            case INFO_CARD_ACTION.DELETE:
-              onDeleteButtonPressed(f);
-              break;
-            case INFO_CARD_ACTION.CLONE:
-              onCloneButtonPressed(f);
-              break;
-            case INFO_CARD_ACTION.SELECT:
-              onSelectButtonPressed(f);
-              break;
-          }
+        config: widget.config.cardConfig,
+        heading: headingWidget,
+        onActionSelected: (actionType) {
+          widget.actionhandler(actionType, f);
         },
         fullPath: f.path,
         date: f.lastModifiedSync(),
@@ -152,24 +141,26 @@ class _FileManagerPageState extends State<FileManagerPage> {
           brightness: Theme.of(context).brightness,
           backgroundColor: Theme.of(context).scaffoldBackgroundColor,
           elevation: 0.0,
-          title: Text('Action Sheet'),
-          actions: [
-            Padding(
-              padding: const EdgeInsets.only(right: 8.0),
-              child: IconButton(
-                  icon: Icon(Icons.add),
-                  onPressed: () {
-                    openCreateFilePrompt().then((value) => print(value));
-                  }),
-            )
-          ],
+          title: Text(widget.title),
+          actions: widget.config.allowAddFile
+              ? [
+                  Padding(
+                    padding: const EdgeInsets.only(right: 8.0),
+                    child: IconButton(
+                        icon: Icon(Icons.add),
+                        onPressed: () {
+                          openCreateFilePrompt().then((value) => print(value));
+                        }),
+                  )
+                ]
+              : [],
         ),
         body: FutureBuilder(
           future: _dirFuture,
           builder: (context, asyncSnapshot) {
             if (asyncSnapshot.connectionState == ConnectionState.done) {
               return AnimatedList(
-                key: _fileListKey,
+                key: _fileListNode,
                 initialItemCount: _availableFiles.length,
                 itemBuilder: (context, idx, animation) {
                   return SizeTransition(

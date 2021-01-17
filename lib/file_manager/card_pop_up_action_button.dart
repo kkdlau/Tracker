@@ -1,10 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-class CardPopupAction extends StatelessWidget {
+class CardPopupActionButton extends StatelessWidget {
   final void Function() onPressed;
   final List<Widget> children;
-  const CardPopupAction({Key key, @required this.children, this.onPressed})
+  const CardPopupActionButton(
+      {Key key, @required this.children, this.onPressed})
       : super(key: key);
 
   @override

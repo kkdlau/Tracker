@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 class TopToolBar extends StatefulWidget {
   final void Function() onSwitchBtnPressed;
   final void Function() onFlashBtnPressed;
+  final void Function() onSettingBtnPressed;
   final Orientation orientation;
   final bool enableFlash;
 
@@ -12,7 +13,8 @@ class TopToolBar extends StatefulWidget {
       this.onSwitchBtnPressed,
       this.onFlashBtnPressed,
       this.enableFlash,
-      this.orientation})
+      this.orientation,
+      this.onSettingBtnPressed})
       : super(key: key);
 
   @override
@@ -28,7 +30,7 @@ class _TopToolBarState extends State<TopToolBar> {
   Widget _themedIconButton(
       BuildContext context, IconData icon, void Function() onPressed) {
     return Padding(
-      padding: const EdgeInsets.only(right: 30.0),
+      padding: const EdgeInsets.all(10.0),
       child: ShadowIconButton(
         onPressed: onPressed,
         icon: icon,
@@ -41,12 +43,16 @@ class _TopToolBarState extends State<TopToolBar> {
 
   List<Widget> _toolButtons() {
     return [
+      SizedBox(width: 10.0, height: 10.0),
+      _themedIconButton(context, Icons.settings, widget.onSettingBtnPressed),
+      Expanded(child: SizedBox()),
       _themedIconButton(
           context,
           widget.enableFlash ? Icons.flash_on : Icons.flash_off,
           widget.onFlashBtnPressed),
       _themedIconButton(
-          context, Icons.flip_camera_ios, widget.onSwitchBtnPressed)
+          context, Icons.flip_camera_ios, widget.onSwitchBtnPressed),
+      SizedBox(width: 10.0, height: 10.0),
     ];
   }
 
@@ -55,14 +61,10 @@ class _TopToolBarState extends State<TopToolBar> {
     return widget.orientation == Orientation.landscape
         ? Align(
             alignment: Alignment.topLeft,
-            child: Padding(
-              padding: const EdgeInsets.only(left: 8.0, top: 8.0),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: _toolButtons(),
-              ),
-            ),
-          )
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: _toolButtons().reversed.toList(),
+            ))
         : Align(
             alignment: Alignment.topLeft,
             child: Row(

@@ -1,4 +1,15 @@
 import 'package:Tracker/action_sheet/action_text.dart';
+import 'package:flutter/material.dart';
+
+extension on Duration {
+  String toTimestampRepresentation() {
+    final String min = this.inMinutes.toString().padLeft(2, '0');
+    final String sec = (this.inSeconds % 60).toString().padLeft(2, '0');
+    final String mil =
+        ((this.inMilliseconds % 1000) ~/ 10).toString().padLeft(2, '0');
+    return '$min:$sec,$mil';
+  }
+}
 
 class ActionDescription {
   String description;
@@ -78,5 +89,23 @@ class ActionDescription {
 
   ActionText buildCaptionWidget() {
     return ActionText.fromAction(this);
+  }
+
+  String timeDiffString() {
+    if (timeDiff.inMilliseconds > 0) {
+      return '+${timeDiff.inMilliseconds} ms';
+    } else if (timeDiff.inSeconds < 0) {
+      return '${timeDiff.inMilliseconds} ms';
+    }
+    return '0 ms';
+  }
+
+  Color timeDiffColor() {
+    if (timeDiff.inSeconds > 0) {
+      return Colors.green;
+    } else if (timeDiff.inSeconds < 0) {
+      return Colors.red;
+    }
+    return Colors.grey;
   }
 }

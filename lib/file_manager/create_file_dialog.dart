@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 
 class CreateFileDialog extends StatefulWidget {
   final List<String> usedFileAlias;
-  CreateFileDialog({Key key, this.usedFileAlias}) : super(key: key);
+  final String fileType;
+  CreateFileDialog({Key key, this.usedFileAlias, this.fileType})
+      : super(key: key);
 
   @override
   _CreateFileDialogState createState() => _CreateFileDialogState();
@@ -75,7 +77,7 @@ class _CreateFileDialogState extends State<CreateFileDialog> {
   Widget _titleWidget() {
     return Padding(
       padding: const EdgeInsets.only(bottom: 8.0),
-      child: Text('Create a new sheet',
+      child: Text('Create a new ${widget.fileType}',
           style: Theme.of(context).textTheme.subtitle1),
     );
   }

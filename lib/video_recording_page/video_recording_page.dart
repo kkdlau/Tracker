@@ -1,51 +1,59 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:Tracker/action_sheet/action_sheet.dart';
+import 'package:Tracker/action_sheet/action_sheet_decoder.dart';
+import 'package:Tracker/file_manager/file_manager_page.dart';
+import 'package:Tracker/file_manager/info_card/card_config.dart';
+import 'package:Tracker/file_manager/manger_config.dart';
+import 'package:Tracker/sheet_manager/sheet_magaer_page.dart';
+import 'package:Tracker/utils.dart';
 import 'package:Tracker/video_recording_page/bottom_tool_bar.dart';
+import 'package:Tracker/video_recording_page/camera_config.dart';
 import 'package:Tracker/video_recording_page/camera_viewer.dart';
 import 'package:Tracker/video_recording_page/time_count_text.dart';
 import 'package:Tracker/video_recording_page/top_tool_bar.dart';
-import 'package:Tracker/widgets/hightlighted_container.dart';
 import 'package:camera/camera.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_ffmpeg/flutter_ffmpeg.dart';
+import '../define.dart';
 
 final FlutterFFmpeg _flutterFFmpeg = new FlutterFFmpeg();
 
 class VideoRecordingPage extends StatefulWidget {
-  // Path to action sheet.
-  final String actionSheetPath;
   final List<CameraDescription> availableCameras;
-  VideoRecordingPage({Key key, this.actionSheetPath, this.availableCameras})
-      : super(key: key);
+  VideoRecordingPage({Key key, this.availableCameras}) : super(key: key);
 
   @override
   _VideoRecordingPageState createState() => _VideoRecordingPageState();
 }
 
 class _VideoRecordingPageState extends State<VideoRecordingPage> {
-  ActionSheet sheet;
+  File selectedFile;
   CameraController controller;
+  CameraConfiguration config;
   Future<void> _initializeControllerFuture;
   bool isRecording;
-  bool useFlashLight;
-
-  int _camidx;
+  ActionSheet selectedSheet;
 
   @override
   void initState() {
     super.initState();
 
-    _camidx = 0;
+    config = CameraConfiguration(
+        cameraIndex: 0, enableFlash: false, enableAudio: true);
 
     isRecording = false;
-    useFlashLight = false;
 
+    initializeCamera();
+  }
+
+  void initializeCamera() {
     controller = CameraController(
-      widget.availableCameras[_camidx],
+      widget.availableCameras[config.cameraIndex],
       ResolutionPreset.medium,
-      enableAudio: true,
+      enableAudio: config.enableAudio,
     );
     _initializeControllerFuture = controller.initialize();
   }
@@ -56,7 +64,7 @@ class _VideoRecordingPageState extends State<VideoRecordingPage> {
             textAlign: TextAlign.center));
   }
 
-  Widget futureCamera() {
+  Widget cameraPreview() {
     return FutureBuilder<void>(
       future: _initializeControllerFuture,
       builder: (context, snapshot) {
@@ -79,30 +87,73 @@ class _VideoRecordingPageState extends State<VideoRecordingPage> {
           print((e as CameraException).description);
         }
       } else {
-        controller.stopVideoRecording().then((XFile v) {});
+        controller.stopVideoRecording().then((XFile f) {
+          Utils.getDocumentRootPath().then((root) {
+            final String file_name = f.path.split('/').last;
+            File(f.path).copy('$root/$RECORDING_DIR' + file_name);
+          });
+        });
       }
     });
   }
 
   void flashBtnHandler() {
     setState(() {
-      useFlashLight = !useFlashLight;
+      config.enableFlash = !config.enableFlash;
       // todo: enable flash light. (https://pub.dev/packages/lamp)
     });
   }
 
   void switchCameraHandler() {
     setState(() {
-      _camidx = (_camidx + 1) % widget.availableCameras.length;
+      config.cameraIndex =
+          (config.cameraIndex + 1) % widget.availableCameras.length;
 
       controller = CameraController(
-        widget.availableCameras[_camidx],
+        widget.availableCameras[config.cameraIndex],
         ResolutionPreset.medium,
         enableAudio: true,
       );
       _initializeControllerFuture = controller.initialize();
     });
   }
+
+  void openSheetManager() {
+    controller.dispose();
+    Navigator.push<File>(context,
+        MaterialPageRoute(builder: (BuildContext context) {
+      return SheetManager();
+    })).then((f) => setState(() {
+          initializeCamera();
+          if (f != null) {
+            selectedFile = f;
+            selectedSheet =
+                ActionSheetDecoder.getInstance().decode(f.readAsStringSync());
+          }
+        }));
+  }
+
+  void openRecordingManager() {
+    controller.dispose();
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (_) => FileManagerPage(
+                config: FileManagerConfiguration(
+                    allowAddFile: false,
+                    cardConfig: CardConfiguration(
+                      allowEditFile: false,
+                      allowCloneFile: false,
+                    )),
+                title: 'Recordings',
+                rootDir: RECORDING_DIR))).then((_) {
+      setState(() {
+        initializeCamera();
+      });
+    });
+  }
+
+  void openSetting() {}
 
   @override
   Widget build(BuildContext context) {
@@ -113,12 +164,13 @@ class _VideoRecordingPageState extends State<VideoRecordingPage> {
               fit: StackFit.loose,
               alignment: Alignment.center,
               children: <Widget>[
-                futureCamera(),
+                cameraPreview(),
                 TopToolBar(
                   orientation: orientation,
-                  enableFlash: useFlashLight,
+                  enableFlash: config.enableFlash,
                   onFlashBtnPressed: flashBtnHandler,
                   onSwitchBtnPressed: switchCameraHandler,
+                  onSettingBtnPressed: openSetting,
                 ),
                 Align(
                     alignment: Alignment.topCenter,
@@ -129,7 +181,9 @@ class _VideoRecordingPageState extends State<VideoRecordingPage> {
                 BottomToolBar(
                     orientation: orientation,
                     isRecording: isRecording,
-                    onRecordingButtonPressed: onRecordingBtnPressed)
+                    onDocumentButtonPressed: openSheetManager,
+                    onRecordingButtonPressed: onRecordingBtnPressed,
+                    onMovieButtonPressed: openRecordingManager)
               ]),
         );
       },

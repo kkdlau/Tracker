@@ -51,21 +51,36 @@ class _CameraViewerState extends State<CameraViewer> {
     return screenHeight / _controller.value.aspectRatio;
   }
 
+  Future<int> quarterRotation() async {
+    NativeDeviceOrientation o = await NativeDeviceOrientationCommunicator()
+        .orientation(useSensor: true);
+    return o.toQuarterTurns();
+  }
+
   @override
   Widget build(BuildContext context) {
     return OrientationBuilder(
         builder: (BuildContext context, Orientation orientation) {
       return GestureDetector(
-        child: RotatedBox(
-          quarterTurns: orientation == Orientation.landscape ? 3 : 0,
-          child: AspectRatio(
-            aspectRatio: _controller.value.aspectRatio,
-            child: Transform.scale(
-                scale: orientation == Orientation.landscape
-                    ? screenWidth / cameraWidth
-                    : screenHeight / cameraHeight,
-                child: CameraPreview(_controller)),
-          ),
+        child: FutureBuilder<int>(
+          future: quarterRotation(),
+          builder: (BuildContext context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.done)
+              return RotatedBox(
+                quarterTurns: snapshot.data,
+                child: AspectRatio(
+                  aspectRatio: _controller.value.aspectRatio,
+                  child: Transform.scale(
+                      scale: orientation == Orientation.landscape
+                          ? screenWidth / cameraWidth
+                          : screenHeight / cameraHeight,
+                      child: CameraPreview(_controller)),
+                ),
+              );
+            else {
+              return Container();
+            }
+          },
         ),
       );
     });

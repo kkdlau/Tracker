@@ -37,7 +37,7 @@ Tracker is an app which spports recording videos with timestamps.
 
 ### Local Storage
 
-- [ ] Library for managing in-app videos and action sheets
+- [X] Library for managing in-app videos and action sheets
 
 ### Action Sheet
 
