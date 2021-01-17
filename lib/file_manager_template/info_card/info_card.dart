@@ -1,5 +1,5 @@
-import 'package:Tracker/file_manager/card_pop_up_action_button.dart';
-import 'package:Tracker/file_manager/info_card/card_config.dart';
+import 'package:Tracker/file_manager_template/card_pop_up_action_button.dart';
+import 'package:Tracker/file_manager_template/info_card/card_config.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 

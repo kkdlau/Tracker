@@ -1,8 +1,8 @@
 import 'dart:io';
 
-import 'package:Tracker/file_manager/create_file_dialog.dart';
-import 'package:Tracker/file_manager/info_card/info_card.dart';
-import 'package:Tracker/file_manager/manger_config.dart';
+import 'package:Tracker/file_manager_template/create_file_dialog.dart';
+import 'package:Tracker/file_manager_template/info_card/info_card.dart';
+import 'package:Tracker/file_manager_template/manger_config.dart';
 import 'package:Tracker/sheet_editor/sheet_editor.dart';
 import 'package:Tracker/utils.dart';
 import 'package:flutter/cupertino.dart';

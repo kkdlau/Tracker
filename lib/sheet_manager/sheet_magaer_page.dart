@@ -1,8 +1,8 @@
 import 'dart:io';
 
 import 'package:Tracker/define.dart';
-import 'package:Tracker/file_manager/file_manager_page.dart';
-import 'package:Tracker/file_manager/info_card/info_card.dart';
+import 'package:Tracker/file_manager_template/file_manager_page.dart';
+import 'package:Tracker/file_manager_template/info_card/info_card.dart';
 import 'package:Tracker/sheet_editor/sheet_editor.dart';
 import 'package:flutter/material.dart';
 

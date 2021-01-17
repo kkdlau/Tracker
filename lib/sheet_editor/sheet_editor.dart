@@ -2,7 +2,7 @@ import 'dart:io';
 import 'package:Tracker/action_sheet/action_description.dart';
 import 'package:Tracker/action_sheet/action_sheet.dart';
 import 'package:Tracker/action_sheet/action_sheet_decoder.dart';
-import 'package:Tracker/file_manager/info_card/info_card.dart';
+import 'package:Tracker/file_manager_template/info_card/info_card.dart';
 import 'package:Tracker/sheet_editor/action_card.dart';
 import 'package:Tracker/sheet_editor/action_edit_dialog.dart';
 import 'package:flutter/cupertino.dart';

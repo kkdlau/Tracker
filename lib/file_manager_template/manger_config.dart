@@ -1,4 +1,4 @@
-import 'package:Tracker/file_manager/info_card/card_config.dart';
+import 'package:Tracker/file_manager_template/info_card/card_config.dart';
 
 class FileManagerConfiguration {
   final bool allowAddFile;
