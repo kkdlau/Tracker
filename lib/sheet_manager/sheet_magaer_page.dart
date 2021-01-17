@@ -1,10 +1,13 @@
 import 'dart:io';
 
+import 'package:Tracker/action_sheet/action_sheet.dart';
+import 'package:Tracker/action_sheet/action_sheet_decoder.dart';
 import 'package:Tracker/define.dart';
 import 'package:Tracker/file_manager_template/file_manager_page.dart';
 import 'package:Tracker/file_manager_template/info_card/info_card.dart';
 import 'package:Tracker/sheet_editor/sheet_editor.dart';
 import 'package:flutter/material.dart';
+import 'package:share/share.dart';
 
 class SheetManagerPage extends StatefulWidget {
   const SheetManagerPage({Key key}) : super(key: key);
@@ -50,6 +53,7 @@ class _SheetManagerPageState extends State<SheetManagerPage> {
         openSheetEditor(file);
         break;
       case INFO_CARD_ACTION.EXPORT:
+        exportAsTextMsg(file);
         break;
       case INFO_CARD_ACTION.SELECT:
         returnSelectedSheet(file);
@@ -88,5 +92,12 @@ class _SheetManagerPageState extends State<SheetManagerPage> {
     if (Navigator.canPop(context)) {
       Navigator.pop<File>(context, f);
     }
+  }
+
+  void exportAsTextMsg(File f) {
+    f.readAsString().then((str) {
+      ActionSheet sheet = ActionSheetDecoder.getInstance().decode(str);
+      Share.share(sheet.toShareMsg());
+    });
   }
 }

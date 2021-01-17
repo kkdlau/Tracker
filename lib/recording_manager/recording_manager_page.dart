@@ -28,17 +28,14 @@ class _RecordingManagerPageState extends State<RecordingManagerPage> {
       headingBuilder: (f) {
         Future<Uint8List> future = VideoThumbnail.thumbnailData(video: f.path);
         return FutureBuilder<Uint8List>(
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.done) {
-              return Padding(
-                  padding: EdgeInsets.only(left: 15.0, right: 15.0),
-                  child: Image.memory(
-                    snapshot.data,
-                    height: 30.0,
-                  ));
-            } else
-              return Icon(Icons.perm_media);
-          },
+          builder: (context, snapshot) => Padding(
+              padding: EdgeInsets.only(left: 15.0, right: 15.0),
+              child: snapshot.connectionState == ConnectionState.done
+                  ? Image.memory(
+                      snapshot.data,
+                      height: 30.0,
+                    )
+                  : Icon(Icons.perm_media)),
           future: future,
         );
       },
