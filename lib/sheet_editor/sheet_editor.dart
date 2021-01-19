@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 import 'package:Tracker/action_sheet/action_description.dart';
 import 'package:Tracker/action_sheet/action_sheet.dart';
@@ -16,25 +17,6 @@ extension SwappableList<T> on List<T> {
   }
 }
 
-final ActionSheet sheet = ActionSheet(
-  actions: <ActionDescription>[
-    ActionDescription('Test message: Game start.', Duration(seconds: 0),
-        Duration(seconds: 0)),
-    ActionDescription(
-        'Every action consists of description, target time and time differences',
-        Duration(seconds: 3),
-        Duration(seconds: -3)),
-    ActionDescription(
-        'Red / Green text indicate the time differences of previous recording',
-        Duration(seconds: 7),
-        Duration(seconds: 3)),
-    ActionDescription(
-        'The display time of a caption is automatically calculated.',
-        Duration(seconds: 11),
-        Duration(seconds: 1))
-  ],
-);
-
 class SheetEditor extends StatefulWidget {
   final String filePath;
 
@@ -47,6 +29,8 @@ class SheetEditor extends StatefulWidget {
 class _SheetEditorState extends State<SheetEditor> {
   File f;
   ActionSheet _sheet;
+  GlobalKey<AnimatedListState> _listNode;
+  GlobalKey<ScaffoldState> _scaffoldNode;
 
   @override
   void initState() {
@@ -54,13 +38,109 @@ class _SheetEditorState extends State<SheetEditor> {
     f = File(widget.filePath);
     _sheet = ActionSheetDecoder.getInstance().decode(f.readAsStringSync());
 
-    _sheet = sheet;
+    if (_sheet.actions.length == 0) {
+      insertNewAction(0,
+          item: ActionDescription('Click to edit this action.',
+              const Duration(seconds: 10), const Duration()));
+    }
+
+    _listNode = GlobalKey<AnimatedListState>();
+    _scaffoldNode = GlobalKey<ScaffoldState>();
+  }
+
+  ActionDescription insertNewAction(int index, {ActionDescription item}) {
+    if (item == null) {
+      item = ActionDescription('', const Duration(), const Duration());
+    }
+
+    _sheet.actions.insert(index, item);
+
+    if (_listNode != null) {
+      _listNode.currentState
+          .insertItem(index, duration: const Duration(milliseconds: 300));
+    }
+
+    return item;
+  }
+
+  void removeAction(ActionDescription action) {
+    int index = _sheet.actions.indexOf(action);
+
+    _listNode.currentState.removeItem(index, (context, animation) {
+      Widget transition = SizeTransition(
+        child: editableActionCard(action, index + 1),
+        sizeFactor: Tween<double>(
+          begin: 0,
+          end: 1,
+        ).animate(animation),
+      );
+
+      _sheet.actions.removeAt(index);
+
+      return transition;
+    }, duration: const Duration(milliseconds: 200));
+  }
+
+  Widget editableActionCard(ActionDescription action, int orderIndex) {
+    return ActionCard(
+      onPressed: (selectedAction, type) {
+        final int indexToSave = _sheet.actions.indexOf(selectedAction);
+
+        switch (type) {
+          case ACIONCARD_ACION.INSERT_ABOVE:
+            insertNewAction(_sheet.actions.indexOf(selectedAction));
+            Future.delayed(Duration(milliseconds: 200))
+                .then((value) => openEditDialog(action, indexToSave));
+            break;
+          case ACIONCARD_ACION.INSERT_BELOW:
+            Scrollable.ensureVisible(context);
+            insertNewAction(_sheet.actions.indexOf(selectedAction) + 1);
+            Future.delayed(Duration(milliseconds: 200))
+                .then((value) => openEditDialog(action, indexToSave));
+            break;
+          case ACIONCARD_ACION.DELETE:
+            removeAction(selectedAction);
+            break;
+          case ACIONCARD_ACION.SELECT:
+            openEditDialog(action, indexToSave);
+            break;
+        }
+      },
+      heading:
+          Text('$orderIndex.', style: Theme.of(context).textTheme.headline6),
+      act: action,
+    );
+  }
+
+  void openEditDialog(ActionDescription action, int indexToSave) {
+    showCupertinoDialog<ActionDescription>(
+        context: context,
+        builder: (_) {
+          return ActionEditDialog(action: action);
+        }).then((act) {
+      if (act != null) {
+        setState(() {
+          _sheet.actions[indexToSave] = act;
+        });
+      }
+    });
+  }
+
+  void saveFile() {
+    _sheet
+        .saveTo(f.path)
+        .then((value) => _scaffoldNode.currentState.showSnackBar(SnackBar(
+              behavior: SnackBarBehavior.floating,
+              backgroundColor: Colors.green,
+              content: Text('File has been saved.'),
+            )));
   }
 
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
     return Scaffold(
+      key: _scaffoldNode,
       appBar: AppBar(
         brightness: Theme.of(context).brightness,
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
@@ -69,49 +149,23 @@ class _SheetEditorState extends State<SheetEditor> {
         actions: [
           Padding(
             padding: const EdgeInsets.only(right: 15.0),
-            child: IconButton(icon: Icon(Icons.save_alt), onPressed: () {}),
+            child: IconButton(icon: Icon(Icons.save_alt), onPressed: saveFile),
           )
         ],
       ),
-      floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.add),
-        onPressed: () {},
-      ),
-      body: ImplicitlyAnimatedReorderableList<ActionDescription>(
-        areItemsTheSame: (oldItem, newItem) {
-          return oldItem.toString() == newItem.toString();
-        },
+      body: AnimatedList(
+        key: _listNode,
+        initialItemCount: _sheet.actions.length,
         itemBuilder:
-            (BuildContext context, Animation<double> animation, action, int i) {
-          return Reorderable(
-              key: Key(action.toString()),
-              child: ActionCard(
-                onPressed: (selectedAction) {
-                  showCupertinoDialog(
-                      context: context,
-                      builder: (_) {
-                        return ActionEditDialog(action: action);
-                      });
-                },
-                heading:
-                    Text('${(i + 1).toString()}.', style: textTheme.headline6),
-                act: action,
-              ));
+            (BuildContext context, int index, Animation<double> animation) {
+          return SizeTransition(
+              sizeFactor: Tween<double>(
+                begin: 0,
+                end: 1,
+              ).animate(animation),
+              child: editableActionCard(_sheet.actions[index], index + 1));
         },
-        items: _sheet.actions,
-        onReorderFinished: (item, int from, int to, List<dynamic> newItems) {},
       ),
     );
   }
 }
-
-// ReorderableListView(
-//           children: _sheet.actions
-//               .map((action) => ActionCard(
-//                     key: Key(action.toString()),
-//                     heading: Text('${(index++).toString()}.',
-//                         style: textTheme.headline6),
-//                     act: action,
-//                   ))
-//               .toList(),
-//           onReorder: (int oldIdx, newIdx) {})

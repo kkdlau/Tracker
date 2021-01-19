@@ -1,16 +1,6 @@
 import 'package:Tracker/action_sheet/action_text.dart';
 import 'package:flutter/material.dart';
 
-extension on Duration {
-  String toTimestampRepresentation() {
-    final String min = this.inMinutes.toString().padLeft(2, '0');
-    final String sec = (this.inSeconds % 60).toString().padLeft(2, '0');
-    final String mil =
-        ((this.inMilliseconds % 1000) ~/ 10).toString().padLeft(2, '0');
-    return '$min:$sec,$mil';
-  }
-}
-
 class ActionDescription {
   String description;
   Duration targetTime;
@@ -24,8 +14,8 @@ class ActionDescription {
   factory ActionDescription.fromJSON(Map<String, dynamic> json) {
     return ActionDescription(
       json['description'],
-      Duration(milliseconds: json['expect']),
-      Duration(milliseconds: json['diff']),
+      Duration(milliseconds: int.parse(json['expect'])),
+      Duration(milliseconds: int.parse(json['diff'])),
     );
   }
 

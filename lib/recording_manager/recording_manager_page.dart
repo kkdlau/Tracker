@@ -39,6 +39,7 @@ class _RecordingManagerPageState extends State<RecordingManagerPage> {
           future: future,
         );
       },
+      actionhandler: (actionType, file) {},
     );
   }
 }

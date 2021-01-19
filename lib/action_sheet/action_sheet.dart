@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'action_description.dart';
 import 'dart:convert';
 
@@ -55,5 +57,9 @@ class ActionSheet {
     });
 
     return ActionSheet(sheetName: sheetName, actions: clone);
+  }
+
+  Future<File> saveTo(String path) {
+    return File(path).writeAsString(json.encode(this.toMap()));
   }
 }

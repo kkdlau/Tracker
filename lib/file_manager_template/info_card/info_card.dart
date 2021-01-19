@@ -128,6 +128,7 @@ class InfoCard extends StatelessWidget {
             list.isNotEmpty
                 ? IconButton(
                     icon: Icon(Icons.more_horiz),
+                    iconSize: 30.0,
                     onPressed: () {
                       showCupertinoModalPopup(
                           context: context,

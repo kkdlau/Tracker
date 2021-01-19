@@ -64,6 +64,27 @@ class _ActionEditDialogState extends State<ActionEditDialog> {
           ));
   }
 
+  int _calculateSeconds(TextEditingController minsController,
+      TextEditingController secController) {
+    return int.parse(minsController.text) * 60 + int.parse(secController.text);
+  }
+
+  void saveAction() {
+    // todo: implement textfiled validation
+    if (Navigator.canPop(context)) {
+      Navigator.pop(
+          context,
+          ActionDescription(
+              _descriptionController.text,
+              Duration(
+                  seconds: _calculateSeconds(
+                      _targetMinController, _targetSecController)),
+              Duration(
+                  seconds: _calculateSeconds(
+                      _diffMinController, _diffSecController))));
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return CupertinoTheme(
@@ -151,13 +172,7 @@ class _ActionEditDialogState extends State<ActionEditDialog> {
             },
           ),
           actions: [
-            CupertinoButton(
-                child: Text("Save"),
-                onPressed: () {
-                  if (Navigator.canPop(context)) {
-                    Navigator.pop(context);
-                  }
-                }),
+            CupertinoButton(child: Text("Save"), onPressed: saveAction),
             CupertinoButton(
                 child: Text(
                   "Discard",

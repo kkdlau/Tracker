@@ -24,3 +24,12 @@ class Utils {
     }
   }
 }
+
+extension on File {
+  String get alias {
+    if (this.path.contains('/'))
+      return this.path.split('/').last.split('.').first;
+    else
+      return this.path.split('.').first;
+  }
+}

@@ -46,6 +46,9 @@ Tracker is an app which spports recording videos with timestamps.
   - [x] `.rst`
   - [ ] `pure text message` (for sharing)
 
+### New Features
+
+ - [ ] Import Action Sheet from clipboard
 ## JSON Structure
 
 ```json

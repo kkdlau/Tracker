@@ -25,10 +25,10 @@ class VideoRecordingPage extends StatefulWidget {
   VideoRecordingPage({Key key, this.availableCameras}) : super(key: key);
 
   @override
-  _VideoRecordingPageState createState() => _VideoRecordingPageState();
+  VideoRecordingPageState createState() => VideoRecordingPageState();
 }
 
-class _VideoRecordingPageState extends State<VideoRecordingPage> {
+class VideoRecordingPageState extends State<VideoRecordingPage> {
   File selectedFile;
   CameraController controller;
   CameraConfiguration config;
@@ -88,8 +88,8 @@ class _VideoRecordingPageState extends State<VideoRecordingPage> {
       } else {
         controller.stopVideoRecording().then((XFile f) {
           Utils.getDocumentRootPath().then((root) {
-            final String file_name = f.path.split('/').last;
-            File(f.path).copy('$root/$RECORDING_DIR' + file_name);
+            final String fileAlias = f.path.split('/').last;
+            File(f.path).copy('$root/$RECORDING_DIR' + fileAlias);
           });
         });
       }
@@ -125,11 +125,15 @@ class _VideoRecordingPageState extends State<VideoRecordingPage> {
     })).then((f) => setState(() {
           initializeCamera();
           if (f != null) {
-            selectedFile = f;
-            selectedSheet =
-                ActionSheetDecoder.getInstance().decode(f.readAsStringSync());
+            updateSelectedSheet(f);
           }
         }));
+  }
+
+  void updateSelectedSheet(File f) {
+    selectedFile = f;
+    selectedSheet =
+        ActionSheetDecoder.getInstance().decode(f.readAsStringSync());
   }
 
   void openRecordingManager() {
@@ -176,7 +180,7 @@ class _VideoRecordingPageState extends State<VideoRecordingPage> {
                     isRecording: isRecording,
                     onDocumentButtonPressed: openSheetManager,
                     onRecordingButtonPressed: onRecordingBtnPressed,
-                    onMovieButtonPressed: openRecordingManager)
+                    onMovieButtonPressed: openRecordingManager),
               ]),
         );
       },
