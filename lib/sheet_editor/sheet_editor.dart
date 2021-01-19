@@ -5,6 +5,7 @@ import 'package:Tracker/action_sheet/action_sheet.dart';
 import 'package:Tracker/action_sheet/action_sheet_decoder.dart';
 import 'package:Tracker/sheet_editor/action_card.dart';
 import 'package:Tracker/sheet_editor/action_edit_dialog.dart';
+import 'package:Tracker/sheet_editor/confirm_quit_dialog.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:implicitly_animated_reorderable_list/implicitly_animated_reorderable_list.dart';
@@ -31,6 +32,7 @@ class _SheetEditorState extends State<SheetEditor> {
   ActionSheet _sheet;
   GlobalKey<AnimatedListState> _listNode;
   GlobalKey<ScaffoldState> _scaffoldNode;
+  bool _hasSaved;
 
   @override
   void initState() {
@@ -46,11 +48,13 @@ class _SheetEditorState extends State<SheetEditor> {
 
     _listNode = GlobalKey<AnimatedListState>();
     _scaffoldNode = GlobalKey<ScaffoldState>();
+
+    _hasSaved = true;
   }
 
   ActionDescription insertNewAction(int index, {ActionDescription item}) {
     if (item == null) {
-      item = ActionDescription('', const Duration(), const Duration());
+      item = ActionDescription.EmptyTemplate;
     }
 
     _sheet.actions.insert(index, item);
@@ -88,17 +92,23 @@ class _SheetEditorState extends State<SheetEditor> {
 
         switch (type) {
           case ACIONCARD_ACION.INSERT_ABOVE:
+            _hasSaved = false;
+
             insertNewAction(_sheet.actions.indexOf(selectedAction));
-            Future.delayed(Duration(milliseconds: 200))
-                .then((value) => openEditDialog(action, indexToSave));
+            Future.delayed(Duration(milliseconds: 200)).then((value) =>
+                openEditDialog(ActionDescription.EmptyTemplate, indexToSave));
             break;
           case ACIONCARD_ACION.INSERT_BELOW:
+            _hasSaved = false;
+
             Scrollable.ensureVisible(context);
             insertNewAction(_sheet.actions.indexOf(selectedAction) + 1);
-            Future.delayed(Duration(milliseconds: 200))
-                .then((value) => openEditDialog(action, indexToSave));
+            Future.delayed(Duration(milliseconds: 200)).then((value) =>
+                openEditDialog(ActionDescription.EmptyTemplate, indexToSave));
             break;
           case ACIONCARD_ACION.DELETE:
+            _hasSaved = false;
+
             removeAction(selectedAction);
             break;
           case ACIONCARD_ACION.SELECT:
@@ -121,50 +131,71 @@ class _SheetEditorState extends State<SheetEditor> {
       if (act != null) {
         setState(() {
           _sheet.actions[indexToSave] = act;
+          _hasSaved = false;
         });
       }
     });
   }
 
   void saveFile() {
-    _sheet
-        .saveTo(f.path)
-        .then((value) => _scaffoldNode.currentState.showSnackBar(SnackBar(
-              behavior: SnackBarBehavior.floating,
-              backgroundColor: Colors.green,
-              content: Text('File has been saved.'),
-            )));
+    _sheet.saveTo(f.path).then((value) {
+      _scaffoldNode.currentState.showSnackBar(SnackBar(
+        behavior: SnackBarBehavior.floating,
+        backgroundColor: Colors.green,
+        content: Text('File has been saved.'),
+      ));
+      _hasSaved = false;
+    });
+  }
+
+  Future<bool> askForConfirmAndQuit() async {
+    if (!_hasSaved) {
+      CONFIRM_STATE state = await showCupertinoDialog<CONFIRM_STATE>(
+          context: context,
+          builder: (_) {
+            return ConfirmQuitDialog();
+          });
+      if (state == CONFIRM_STATE.SAVE_AND_QUIT)
+        saveFile();
+      else if (state == CONFIRM_STATE.CANCEL) return false;
+    }
+
+    return true;
   }
 
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
-    return Scaffold(
-      key: _scaffoldNode,
-      appBar: AppBar(
-        brightness: Theme.of(context).brightness,
-        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-        elevation: 0.0,
-        title: Text(f.path.split('/').last.split('.').first),
-        actions: [
-          Padding(
-            padding: const EdgeInsets.only(right: 15.0),
-            child: IconButton(icon: Icon(Icons.save_alt), onPressed: saveFile),
-          )
-        ],
-      ),
-      body: AnimatedList(
-        key: _listNode,
-        initialItemCount: _sheet.actions.length,
-        itemBuilder:
-            (BuildContext context, int index, Animation<double> animation) {
-          return SizeTransition(
-              sizeFactor: Tween<double>(
-                begin: 0,
-                end: 1,
-              ).animate(animation),
-              child: editableActionCard(_sheet.actions[index], index + 1));
-        },
+    return WillPopScope(
+      onWillPop: askForConfirmAndQuit,
+      child: Scaffold(
+        key: _scaffoldNode,
+        appBar: AppBar(
+          brightness: Theme.of(context).brightness,
+          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+          elevation: 0.0,
+          title: Text(f.path.split('/').last.split('.').first),
+          actions: [
+            Padding(
+              padding: const EdgeInsets.only(right: 15.0),
+              child:
+                  IconButton(icon: Icon(Icons.save_alt), onPressed: saveFile),
+            )
+          ],
+        ),
+        body: AnimatedList(
+          key: _listNode,
+          initialItemCount: _sheet.actions.length,
+          itemBuilder:
+              (BuildContext context, int index, Animation<double> animation) {
+            return SizeTransition(
+                sizeFactor: Tween<double>(
+                  begin: 0,
+                  end: 1,
+                ).animate(animation),
+                child: editableActionCard(_sheet.actions[index], index + 1));
+          },
+        ),
       ),
     );
   }

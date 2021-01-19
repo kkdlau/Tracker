@@ -6,6 +6,10 @@ class ActionDescription {
   Duration targetTime;
   Duration timeDiff;
 
+  static ActionDescription get EmptyTemplate {
+    return ActionDescription('', const Duration(), const Duration());
+  }
+
   ActionDescription(String description, Duration targetTime, Duration timeDiff)
       : description = description,
         targetTime = targetTime,
