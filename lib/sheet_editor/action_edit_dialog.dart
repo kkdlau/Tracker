@@ -69,9 +69,32 @@ class _ActionEditDialogState extends State<ActionEditDialog> {
     return int.parse(minsController.text) * 60 + int.parse(secController.text);
   }
 
+  void textfieldAssert(bool condition, String msgIfError) {
+    if (!condition)
+      setState(() {
+        _errorMsg = msgIfError;
+      });
+  }
+
+  bool validInput() {
+    _errorMsg = '';
+
+    textfieldAssert(
+        _descriptionController.text.isNotEmpty, "Description cannot be empty.");
+    textfieldAssert(int.parse(_targetMinController.text) >= 0,
+        "Target time(Min) must be a positive number.");
+
+    textfieldAssert(int.parse(_targetSecController.text) >= 0,
+        "Target time(Sec) must be a positive number.");
+
+    textfieldAssert(int.parse(_diffSecController.text) >= 0,
+        "Difference time(Sec) must be a positive number.");
+
+    return _errorMsg.isEmpty;
+  }
+
   void saveAction() {
-    // todo: implement textfiled validation
-    if (Navigator.canPop(context)) {
+    if (validInput() && Navigator.canPop(context)) {
       Navigator.pop(
           context,
           ActionDescription(
