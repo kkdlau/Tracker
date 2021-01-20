@@ -15,6 +15,7 @@ import 'package:Tracker/video_recording_page/top_tool_bar.dart';
 import 'package:camera/camera.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_ffmpeg/flutter_ffmpeg.dart';
 import '../define.dart';
 
@@ -44,6 +45,8 @@ class VideoRecordingPageState extends State<VideoRecordingPage> {
         cameraIndex: 0, enableFlash: false, enableAudio: true);
 
     isRecording = false;
+
+    SystemChrome.setPreferredOrientations(DeviceOrientation.values);
 
     initializeCamera();
   }
@@ -149,7 +152,13 @@ class VideoRecordingPageState extends State<VideoRecordingPage> {
   }
 
   void openSetting() {
-    Navigator.push(context, MaterialPageRoute(builder: (_) => SettingPage()));
+    controller.dispose();
+    Navigator.push(context, MaterialPageRoute(builder: (_) => SettingPage()))
+        .then((value) {
+      setState(() {
+        initializeCamera();
+      });
+    });
   }
 
   @override

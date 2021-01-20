@@ -145,21 +145,24 @@ class FileManagerPageState extends State<FileManagerPage> {
               ? [
                   Padding(
                     padding: const EdgeInsets.only(right: 8.0),
-                    child: IconButton(
-                        icon: Icon(Icons.add),
-                        onPressed: () {
-                          openCreateFilePrompt().then((alias) {
-                            File f = File(dirFullPath +
-                                alias +
-                                ACTION_SHEET_FILE_EXTENSION);
-                            f.create().then((value) {
-                              insertFileToDirectory(f);
-                              Future.delayed(Duration(milliseconds: 300)).then(
-                                  (value) => widget.actionhandler(
-                                      INFO_CARD_ACTION.EDIT, f));
+                    child: Tooltip(
+                      message: 'Create new file',
+                      child: IconButton(
+                          icon: Icon(Icons.add),
+                          onPressed: () {
+                            openCreateFilePrompt().then((alias) {
+                              File f = File(dirFullPath +
+                                  alias +
+                                  ACTION_SHEET_FILE_EXTENSION);
+                              f.create().then((value) {
+                                insertFileToDirectory(f);
+                                Future.delayed(Duration(milliseconds: 300))
+                                    .then((value) => widget.actionhandler(
+                                        INFO_CARD_ACTION.EDIT, f));
+                              });
                             });
-                          });
-                        }),
+                          }),
+                    ),
                   )
                 ]
               : [],

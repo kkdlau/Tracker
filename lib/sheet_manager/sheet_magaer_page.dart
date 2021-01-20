@@ -8,6 +8,7 @@ import 'package:Tracker/file_manager_template/info_card/info_card.dart';
 import 'package:Tracker/sheet_editor/sheet_editor.dart';
 import 'package:flutter/material.dart';
 import 'package:share/share.dart';
+import 'dart:math';
 
 class SheetManagerPage extends StatefulWidget {
   const SheetManagerPage({Key key}) : super(key: key);
@@ -36,6 +37,7 @@ class _SheetManagerPageState extends State<SheetManagerPage> {
       headingBuilder: (_) => Padding(
         padding: const EdgeInsets.only(right: 15.0, left: 15.0),
         child: Icon(Icons.description,
+            color: Colors.lightGreen,
             size: Theme.of(context).textTheme.headline4.fontSize),
       ),
     );

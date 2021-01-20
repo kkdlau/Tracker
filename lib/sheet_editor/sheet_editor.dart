@@ -104,7 +104,8 @@ class _SheetEditorState extends State<SheetEditor> {
             Scrollable.ensureVisible(context);
             insertNewAction(_sheet.actions.indexOf(selectedAction) + 1);
             Future.delayed(Duration(milliseconds: 200)).then((value) =>
-                openEditDialog(ActionDescription.EmptyTemplate, indexToSave));
+                openEditDialog(
+                    ActionDescription.EmptyTemplate, indexToSave + 1));
             break;
           case ACIONCARD_ACION.DELETE:
             _hasSaved = false;
@@ -144,7 +145,7 @@ class _SheetEditorState extends State<SheetEditor> {
         backgroundColor: Colors.green,
         content: Text('File has been saved.'),
       ));
-      _hasSaved = false;
+      _hasSaved = true;
     });
   }
 

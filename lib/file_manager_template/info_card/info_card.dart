@@ -126,27 +126,30 @@ class InfoCard extends StatelessWidget {
               width: 10.0,
             ),
             list.isNotEmpty
-                ? IconButton(
-                    icon: Icon(Icons.more_horiz),
-                    iconSize: 30.0,
-                    onPressed: () {
-                      showCupertinoModalPopup(
-                          context: context,
-                          builder: (context) {
-                            return CupertinoActionSheet(
-                              title: Text(
-                                  'Select the following action for $fileAlias'),
-                              actions: list,
-                              cancelButton: CardPopupActionButton(
-                                onPressed: () {
-                                  if (Navigator.canPop(context))
-                                    Navigator.pop(context);
-                                },
-                                children: [Text('Cancel')],
-                              ),
-                            );
-                          });
-                    })
+                ? Tooltip(
+                    message: 'More',
+                    child: IconButton(
+                        icon: Icon(Icons.more_horiz),
+                        iconSize: 30.0,
+                        onPressed: () {
+                          showCupertinoModalPopup(
+                              context: context,
+                              builder: (context) {
+                                return CupertinoActionSheet(
+                                  title: Text(
+                                      'Select the following action for $fileAlias'),
+                                  actions: list,
+                                  cancelButton: CardPopupActionButton(
+                                    onPressed: () {
+                                      if (Navigator.canPop(context))
+                                        Navigator.pop(context);
+                                    },
+                                    children: [Text('Cancel')],
+                                  ),
+                                );
+                              });
+                        }),
+                  )
                 : SizedBox(),
             SizedBox(width: 10.0)
           ],

@@ -27,7 +27,9 @@ final ActionSheet sheet = ActionSheet(
 
 class ActionVideoPlayer extends StatefulWidget {
   final String videoPath;
-  ActionVideoPlayer({Key key, @required this.videoPath}) : super(key: key);
+  final String sheetPath;
+  ActionVideoPlayer({Key key, @required this.videoPath, this.sheetPath})
+      : super(key: key);
 
   @override
   _ActionVideoPlayerState createState() => _ActionVideoPlayerState();
@@ -46,32 +48,27 @@ class _ActionVideoPlayerState extends State<ActionVideoPlayer>
   void initState() {
     super.initState();
 
-    Utils.getFileUrl(
-            'camera/videos/CAP_2F505A82-36EC-4EC5-8795-E24B9E1AB0B1.mp4')
-        .then((value) {
-      setState(() {
-        bpController = BetterPlayerController(
-            BetterPlayerConfiguration(
-              autoPlay: true,
-              fullScreenByDefault: true,
-            ),
-            betterPlayerDataSource:
-                BetterPlayerDataSource(BetterPlayerDataSourceType.file, value));
-        schedularInitialize(sheet.actions, Container(), bpController);
-        bpController.addEventsListener((e) {
-          if (e.betterPlayerEventType == BetterPlayerEventType.initialized) {
-            bpController.setOverriddenAspectRatio(
-                bpController.videoPlayerController.value.aspectRatio);
-            setState(() {
-              loaded = true;
-              scheduleDisplayCpation(bpController);
-              startScheduleCaption();
-            });
-          }
-        });
-
-        bpController.addEventsListener(playerEventHandler);
+    setState(() {
+      bpController = BetterPlayerController(
+          BetterPlayerConfiguration(
+            fit: BoxFit.contain,
+            autoPlay: true,
+            fullScreenByDefault: true,
+          ),
+          betterPlayerDataSource: BetterPlayerDataSource(
+              BetterPlayerDataSourceType.file, widget.videoPath));
+      schedularInitialize(sheet.actions, Container(), bpController);
+      bpController.addEventsListener((e) {
+        if (e.betterPlayerEventType == BetterPlayerEventType.initialized) {
+          setState(() {
+            loaded = true;
+            // scheduleDisplayCpation(bpController);
+            // startScheduleCaption();
+          });
+        }
       });
+
+      bpController.addEventsListener(playerEventHandler);
     });
   }
 
