@@ -5,7 +5,6 @@ import 'package:Tracker/action_sheet/action_sheet.dart';
 import 'package:Tracker/action_sheet/action_sheet_decoder.dart';
 import 'package:Tracker/recording_manager/recording_manager_page.dart';
 import 'package:Tracker/setting/setting_page.dart';
-import 'package:flushbar/flushbar.dart';
 import 'package:Tracker/sheet_manager/sheet_magaer_page.dart';
 import 'package:Tracker/utils.dart';
 import 'package:Tracker/video_recording_page/bottom_tool_bar.dart';
@@ -17,10 +16,9 @@ import 'package:camera/camera.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_ffmpeg/flutter_ffmpeg.dart';
 import '../define.dart';
 
-final FlutterFFmpeg _flutterFFmpeg = new FlutterFFmpeg();
+// final FlutterFFmpeg _flutterFFmpeg = new FlutterFFmpeg();
 
 class VideoRecordingPage extends StatefulWidget {
   final List<CameraDescription> availableCameras;
