@@ -52,37 +52,36 @@ class _CameraViewerState extends State<CameraViewer> {
   }
 
   Future<int> quarterRotation() async {
-    NativeDeviceOrientation o = await NativeDeviceOrientationCommunicator()
-        .orientation(useSensor: true);
-    return o.toQuarterTurns();
+    return (await NativeDeviceOrientationCommunicator()
+            .orientation(useSensor: false))
+        .toQuarterTurns();
   }
 
   @override
   Widget build(BuildContext context) {
-    return OrientationBuilder(
-        builder: (BuildContext context, Orientation orientation) {
-      return GestureDetector(
-        child: FutureBuilder<int>(
-          future: quarterRotation(),
-          builder: (BuildContext context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.done)
-              return RotatedBox(
-                quarterTurns: snapshot.data,
-                child: AspectRatio(
-                  aspectRatio: _controller.value.aspectRatio,
-                  child: Transform.scale(
-                      scale: orientation == Orientation.landscape
-                          ? screenWidth / cameraWidth
-                          : screenHeight / cameraHeight,
-                      child: CameraPreview(_controller)),
-                ),
-              );
-            else {
-              return Container();
-            }
-          },
-        ),
-      );
-    });
+    return GestureDetector(
+      child: FutureBuilder<int>(
+        future: quarterRotation(),
+        builder: (BuildContext context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.done)
+            return RotatedBox(
+              quarterTurns: snapshot.data,
+              child: AspectRatio(
+                aspectRatio: _controller.value.aspectRatio,
+                child: Transform.scale(
+                    scale: (MediaQuery.of(context).orientation ==
+                                Orientation.landscape
+                            ? screenWidth / cameraWidth
+                            : screenHeight / cameraHeight) +
+                        0.1,
+                    child: CameraPreview(_controller)),
+              ),
+            );
+          else {
+            return Container();
+          }
+        },
+      ),
+    );
   }
 }

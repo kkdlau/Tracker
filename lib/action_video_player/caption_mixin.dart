@@ -1,5 +1,4 @@
 import 'package:Tracker/action_sheet/action_description.dart';
-import 'package:Tracker/action_video_player/action_video_player.dart';
 import 'package:async/async.dart';
 import 'package:better_player/better_player.dart';
 import 'package:flutter/material.dart';
@@ -23,37 +22,42 @@ mixin CaptionSchedularMixin<T extends StatefulWidget> on State<T> {
   }
 
   void startScheduleCaption() {
-    _controller.addEventsListener(_controllerEventHandler);
+    _controller.addEventsListener(_playerControlEventHandler);
   }
 
-  void _controllerEventHandler(BetterPlayerEvent e) {
-    print(e.betterPlayerEventType);
+  void _playerControlEventHandler(BetterPlayerEvent e) {
     switch (e.betterPlayerEventType) {
-      case BetterPlayerEventType.progress:
+      case BetterPlayerEventType.progressStartDragging:
+        // cancel all scheduling event
+        break;
+      case BetterPlayerEventType.progressEndDragging:
+        // reschedule all caption event.
+        break;
+      case BetterPlayerEventType.finished:
+        // cancel all event and caption.
         break;
       default:
     }
   }
 
-  void scheduleDisplayCpation(BetterPlayerController controller) {
-    if (currentCaption + 1 == sheet.actions.length)
+  void scheduleDisplayCpation() {
+    if (currentCaption + 1 == captionList.length)
       return; // out of bound checking
     final Duration delay = captionList[currentCaption + 1].targetTime -
-        controller.videoPlayerController.value.position;
+        _controller.videoPlayerController.value.position;
 
     _displayCpationOperation =
         CancelableOperation.fromFuture(Future.delayed(delay, () {
       if (interrupt) return;
 
       _displayCpationOperation = null;
-      displayCaption(controller, ++currentCaption);
+      displayCaption(_controller, ++currentCaption);
 
-      scheduleDisplayCpation(controller);
+      scheduleDisplayCpation();
     }));
   }
 
   int calculateCaptionDisplayTime(int wordLength) {
-    print('display time:${(wordLength ~/ (200 / 60)) * 1000 + 500} ms');
     return (wordLength ~/ (200 / 60)) * 1000 + 500;
   }
 

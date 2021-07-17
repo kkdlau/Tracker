@@ -6,21 +6,21 @@ Tracker is an app which spports recording videos with timestamps.
 
 - [X] Video recording
 - [ ] Different recording modes
-- [ ] Different camera cofiguration
-- [ ] Select different action sheets
-- [ ] Generate Video thumbnail (https://pub.dev/packages/video_thumbnail) 
+- [x] Different camera cofiguration
+- [x] Select different action sheets
+- [x] Generate Video thumbnail (https://pub.dev/packages/video_thumbnail) 
 
 ### Video Player
 
 - [x] Pause / Play
 - [x] Go backward / forward
 - [x] Text overlay
-- [ ] Share text recording
+- [x] Share text recording
 
 ### Action Sheet Editor
 
-- [ ] Add / Remove actions
-- [ ] Time Picker
+- [x] Add / Remove actions
+- [x] Time Picker
 - [ ] Comparsion between different sheets
 
 ## Back-end Development
@@ -44,7 +44,7 @@ Tracker is an app which spports recording videos with timestamps.
 * Support export action sheet into different format
   - [x] `Splitty` / `JSON`
   - [x] `.rst`
-  - [ ] `pure text message` (for sharing)
+  - [x] `pure text message` (for sharing)
 
 ### New Features
 

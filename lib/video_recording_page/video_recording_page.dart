@@ -5,6 +5,7 @@ import 'package:Tracker/action_sheet/action_sheet.dart';
 import 'package:Tracker/action_sheet/action_sheet_decoder.dart';
 import 'package:Tracker/recording_manager/recording_manager_page.dart';
 import 'package:Tracker/setting/setting_page.dart';
+import 'package:flushbar/flushbar.dart';
 import 'package:Tracker/sheet_manager/sheet_magaer_page.dart';
 import 'package:Tracker/utils.dart';
 import 'package:Tracker/video_recording_page/bottom_tool_bar.dart';
@@ -36,6 +37,7 @@ class VideoRecordingPageState extends State<VideoRecordingPage> {
   Future<void> _initializeControllerFuture;
   bool isRecording;
   ActionSheet selectedSheet;
+  GlobalKey<ScaffoldState> _scaffoldNode;
 
   @override
   void initState() {
@@ -49,6 +51,8 @@ class VideoRecordingPageState extends State<VideoRecordingPage> {
     SystemChrome.setPreferredOrientations(DeviceOrientation.values);
 
     initializeCamera();
+
+    _scaffoldNode = GlobalKey<ScaffoldState>();
   }
 
   void initializeCamera() {
@@ -152,47 +156,67 @@ class VideoRecordingPageState extends State<VideoRecordingPage> {
   }
 
   void openSetting() {
-    controller.dispose();
-    Navigator.push(context, MaterialPageRoute(builder: (_) => SettingPage()))
-        .then((value) {
-      setState(() {
-        initializeCamera();
-      });
-    });
+    // controller.dispose();
+    // Navigator.push(context, MaterialPageRoute(builder: (_) => SettingPage()))
+    //     .then((value) {
+    //   setState(() {
+    //     initializeCamera();
+    //   });
+    // });
+
+    _scaffoldNode.currentState.showSnackBar(SnackBar(
+      content: Container(
+        //color: Colors.white,
+        decoration: BoxDecoration(
+            color: Colors.white,
+            border: Border.all(width: 2.0, color: Colors.black),
+            borderRadius: BorderRadius.circular(20)),
+        margin: EdgeInsets.fromLTRB(0, 0, 0, 75),
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Text('Yay! A SnackBar!'),
+        ),
+      ),
+      backgroundColor: Colors.transparent,
+      elevation: 1000,
+      behavior: SnackBarBehavior.floating,
+    ));
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(body: OrientationBuilder(
-      builder: (BuildContext context, Orientation orientation) {
-        return SafeArea(
-          child: Stack(
-              fit: StackFit.loose,
-              alignment: Alignment.center,
-              children: <Widget>[
-                cameraPreview(),
-                TopToolBar(
-                  orientation: orientation,
-                  enableFlash: config.enableFlash,
-                  onFlashBtnPressed: flashBtnHandler,
-                  onSwitchBtnPressed: switchCameraHandler,
-                  onSettingBtnPressed: openSetting,
-                ),
-                Align(
-                    alignment: Alignment.topCenter,
-                    child: Padding(
-                        padding: EdgeInsets.only(top: 10.0),
-                        child: TimeCountText.fromDuration(
-                            Duration(seconds: 10000)))),
-                BottomToolBar(
-                    orientation: orientation,
-                    isRecording: isRecording,
-                    onDocumentButtonPressed: openSheetManager,
-                    onRecordingButtonPressed: onRecordingBtnPressed,
-                    onMovieButtonPressed: openRecordingManager),
-              ]),
-        );
-      },
-    ));
+    return Scaffold(
+        key: _scaffoldNode,
+        body: OrientationBuilder(
+          builder: (BuildContext context, Orientation orientation) {
+            return SafeArea(
+              child: Stack(
+                  fit: StackFit.loose,
+                  alignment: Alignment.center,
+                  children: <Widget>[
+                    cameraPreview(),
+                    TopToolBar(
+                      orientation: orientation,
+                      enableFlash: config.enableFlash,
+                      onFlashBtnPressed: flashBtnHandler,
+                      onSwitchBtnPressed: switchCameraHandler,
+                      onSettingBtnPressed: openSetting,
+                    ),
+                    Align(
+                        alignment: Alignment.topCenter,
+                        child: Padding(
+                            padding: EdgeInsets.only(top: 10.0),
+                            child: TimeCountText.fromDuration(
+                                Duration(seconds: 10000)))),
+                    BottomToolBar(
+                        orientation: orientation,
+                        isRecording: isRecording,
+                        onDocumentButtonPressed: openSheetManager,
+                        onRecordingButtonPressed: onRecordingBtnPressed,
+                        onMovieButtonPressed: openRecordingManager),
+                  ]),
+            );
+          },
+        ));
   }
 }

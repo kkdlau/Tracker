@@ -1,29 +1,14 @@
+import 'dart:io';
+
 import 'package:Tracker/action_sheet/action_description.dart';
 import 'package:Tracker/action_sheet/action_sheet.dart';
+import 'package:Tracker/action_sheet/action_sheet_decoder.dart';
 import 'package:Tracker/action_video_player/caption_mixin.dart';
 import 'package:Tracker/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:after_layout/after_layout.dart';
 import 'package:better_player/better_player.dart';
-
-final ActionSheet sheet = ActionSheet(
-  actions: <ActionDescription>[
-    ActionDescription('Test message: Game start.', Duration(seconds: 0),
-        Duration(seconds: 0)),
-    ActionDescription(
-        'Every action consists of description, target time and time differences',
-        Duration(seconds: 3),
-        Duration(seconds: -3)),
-    ActionDescription(
-        'Red / Green text indicate the time differences of previous recording',
-        Duration(seconds: 7),
-        Duration(seconds: 3)),
-    ActionDescription(
-        'The display time of a caption is automatically calculated.',
-        Duration(seconds: 11),
-        Duration(seconds: 1))
-  ],
-);
+import 'package:flutter/services.dart';
 
 class ActionVideoPlayer extends StatefulWidget {
   final String videoPath;
@@ -32,10 +17,10 @@ class ActionVideoPlayer extends StatefulWidget {
       : super(key: key);
 
   @override
-  _ActionVideoPlayerState createState() => _ActionVideoPlayerState();
+  ActionVideoPlayerState createState() => ActionVideoPlayerState();
 }
 
-class _ActionVideoPlayerState extends State<ActionVideoPlayer>
+class ActionVideoPlayerState extends State<ActionVideoPlayer>
     with
         AfterLayoutMixin<ActionVideoPlayer>,
         CaptionSchedularMixin<ActionVideoPlayer> {
@@ -43,6 +28,7 @@ class _ActionVideoPlayerState extends State<ActionVideoPlayer>
   bool loaded = false;
   Future<String> controllerInitializationFuture;
   double _captionPadding = 20.0;
+  ActionSheet _sheet;
 
   @override
   void initState() {
@@ -51,19 +37,29 @@ class _ActionVideoPlayerState extends State<ActionVideoPlayer>
     setState(() {
       bpController = BetterPlayerController(
           BetterPlayerConfiguration(
+            deviceOrientationsOnFullScreen: DeviceOrientation.values,
+            controlsConfiguration:
+                BetterPlayerControlsConfiguration(enableOverflowMenu: false),
             fit: BoxFit.contain,
             autoPlay: true,
             fullScreenByDefault: true,
           ),
           betterPlayerDataSource: BetterPlayerDataSource(
               BetterPlayerDataSourceType.file, widget.videoPath));
-      schedularInitialize(sheet.actions, Container(), bpController);
+
+      if (widget.sheetPath != null) {
+        _sheet = ActionSheetDecoder.getInstance()
+            .decode(File(widget.sheetPath).readAsStringSync());
+      } else
+        _sheet = ActionSheet();
+
+      schedularInitialize(_sheet.actions, Container(), bpController);
       bpController.addEventsListener((e) {
         if (e.betterPlayerEventType == BetterPlayerEventType.initialized) {
           setState(() {
             loaded = true;
-            // scheduleDisplayCpation(bpController);
-            // startScheduleCaption();
+            scheduleDisplayCpation();
+            startScheduleCaption();
           });
         }
       });
@@ -73,6 +69,7 @@ class _ActionVideoPlayerState extends State<ActionVideoPlayer>
   }
 
   void playerEventHandler(BetterPlayerEvent e) {
+    print(e.betterPlayerEventType);
     switch (e.betterPlayerEventType) {
       case BetterPlayerEventType.controlsHidden:
         setState(() {
@@ -112,6 +109,6 @@ class _ActionVideoPlayerState extends State<ActionVideoPlayer>
 
   @override
   void afterFirstLayout(BuildContext context) {
-    // scheduleDisplayCpation(bpController);
+    scheduleDisplayCpation();
   }
 }

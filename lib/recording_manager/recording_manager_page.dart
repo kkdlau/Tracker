@@ -6,6 +6,7 @@ import 'package:Tracker/file_manager_template/file_manager_page.dart';
 import 'package:Tracker/file_manager_template/info_card/card_config.dart';
 import 'package:Tracker/file_manager_template/info_card/info_card.dart';
 import 'package:Tracker/file_manager_template/manger_config.dart';
+import 'package:Tracker/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:share/share.dart';
 import 'package:video_thumbnail/video_thumbnail.dart';
@@ -56,6 +57,13 @@ class _RecordingManagerPageState extends State<RecordingManagerPage> {
     );
   }
 
+  Future<String> _tempActionSheet() async {
+    Directory d = await Utils.openFolder(ACTION_SHEET_DIR);
+    print(d.path);
+
+    return d.path + 'robocon 2021.json';
+  }
+
   void videoCardHandler(INFO_CARD_ACTION actionType, File file) {
     switch (actionType) {
       case INFO_CARD_ACTION.EXPORT:
@@ -67,9 +75,17 @@ class _RecordingManagerPageState extends State<RecordingManagerPage> {
         break;
       case INFO_CARD_ACTION.SELECT:
         Navigator.push(context, MaterialPageRoute(builder: (_) {
-          return ActionVideoPlayer(
-            videoPath: file.path,
-          );
+          return FutureBuilder<String>(
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.done) {
+                  return ActionVideoPlayer(
+                    videoPath: file.path,
+                    sheetPath: snapshot.data,
+                  );
+                } else
+                  Container();
+              },
+              future: _tempActionSheet());
         }));
         break;
       default:
