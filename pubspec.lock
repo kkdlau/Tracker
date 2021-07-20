@@ -7,7 +7,7 @@ packages:
       name: after_layout
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.0.7+2"
+    version: "1.1.0"
   async:
     dependency: "direct main"
     description:
@@ -18,12 +18,10 @@ packages:
   better_player:
     dependency: "direct main"
     description:
-      path: "."
-      ref: HEAD
-      resolved-ref: "4cb544b4bb5683571f04a2d8801c325a9f22fee2"
-      url: "https://github.com/kkdlau/better_player_ext.git"
-    source: git
-    version: "0.0.41"
+      name: better_player
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.0.61"
   boolean_selector:
     dependency: transitive
     description:
@@ -37,14 +35,14 @@ packages:
       name: camera
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.6.2+1"
+    version: "0.7.0+4"
   camera_platform_interface:
     dependency: transitive
     description:
       name: camera_platform_interface
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.0.4"
+    version: "1.5.0"
   characters:
     dependency: transitive
     description:
@@ -93,7 +91,7 @@ packages:
       name: cupertino_icons
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.0.0"
+    version: "1.0.3"
   fake_async:
     dependency: transitive
     description:
@@ -107,26 +105,19 @@ packages:
       name: ffi
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.1.3"
+    version: "1.1.2"
   file:
     dependency: transitive
     description:
       name: file
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "5.2.1"
+    version: "6.1.2"
   flutter:
     dependency: "direct main"
     description: flutter
     source: sdk
     version: "0.0.0"
-  flutter_hls_parser:
-    dependency: transitive
-    description:
-      name: flutter_hls_parser
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.0.0"
   flutter_test:
     dependency: "direct dev"
     description: flutter
@@ -150,7 +141,7 @@ packages:
       name: gallery_saver
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.1"
+    version: "2.0.3"
   html:
     dependency: transitive
     description:
@@ -186,13 +177,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.2"
-  intl:
-    dependency: transitive
-    description:
-      name: intl
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.16.1"
   js:
     dependency: transitive
     description:
@@ -234,7 +218,7 @@ packages:
       name: nested
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.0.4"
+    version: "1.0.0"
   path:
     dependency: "direct main"
     description:
@@ -248,7 +232,7 @@ packages:
       name: path_provider
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.6.24"
+    version: "1.6.28"
   path_provider_linux:
     dependency: transitive
     description:
@@ -262,7 +246,7 @@ packages:
       name: path_provider_macos
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.0.4+6"
+    version: "0.0.4+8"
   path_provider_platform_interface:
     dependency: transitive
     description:
@@ -276,21 +260,21 @@ packages:
       name: path_provider_windows
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.0.4+3"
+    version: "0.0.5"
   pedantic:
     dependency: transitive
     description:
       name: pedantic
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.9.2"
+    version: "1.11.1"
   platform:
     dependency: transitive
     description:
       name: platform
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.2.1"
+    version: "3.0.0"
   plugin_platform_interface:
     dependency: transitive
     description:
@@ -304,14 +288,14 @@ packages:
       name: process
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.0.13"
+    version: "4.2.1"
   provider:
     dependency: "direct main"
     description:
       name: provider
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "4.3.2+3"
+    version: "5.0.0"
   quiver:
     dependency: transitive
     description:
@@ -435,7 +419,7 @@ packages:
       name: win32
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.7.4"
+    version: "2.2.5"
   xdg_directories:
     dependency: transitive
     description:
@@ -444,5 +428,5 @@ packages:
     source: hosted
     version: "0.1.2"
 sdks:
-  dart: ">=2.12.0 <3.0.0"
+  dart: ">=2.13.0 <3.0.0"
   flutter: ">=1.22.0"

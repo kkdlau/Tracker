@@ -6,11 +6,6 @@ PODS:
     - Flutter
   - CocoaAsyncSocket (7.6.5)
   - Flutter (1.0.0)
-  - flutter_ffmpeg/video-lts (0.3.0):
-    - Flutter
-    - mobile-ffmpeg-video (= 4.4.LTS)
-  - flutter_hls_parser (0.0.1):
-    - Flutter
   - gallery_saver (0.0.1):
     - Flutter
   - KTVCocoaHTTPServer (1.0.0):
@@ -26,7 +21,6 @@ PODS:
   - libwebp/mux (1.1.0):
     - libwebp/demux
   - libwebp/webp (1.1.0)
-  - mobile-ffmpeg-video (4.4.LTS)
   - native_device_orientation (0.0.1):
     - Flutter
   - path_provider (0.0.1):
@@ -43,8 +37,6 @@ DEPENDENCIES:
   - better_player (from `.symlinks/plugins/better_player/ios`)
   - camera (from `.symlinks/plugins/camera/ios`)
   - Flutter (from `Flutter`)
-  - flutter_ffmpeg/video-lts (from `.symlinks/plugins/flutter_ffmpeg/ios`)
-  - flutter_hls_parser (from `.symlinks/plugins/flutter_hls_parser/ios`)
   - gallery_saver (from `.symlinks/plugins/gallery_saver/ios`)
   - native_device_orientation (from `.symlinks/plugins/native_device_orientation/ios`)
   - path_provider (from `.symlinks/plugins/path_provider/ios`)
@@ -58,7 +50,6 @@ SPEC REPOS:
     - KTVCocoaHTTPServer
     - KTVHTTPCache
     - libwebp
-    - mobile-ffmpeg-video
 
 EXTERNAL SOURCES:
   better_player:
@@ -67,10 +58,6 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/camera/ios"
   Flutter:
     :path: Flutter
-  flutter_ffmpeg:
-    :path: ".symlinks/plugins/flutter_ffmpeg/ios"
-  flutter_hls_parser:
-    :path: ".symlinks/plugins/flutter_hls_parser/ios"
   gallery_saver:
     :path: ".symlinks/plugins/gallery_saver/ios"
   native_device_orientation:
@@ -88,14 +75,11 @@ SPEC CHECKSUMS:
   better_player: a4383402f457e53720525888c0fc5d337ef6ba11
   camera: a0ca5080336f7af47b88436e5e26da3dee5568f0
   CocoaAsyncSocket: 065fd1e645c7abab64f7a6a2007a48038fdc6a99
-  Flutter: 0e3d915762c693b495b44d77113d4970485de6ec
-  flutter_ffmpeg: 657ce8a1502c3d25bf34efc58b380b248836f772
-  flutter_hls_parser: be41df963ec4f909fb5c318d483c4483556553e0
+  Flutter: 434fef37c0980e73bb6479ef766c45957d4b510c
   gallery_saver: 9fc173c9f4fcc48af53b2a9ebea1b643255be542
   KTVCocoaHTTPServer: df8d7b861e603ff8037e9b2138aca2563a6b768d
   KTVHTTPCache: 588c3eb16f6bd1e6fde1e230dabfb7bd4e490a4d
   libwebp: 946cb3063cea9236285f7e9a8505d806d30e07f3
-  mobile-ffmpeg-video: f14c9680812ecfc68a3c95396b3ca4f61484f5e7
   native_device_orientation: 3b4cfc9565a7b879cc4fde282b3e27745e852d0d
   path_provider: abfe2b5c733d04e238b0d8691db0cfd63a27a93c
   share: 0b2c3e82132f5888bccca3351c504d0003b3b410
@@ -104,4 +88,4 @@ SPEC CHECKSUMS:
 
 PODFILE CHECKSUM: d8c2070bed064035224764e38e61e88322209264
 
-COCOAPODS: 1.8.4
+COCOAPODS: 1.10.1
