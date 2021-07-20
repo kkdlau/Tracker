@@ -97,11 +97,7 @@ class ActionVideoPlayerState extends State<ActionVideoPlayer>
   Widget build(BuildContext context) {
     return Stack(children: <Widget>[
       Center(
-          child: loaded
-              ? BetterPlayer(
-                  controller: bpController,
-                  overlayWidget: animatedCpationWidget(_captionPadding))
-              : Container())
+          child: loaded ? BetterPlayer(controller: bpController) : Container())
     ]);
   }
 

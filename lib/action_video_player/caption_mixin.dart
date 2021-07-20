@@ -25,20 +25,7 @@ mixin CaptionSchedularMixin<T extends StatefulWidget> on State<T> {
     _controller.addEventsListener(_playerControlEventHandler);
   }
 
-  void _playerControlEventHandler(BetterPlayerEvent e) {
-    switch (e.betterPlayerEventType) {
-      case BetterPlayerEventType.progressStartDragging:
-        // cancel all scheduling event
-        break;
-      case BetterPlayerEventType.progressEndDragging:
-        // reschedule all caption event.
-        break;
-      case BetterPlayerEventType.finished:
-        // cancel all event and caption.
-        break;
-      default:
-    }
-  }
+  void _playerControlEventHandler(BetterPlayerEvent e) {}
 
   void scheduleDisplayCpation() {
     if (currentCaption + 1 == captionList.length)
