@@ -17,6 +17,10 @@ extension on NativeDeviceOrientation {
   }
 }
 
+/// Full screen camera view with orientation support.
+///
+/// This widget listens to orientation.
+/// If the orientation changes, the widget will rotate the camera view.
 class CameraViewer extends StatefulWidget {
   final CameraController controller;
   CameraViewer(this.controller, {Key key}) : super(key: key);
