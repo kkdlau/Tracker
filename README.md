@@ -50,16 +50,30 @@ Tracker is an app which spports recording videos with timestamps.
 ### New Features
 
  - [ ] Import Action Sheet from clipboard
-## JSON Structure
+## Data Structure of Action Sheet
 
+```typescript
+interface Action {
+  description: String; // description of Action
+  expect: number; // expected fnish time of Action
+  diff: number; // time difference between actual finish time and expected
+}
+
+interface ActionSheet {
+  description: String; // overall description of action sheet
+  actions: Array<Action>; // list of Action
+}
+```
+
+### Example
 ```json
 {
   "description": "Description of the file",
   "actions": [
     {
       "description": "Description of the action",
-      "expect": 10, // Expected time, in milliseconds
-      "diff": -10 // Time difference between completed time and expected time, in milliseconds
+      "expect": 10,
+      "diff": -10
     },
     {
       "description": "Another action",
