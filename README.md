@@ -16,6 +16,7 @@ Tracker is an app which spports recording videos with timestamps.
 - [x] Go backward / forward
 - [x] Text overlay
 - [x] Share text recording
+- [ ] Using `native_video_view` to support video streaming instead
 
 ### Action Sheet Editor
 
