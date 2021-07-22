@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:Tracker/action_sheet/action_sheet.dart';
 import 'package:Tracker/action_sheet/action_sheet_decoder.dart';
+import 'package:Tracker/action_sheet/action_text.dart';
 import 'package:Tracker/action_video_player/caption_mixin.dart';
 import 'package:chewie/chewie.dart';
 import 'package:flutter/material.dart';
@@ -37,8 +38,19 @@ class ActionVideoPlayerState extends State<ActionVideoPlayer>
     videoPlayerController = VideoPlayerController.file(File(widget.videoPath));
     chewieController = ChewieController(
         videoPlayerController: videoPlayerController,
+        subtitle: Subtitles([
+          Subtitle(
+              index: 0,
+              start: const Duration(seconds: 0),
+              end: const Duration(seconds: 1),
+              text: ActionText(
+                      time: Duration(seconds: 1),
+                      timeDiff: Duration(milliseconds: 100),
+                      data: 'idk but i')
+                  .toString())
+        ]),
         subtitleBuilder: (context, text) {
-          return null;
+          return Text(text);
         });
     controllerInitializationFuture = videoPlayerController.initialize();
   }

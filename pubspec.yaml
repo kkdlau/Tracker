@@ -32,7 +32,6 @@ dependencies:
   path_provider:
   path:
   provider:
-  gallery_saver: ^2.0.1
   after_layout: ^1.0.7+2
   async: ^2.4.2
   native_device_orientation: ^0.4.3

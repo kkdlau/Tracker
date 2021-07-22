@@ -142,13 +142,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.6.1+4"
-  gallery_saver:
-    dependency: "direct main"
-    description:
-      name: gallery_saver
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "2.1.2"
   html:
     dependency: transitive
     description:
@@ -156,20 +149,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.15.0"
-  http:
-    dependency: transitive
-    description:
-      name: http
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.13.3"
-  http_parser:
-    dependency: transitive
-    description:
-      name: http_parser
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "4.0.0"
   implicitly_animated_reorderable_list:
     dependency: "direct main"
     description:
