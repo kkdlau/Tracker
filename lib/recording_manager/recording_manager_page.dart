@@ -83,7 +83,7 @@ class _RecordingManagerPageState extends State<RecordingManagerPage> {
                     sheetPath: snapshot.data,
                   );
                 } else
-                  Container();
+                  return Container();
               },
               future: _tempActionSheet());
         }));

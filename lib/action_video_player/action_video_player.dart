@@ -3,10 +3,12 @@ import 'dart:io';
 import 'package:Tracker/action_sheet/action_sheet.dart';
 import 'package:Tracker/action_sheet/action_sheet_decoder.dart';
 import 'package:Tracker/action_video_player/caption_mixin.dart';
+import 'package:chewie/chewie.dart';
 import 'package:flutter/material.dart';
 import 'package:after_layout/after_layout.dart';
 import 'package:better_player/better_player.dart';
 import 'package:flutter/services.dart';
+import 'package:video_player/video_player.dart';
 
 class ActionVideoPlayer extends StatefulWidget {
   final String videoPath;
@@ -22,66 +24,26 @@ class ActionVideoPlayerState extends State<ActionVideoPlayer>
     with
         AfterLayoutMixin<ActionVideoPlayer>,
         CaptionSchedularMixin<ActionVideoPlayer> {
-  BetterPlayerController bpController;
+  ChewieController chewieController;
+  VideoPlayerController videoPlayerController;
   bool loaded = false;
-  Future<String> controllerInitializationFuture;
-  double _captionPadding = 20.0;
+  Future<void> controllerInitializationFuture;
   ActionSheet _sheet;
 
   @override
   void initState() {
     super.initState();
 
-    setState(() {
-      bpController = BetterPlayerController(
-          BetterPlayerConfiguration(
-            deviceOrientationsOnFullScreen: DeviceOrientation.values,
-            controlsConfiguration:
-                BetterPlayerControlsConfiguration(enableOverflowMenu: false),
-            fit: BoxFit.contain,
-            autoPlay: true,
-            fullScreenByDefault: true,
-          ),
-          betterPlayerDataSource: BetterPlayerDataSource(
-              BetterPlayerDataSourceType.file, widget.videoPath));
-
-      if (widget.sheetPath != null) {
-        _sheet = ActionSheetDecoder.getInstance()
-            .decode(File(widget.sheetPath).readAsStringSync());
-      } else
-        _sheet = ActionSheet();
-
-      schedularInitialize(_sheet.actions, Container(), bpController);
-      bpController.addEventsListener((e) {
-        if (e.betterPlayerEventType == BetterPlayerEventType.initialized) {
-          setState(() {
-            loaded = true;
-            scheduleDisplayCpation();
-            startScheduleCaption();
-          });
-        }
-      });
-
-      bpController.addEventsListener(playerEventHandler);
-    });
+    videoPlayerController = VideoPlayerController.file(File(widget.videoPath));
+    chewieController = ChewieController(
+        videoPlayerController: videoPlayerController,
+        subtitleBuilder: (context, text) {
+          return null;
+        });
+    controllerInitializationFuture = videoPlayerController.initialize();
   }
 
-  void playerEventHandler(BetterPlayerEvent e) {
-    print(e.betterPlayerEventType);
-    switch (e.betterPlayerEventType) {
-      case BetterPlayerEventType.controlsHidden:
-        setState(() {
-          _captionPadding = 20.0;
-        });
-        break;
-      case BetterPlayerEventType.controlsVisible:
-        setState(() {
-          _captionPadding = 60.0;
-        });
-        break;
-      default:
-    }
-  }
+  void playerEventHandler(BetterPlayerEvent e) {}
 
   Widget animatedCpationWidget(double padding) {
     return Positioned.fill(
@@ -95,14 +57,28 @@ class ActionVideoPlayerState extends State<ActionVideoPlayer>
 
   @override
   Widget build(BuildContext context) {
-    return Stack(children: <Widget>[
-      Center(
-          child: loaded ? BetterPlayer(controller: bpController) : Container())
-    ]);
+    return Scaffold(
+      body: FutureBuilder(
+          future: controllerInitializationFuture,
+          builder: (context, snapshot) {
+            if (snapshot.connectionState != ConnectionState.done) {
+              return Container();
+            } else {
+              return Chewie(controller: chewieController);
+            }
+          }),
+    );
   }
 
   @override
   void afterFirstLayout(BuildContext context) {
-    scheduleDisplayCpation();
+    // scheduleDisplayCpation();
+  }
+
+  @override
+  void dispose() {
+    videoPlayerController.dispose();
+    chewieController.dispose();
+    super.dispose();
   }
 }
