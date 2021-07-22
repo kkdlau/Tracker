@@ -4,6 +4,7 @@ import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:flutter/services.dart';
+import 'package:video_player/video_player.dart';
 
 List<CameraDescription> cameras = [];
 Future<void> main() async {
@@ -31,6 +32,6 @@ class TrackerApp extends StatelessWidget {
             brightness: Brightness.dark,
             visualDensity: VisualDensity.adaptivePlatformDensity),
         title: 'Tracker',
-        home: VideoRecordingPage());
+        home: RecordingManagerPage());
   }
 }
