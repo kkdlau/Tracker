@@ -1,6 +1,7 @@
 import 'package:Tracker/action_sheet/action_description.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class ActionEditDialog extends StatefulWidget {
   final ActionDescription action;
@@ -173,7 +174,12 @@ class _ActionEditDialogState extends State<ActionEditDialog> {
                       SizedBox(
                           child: CupertinoTextField(
                             controller: _diffMinController,
-                            keyboardType: TextInputType.number,
+                            inputFormatters: [
+                              FilteringTextInputFormatter.allow(
+                                  RegExp('[0-9-]'))
+                            ],
+                            keyboardType:
+                                TextInputType.numberWithOptions(signed: true),
                           ),
                           width: 40.0),
                       Padding(
@@ -182,7 +188,12 @@ class _ActionEditDialogState extends State<ActionEditDialog> {
                       SizedBox(
                           child: CupertinoTextField(
                             controller: _diffSecController,
-                            keyboardType: TextInputType.number,
+                            inputFormatters: [
+                              FilteringTextInputFormatter.allow(
+                                  RegExp('[0-9-]'))
+                            ],
+                            keyboardType:
+                                TextInputType.numberWithOptions(signed: true),
                           ),
                           width: 40.0),
                       Padding(

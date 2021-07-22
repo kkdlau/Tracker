@@ -1,4 +1,5 @@
 import 'package:Tracker/recording_manager/recording_manager_page.dart';
+import 'package:Tracker/sheet_manager/sheet_magaer_page.dart';
 import 'package:Tracker/video_recording/video_recording_page.dart';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
@@ -32,6 +33,6 @@ class TrackerApp extends StatelessWidget {
             brightness: Brightness.dark,
             visualDensity: VisualDensity.adaptivePlatformDensity),
         title: 'Tracker',
-        home: RecordingManagerPage());
+        home: SheetManagerPage());
   }
 }
