@@ -15,7 +15,7 @@ Tracker is an app which spports recording videos with timestamps.
 - Wrap all control UI into safeArea ( need to find way to hack the UI and modify the library)
 
 ### Stamp Sheet Editor:
-- Support entering negative number
+- ~~Support entering negative number~~
 
 ### New Features
 
