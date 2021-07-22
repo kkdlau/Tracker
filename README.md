@@ -2,50 +2,20 @@
 
 Tracker is an app which spports recording videos with timestamps.
 ## UI Development
-### Main Page
 
-- [X] Video recording
-- [ ] Different recording modes
-- [x] Different camera cofiguration
-- [x] Select different action sheets
-- [x] Generate Video thumbnail (https://pub.dev/packages/video_thumbnail) 
+### Video Recording Page
+- Display selected stamp sheet
+- Display recording time
+- Add camera focus
+- Add Zoom In / Out
+- Fix video orientation
+- Fix camera preview orientation 
 
-### Video Player
+### Video player
+- Wrap all control UI into safeArea ( need to find way to hack the UI and modify the library)
 
-- [x] Pause / Play
-- [x] Go backward / forward
-- [x] Text overlay
-- [x] Share text recording
-- [ ] Using `native_video_view` to support video streaming instead
-
-### Action Sheet Editor
-
-- [x] Add / Remove actions
-- [x] Time Picker
-- [ ] Comparsion between different sheets
-
-## Back-end Development
-
-### Camera
-
-- [ ] Support Zoom
-- [ ] Support Focus
-- [ ] Flash Light (Currently not supported because of bugs)
-- [X] Camera Switching
-### Video editing
-
-- [ ] Support embedded Text Overlay
-
-### Local Storage
-
-- [X] Library for managing in-app videos and action sheets
-
-### Action Sheet
-
-* Support export action sheet into different format
-  - [x] `Splitty` / `JSON`
-  - [x] `.rst`
-  - [x] `pure text message` (for sharing)
+### Stamp Sheet Editor:
+- Support entering negative number
 
 ### New Features
 
