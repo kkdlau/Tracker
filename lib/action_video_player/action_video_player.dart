@@ -47,6 +47,7 @@ class ActionVideoPlayerState extends State<ActionVideoPlayer> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.black,
       body: FutureBuilder(
           future: controllerInitializationFuture,
           builder: (context, snapshot) {

@@ -1,4 +1,4 @@
-import 'package:Tracker/video_recording_page/video_recording_page.dart';
+import 'package:Tracker/video_recording/video_recording_page.dart';
 import 'package:Tracker/widgets/hightlighted_container.dart';
 import 'package:flutter/material.dart';
 
