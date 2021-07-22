@@ -1,5 +1,8 @@
 import 'dart:io';
 
+import 'package:Tracker/utils.dart';
+import 'package:chewie/chewie.dart';
+
 import 'action_description.dart';
 import 'dart:convert';
 
@@ -61,5 +64,30 @@ class ActionSheet {
 
   Future<File> saveTo(String path) {
     return File(path).writeAsString(json.encode(this.toMap()));
+  }
+
+  /// Convert the whole action sheet into subtitle format.
+  ///
+  /// Due to the restriction of Chewie subtitle format (it only can pass String to Subtitle),
+  /// the subtitles will be converted into JSON format.
+  ///
+  /// In the subtitle builder, you will receive the action description in String with JSON format.
+  /// If you pass the string without converting it, you will everntually print some weird on the screen.
+  /// So don't forget to convert the string back to [ActionDescription].
+  Subtitles toSubtitles() {
+    return Subtitles(List.generate(actions.length, (i) {
+      ActionDescription act = actions[i];
+      Duration happenedTime = act.targetTime - act.timeDiff;
+      Duration endTime = happenedTime +
+          Duration(
+              milliseconds:
+                  Utils.calculateCaptionDisplayTime(act.description.length));
+
+      return Subtitle(
+          index: i,
+          start: happenedTime,
+          end: endTime,
+          text: json.encode(act.toMap()));
+    }));
   }
 }

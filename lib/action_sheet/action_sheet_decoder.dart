@@ -25,7 +25,7 @@ class ActionSheetDecoder {
 
   void _decodeActions(List<dynamic> data) {
     data.forEach((element) {
-      _sheet.actions.add(ActionDescription.fromJSON(element));
+      _sheet.actions.add(ActionDescription.fromMap(element));
     });
   }
 

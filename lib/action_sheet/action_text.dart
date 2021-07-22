@@ -16,15 +16,15 @@ class ActionText extends StatelessWidget {
 
   TextSpan timeDiffText() {
     final String sign = timeDiff.isNegative ? '-' : '+';
-    final int seconds = timeDiff.inSeconds;
+    final int ms = timeDiff.inMilliseconds;
     return TextSpan(
         style: TextStyle(
-            color: seconds == 0
+            color: ms == 0
                 ? Colors.grey
-                : seconds > 0
+                : ms > 0
                     ? Colors.green
                     : Colors.red),
-        text: '[$sign${seconds.abs()}\s]\n');
+        text: '[$sign${ms.abs()}\ms]\n');
   }
 
   @override

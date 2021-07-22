@@ -1,14 +1,11 @@
+import 'dart:convert';
 import 'dart:io';
 
+import 'package:Tracker/action_sheet/action_description.dart';
 import 'package:Tracker/action_sheet/action_sheet.dart';
-import 'package:Tracker/action_sheet/action_sheet_decoder.dart';
 import 'package:Tracker/action_sheet/action_text.dart';
-import 'package:Tracker/action_video_player/caption_mixin.dart';
 import 'package:chewie/chewie.dart';
 import 'package:flutter/material.dart';
-import 'package:after_layout/after_layout.dart';
-import 'package:better_player/better_player.dart';
-import 'package:flutter/services.dart';
 import 'package:video_player/video_player.dart';
 
 class ActionVideoPlayer extends StatefulWidget {
@@ -21,50 +18,30 @@ class ActionVideoPlayer extends StatefulWidget {
   ActionVideoPlayerState createState() => ActionVideoPlayerState();
 }
 
-class ActionVideoPlayerState extends State<ActionVideoPlayer>
-    with
-        AfterLayoutMixin<ActionVideoPlayer>,
-        CaptionSchedularMixin<ActionVideoPlayer> {
+class ActionVideoPlayerState extends State<ActionVideoPlayer> {
   ChewieController chewieController;
   VideoPlayerController videoPlayerController;
-  bool loaded = false;
   Future<void> controllerInitializationFuture;
   ActionSheet _sheet;
 
   @override
   void initState() {
     super.initState();
+    _sheet = ActionSheet(actions: [
+      ActionDescription(
+          'lmao', Duration(seconds: 1), Duration(milliseconds: 100))
+    ]);
 
     videoPlayerController = VideoPlayerController.file(File(widget.videoPath));
     chewieController = ChewieController(
         videoPlayerController: videoPlayerController,
-        subtitle: Subtitles([
-          Subtitle(
-              index: 0,
-              start: const Duration(seconds: 0),
-              end: const Duration(seconds: 1),
-              text: ActionText(
-                      time: Duration(seconds: 1),
-                      timeDiff: Duration(milliseconds: 100),
-                      data: 'idk but i')
-                  .toString())
-        ]),
+        subtitle: _sheet.toSubtitles(),
         subtitleBuilder: (context, text) {
-          return Text(text);
+          // text is in JSON format. For details, please refer to ActionShett.toSubtitles().
+          return ActionText.fromAction(
+              ActionDescription.fromMap(json.decode(text)));
         });
     controllerInitializationFuture = videoPlayerController.initialize();
-  }
-
-  void playerEventHandler(BetterPlayerEvent e) {}
-
-  Widget animatedCpationWidget(double padding) {
-    return Positioned.fill(
-      child: AnimatedPadding(
-        padding: EdgeInsets.only(bottom: padding),
-        duration: const Duration(milliseconds: 100),
-        child: Align(alignment: Alignment.bottomCenter, child: captionWidget),
-      ),
-    );
   }
 
   @override
@@ -80,11 +57,6 @@ class ActionVideoPlayerState extends State<ActionVideoPlayer>
             }
           }),
     );
-  }
-
-  @override
-  void afterFirstLayout(BuildContext context) {
-    // scheduleDisplayCpation();
   }
 
   @override

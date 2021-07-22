@@ -15,7 +15,7 @@ class ActionDescription {
         targetTime = targetTime,
         timeDiff = timeDiff;
 
-  factory ActionDescription.fromJSON(Map<String, dynamic> json) {
+  factory ActionDescription.fromMap(Map<String, dynamic> json) {
     return ActionDescription(
       json['description'],
       Duration(milliseconds: int.parse(json['expect'])),

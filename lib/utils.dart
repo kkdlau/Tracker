@@ -30,6 +30,14 @@ class Utils {
       return await folder.create();
     }
   }
+
+  /// Returns how long should the caption be displayed on the screen.
+  ///
+  /// [wordLength] should be number of words in the string.
+  /// And unit of display time is milliseconds.
+  static int calculateCaptionDisplayTime(int wordLength) {
+    return (wordLength ~/ (200 / 60)) * 1000 + 500;
+  }
 }
 
 extension on File {
