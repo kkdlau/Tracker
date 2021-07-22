@@ -13,7 +13,6 @@ Future<void> main() async {
   // SystemChrome.setEnabledSystemUIOverlays([]);
 
   try {
-    // comments
     cameras = await availableCameras();
   } on CameraException catch (e) {
     print('camera error' + e.code);
