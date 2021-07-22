@@ -6,6 +6,7 @@ import 'package:Tracker/action_sheet/action_sheet.dart';
 import 'package:Tracker/action_sheet/action_text.dart';
 import 'package:chewie/chewie.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:video_player/video_player.dart';
 
 class ActionVideoPlayer extends StatefulWidget {
@@ -54,7 +55,8 @@ class ActionVideoPlayerState extends State<ActionVideoPlayer> {
             if (snapshot.connectionState != ConnectionState.done) {
               return Container();
             } else {
-              return Chewie(controller: chewieController);
+              return SafeArea(
+                  bottom: false, child: Chewie(controller: chewieController));
             }
           }),
     );
@@ -64,6 +66,7 @@ class ActionVideoPlayerState extends State<ActionVideoPlayer> {
   void dispose() {
     videoPlayerController.dispose();
     chewieController.dispose();
+    SystemChrome.setPreferredOrientations(DeviceOrientation.values);
     super.dispose();
   }
 }

@@ -33,6 +33,6 @@ class TrackerApp extends StatelessWidget {
             brightness: Brightness.dark,
             visualDensity: VisualDensity.adaptivePlatformDensity),
         title: 'Tracker',
-        home: SheetManagerPage());
+        home: RecordingManagerPage());
   }
 }
