@@ -8,11 +8,12 @@ Tracker is an app which spports recording videos with timestamps.
 - Display recording time
 - Add camera focus
 - Add Zoom In / Out
-- Fix video orientation
-- ~~Fix camera preview orientation ~~
+- ~~Fix video orientation~~
+- ~~Fix camera preview orientation~~
 
 ### Video player
-- Wrap all control UI into safeArea ( need to find way to hack the UI and modify the library)
+- ~~Wrap all control UI into safeArea ( need to find way to hack the UI and modify the library)~~
+- Add a button for leaving video player
 
 ### Stamp Sheet Editor:
 - ~~Support entering negative number~~
