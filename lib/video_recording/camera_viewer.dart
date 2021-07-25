@@ -1,26 +1,10 @@
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
-import 'package:native_device_orientation/native_device_orientation.dart';
-
-extension on NativeDeviceOrientation {
-  toQuarterTurns() {
-    switch (this) {
-      case NativeDeviceOrientation.landscapeLeft:
-        return -1;
-      case NativeDeviceOrientation.landscapeRight:
-        return 1;
-      case NativeDeviceOrientation.portraitDown:
-        return -2;
-      default:
-        return 0;
-    }
-  }
-}
 
 /// Full screen camera view with orientation support.
 ///
-/// This widget listens to orientation.
-/// If the orientation changes, the widget will rotate the camera view.
+/// A wrapper widget for handling camera orientation, and resizing.
+/// The widget doesn't has the responsibility to maintain the life cycle of camera controller.
 class CameraViewer extends StatefulWidget {
   final CameraController controller;
   CameraViewer(this.controller, {Key key}) : super(key: key);
@@ -38,54 +22,36 @@ class _CameraViewerState extends State<CameraViewer> {
     super.initState();
   }
 
-  double get screenHeight {
-    return MediaQuery.of(context).size.height;
-  }
-
-  double get screenWidth {
-    return MediaQuery.of(context).size.width;
-  }
-
+  /// Returns the height of camera preview.
+  ///
+  /// In different orientation, the height will be switched with [width],
+  /// hence you should always use this getter to handle orientation changes.
   double get cameraHeight {
-    // just assume camera width = screen width
-    return screenWidth / _controller.value.aspectRatio;
+    return MediaQuery.of(context).orientation == Orientation.portrait
+        ? _controller.value.previewSize.width
+        : _controller.value.previewSize.height;
   }
 
+  /// Returns the width of camera preview.
+  ///
+  /// In different orientation, the width will be switched with [height],
+  /// hence you should always use this getter to handle orientation changes.
   double get cameraWidth {
-    return screenHeight / _controller.value.aspectRatio;
-  }
-
-  Future<int> quarterRotation() async {
-    return (await NativeDeviceOrientationCommunicator()
-            .orientation(useSensor: false))
-        .toQuarterTurns();
+    return MediaQuery.of(context).orientation == Orientation.portrait
+        ? _controller.value.previewSize.height
+        : _controller.value.previewSize.width;
   }
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      child: FutureBuilder<int>(
-        future: quarterRotation(),
-        builder: (BuildContext context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.done)
-            return RotatedBox(
-              quarterTurns: snapshot.data,
-              child: AspectRatio(
-                aspectRatio: _controller.value.aspectRatio,
-                child: Transform.scale(
-                    scale: (MediaQuery.of(context).orientation ==
-                                Orientation.landscape
-                            ? screenWidth / cameraWidth
-                            : screenHeight / cameraHeight) +
-                        0.1,
-                    child: CameraPreview(_controller)),
-              ),
-            );
-          else {
-            return Container();
-          }
-        },
-      ),
-    );
+        child: FittedBox(
+      clipBehavior: Clip.hardEdge,
+      fit: BoxFit.cover,
+      child: SizedBox(
+          width: cameraWidth,
+          height: cameraHeight,
+          child: CameraPreview(_controller)),
+    ));
   }
 }

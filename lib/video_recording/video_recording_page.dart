@@ -32,7 +32,7 @@ class VideoRecordingPageState extends State<VideoRecordingPage> {
   File selectedFile;
   CameraController controller;
   CameraConfiguration config;
-  Future<void> _initializeControllerFuture;
+  Future<void> _initializeCameraFuture;
   bool isRecording;
   ActionSheet selectedSheet;
   GlobalKey<ScaffoldState> _scaffoldNode;
@@ -48,18 +48,23 @@ class VideoRecordingPageState extends State<VideoRecordingPage> {
 
     SystemChrome.setPreferredOrientations(DeviceOrientation.values);
 
-    initializeCamera();
+    _initializeCameraFuture = initializeCamera();
 
     _scaffoldNode = GlobalKey<ScaffoldState>();
   }
 
-  void initializeCamera() {
+  /// Initialize the camera according to [config].
+  ///
+  /// some initialization invokes calling platform-specific methods and thereby this function has to be a async function.
+  Future<void> initializeCamera() async {
     controller = CameraController(
       widget.availableCameras[config.cameraIndex],
-      ResolutionPreset.medium,
+      ResolutionPreset.ultraHigh,
+      imageFormatGroup: ImageFormatGroup.jpeg,
       enableAudio: config.enableAudio,
     );
-    _initializeControllerFuture = controller.initialize();
+
+    await controller.initialize();
   }
 
   Widget waitingCameraWidget() {
@@ -69,8 +74,8 @@ class VideoRecordingPageState extends State<VideoRecordingPage> {
   }
 
   Widget cameraPreview() {
-    return FutureBuilder<void>(
-      future: _initializeControllerFuture,
+    return FutureBuilder(
+      future: _initializeCameraFuture,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.done) {
           return CameraViewer(controller);
@@ -110,16 +115,14 @@ class VideoRecordingPageState extends State<VideoRecordingPage> {
 
   void switchCameraHandler() {
     setState(() {
-      config.cameraIndex =
-          (config.cameraIndex + 1) % widget.availableCameras.length;
-
-      controller = CameraController(
-        widget.availableCameras[config.cameraIndex],
-        ResolutionPreset.medium,
-        enableAudio: true,
-      );
-      _initializeControllerFuture = controller.initialize();
+      nextCamera();
+      initializeCamera(); // reinitialize after switching to new camera
     });
+  }
+
+  void nextCamera() {
+    config.cameraIndex =
+        (config.cameraIndex + 1) % widget.availableCameras.length;
   }
 
   void openSheetManager() {
@@ -164,7 +167,6 @@ class VideoRecordingPageState extends State<VideoRecordingPage> {
 
     _scaffoldNode.currentState.showSnackBar(SnackBar(
       content: Container(
-        //color: Colors.white,
         decoration: BoxDecoration(
             color: Colors.white,
             border: Border.all(width: 2.0, color: Colors.black),
@@ -187,33 +189,37 @@ class VideoRecordingPageState extends State<VideoRecordingPage> {
         key: _scaffoldNode,
         body: OrientationBuilder(
           builder: (BuildContext context, Orientation orientation) {
-            return SafeArea(
-              child: Stack(
-                  fit: StackFit.loose,
-                  alignment: Alignment.center,
-                  children: <Widget>[
-                    cameraPreview(),
-                    TopToolBar(
+            return Stack(
+                fit: StackFit.loose,
+                alignment: Alignment.center,
+                children: <Widget>[
+                  Positioned.fill(child: cameraPreview()),
+                  SafeArea(
+                    child: TopToolBar(
                       orientation: orientation,
                       enableFlash: config.enableFlash,
                       onFlashBtnPressed: flashBtnHandler,
                       onSwitchBtnPressed: switchCameraHandler,
                       onSettingBtnPressed: openSetting,
                     ),
-                    Align(
+                  ),
+                  SafeArea(
+                    child: Align(
                         alignment: Alignment.topCenter,
                         child: Padding(
                             padding: EdgeInsets.only(top: 10.0),
                             child: TimeCountText.fromDuration(
                                 Duration(seconds: 10000)))),
-                    BottomToolBar(
+                  ),
+                  SafeArea(
+                    child: BottomToolBar(
                         orientation: orientation,
                         isRecording: isRecording,
                         onDocumentButtonPressed: openSheetManager,
                         onRecordingButtonPressed: onRecordingBtnPressed,
                         onMovieButtonPressed: openRecordingManager),
-                  ]),
-            );
+                  ),
+                ]);
           },
         ));
   }
