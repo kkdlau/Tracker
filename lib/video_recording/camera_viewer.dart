@@ -24,7 +24,7 @@ class _CameraViewerState extends State<CameraViewer> {
 
   /// Returns the height of camera preview.
   ///
-  /// In different orientation, the height will be switched with [width],
+  /// In different orientation, the height will be swapped with [width],
   /// hence you should always use this getter to handle orientation changes.
   double get cameraHeight {
     return MediaQuery.of(context).orientation == Orientation.portrait
@@ -34,7 +34,7 @@ class _CameraViewerState extends State<CameraViewer> {
 
   /// Returns the width of camera preview.
   ///
-  /// In different orientation, the width will be switched with [height],
+  /// In different orientation, the width will be swapped with [height],
   /// hence you should always use this getter to handle orientation changes.
   double get cameraWidth {
     return MediaQuery.of(context).orientation == Orientation.portrait

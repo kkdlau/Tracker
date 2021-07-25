@@ -114,10 +114,11 @@ class VideoRecordingPageState extends State<VideoRecordingPage> {
   }
 
   void switchCameraHandler() {
-    setState(() {
-      nextCamera();
-      initializeCamera(); // reinitialize after switching to new camera
-    });
+    disposeCamera().then((value) => setState(() {
+          nextCamera();
+          _initializeCameraFuture =
+              initializeCamera(); // reinitialize after switching to new camera
+        }));
   }
 
   void nextCamera() {
@@ -126,12 +127,12 @@ class VideoRecordingPageState extends State<VideoRecordingPage> {
   }
 
   void openSheetManager() {
-    controller.dispose();
+    disposeCamera();
     Navigator.push<File>(context,
         MaterialPageRoute(builder: (BuildContext context) {
       return SheetManagerPage();
     })).then((f) => setState(() {
-          initializeCamera();
+          _initializeCameraFuture = initializeCamera();
           if (f != null) {
             updateSelectedSheet(f);
           }
@@ -145,15 +146,20 @@ class VideoRecordingPageState extends State<VideoRecordingPage> {
   }
 
   void openRecordingManager() {
-    controller.dispose();
+    disposeCamera();
 
     Navigator.push(
             context, MaterialPageRoute(builder: (_) => RecordingManagerPage()))
         .then((_) {
       setState(() {
-        initializeCamera();
+        _initializeCameraFuture = initializeCamera();
       });
     });
+  }
+
+  Future<void> disposeCamera() async {
+    await controller.dispose();
+    controller = null;
   }
 
   void openSetting() {
@@ -165,7 +171,7 @@ class VideoRecordingPageState extends State<VideoRecordingPage> {
     //   });
     // });
 
-    _scaffoldNode.currentState.showSnackBar(SnackBar(
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
       content: Container(
         decoration: BoxDecoration(
             color: Colors.white,

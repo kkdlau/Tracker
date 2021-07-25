@@ -19,8 +19,6 @@ PODS:
   - libwebp/mux (1.1.0):
     - libwebp/demux
   - libwebp/webp (1.1.0)
-  - native_device_orientation (0.0.1):
-    - Flutter
   - path_provider (0.0.1):
     - Flutter
   - share (0.0.1):
@@ -37,7 +35,6 @@ DEPENDENCIES:
   - better_player (from `.symlinks/plugins/better_player/ios`)
   - camera (from `.symlinks/plugins/camera/ios`)
   - Flutter (from `Flutter`)
-  - native_device_orientation (from `.symlinks/plugins/native_device_orientation/ios`)
   - path_provider (from `.symlinks/plugins/path_provider/ios`)
   - share (from `.symlinks/plugins/share/ios`)
   - video_player (from `.symlinks/plugins/video_player/ios`)
@@ -58,8 +55,6 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/camera/ios"
   Flutter:
     :path: Flutter
-  native_device_orientation:
-    :path: ".symlinks/plugins/native_device_orientation/ios"
   path_provider:
     :path: ".symlinks/plugins/path_provider/ios"
   share:
@@ -79,7 +74,6 @@ SPEC CHECKSUMS:
   KTVCocoaHTTPServer: df8d7b861e603ff8037e9b2138aca2563a6b768d
   KTVHTTPCache: 588c3eb16f6bd1e6fde1e230dabfb7bd4e490a4d
   libwebp: 946cb3063cea9236285f7e9a8505d806d30e07f3
-  native_device_orientation: 3b4cfc9565a7b879cc4fde282b3e27745e852d0d
   path_provider: abfe2b5c733d04e238b0d8691db0cfd63a27a93c
   share: 0b2c3e82132f5888bccca3351c504d0003b3b410
   video_player: 9cc823b1d9da7e8427ee591e8438bfbcde500e6e
