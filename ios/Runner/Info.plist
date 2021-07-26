@@ -11,7 +11,7 @@
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
-	<string>CameraPlus</string>
+	<string>Tracker</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
@@ -43,11 +43,11 @@
 	<false/>
 
 	<key>NSCameraUsageDescription</key>
-	<string>CameraPlus requests camera access for taking videos.</string>
+	<string>Tracker requests camera access for taking videos.</string>
 	<key>NSMicrophoneUsageDescription</key>
-	<string>CameraPlus requests mic access for audio recording.</string>
+	<string>Tracker requests mic access for audio recording.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>CameraPlus requests Photos access for saving videos.</string>
+	<string>Tracker requests Photos access for saving videos.</string>
 
 	<key>NSAppTransportSecurity</key>
 	<dict>

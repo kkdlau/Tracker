@@ -42,7 +42,7 @@ class InfoCard extends StatelessWidget {
           overflow: TextOverflow.ellipsis,
         ),
         Text(
-          'Last modified: ${_displayDate()}',
+          'Last modified: ${_displayDate()}', // !todo: display file size
           style: theme.caption,
         ),
       ]),

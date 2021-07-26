@@ -33,8 +33,6 @@ class ActionSheetDecoder {
   }
 
   ///  Decode file data into [ActionSheet].
-  ///
-  /// [rawFileData] is the raw string data from the file.
   ActionSheet decode(File f) {
     if (f == null) return ActionSheet();
     String s = f.readAsStringSync();
