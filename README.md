@@ -4,12 +4,13 @@ Tracker is an app which spports recording videos with timestamps.
 ## UI Development
 
 ### Video Recording Page
-- Display selected stamp sheet
-- Display recording time
+- ~~Display selected stamp sheet~~
+- ~~Display recording time~~
 - Add camera focus
 - Add Zoom In / Out
 - ~~Fix video orientation~~
 - ~~Fix camera preview orientation~~
+- Add a button for stamping the time
 
 ### Video player
 - ~~Wrap all control UI into safeArea ( need to find way to hack the UI and modify the library)~~
