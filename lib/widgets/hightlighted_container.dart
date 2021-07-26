@@ -8,13 +8,14 @@ class HighlightedContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return AnimatedContainer(
       padding: EdgeInsets.all(5.0),
       decoration: BoxDecoration(
           color: highlightedColor != null
               ? highlightedColor
-              : Theme.of(context).primaryColorDark.withAlpha(180),
+              : Theme.of(context).primaryColorDark.withAlpha(110),
           borderRadius: BorderRadius.circular(7.0)),
+      duration: const Duration(seconds: 1),
       child: child,
     );
   }

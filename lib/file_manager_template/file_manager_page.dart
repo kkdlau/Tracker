@@ -8,15 +8,6 @@ import 'package:Tracker/utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-extension on File {
-  String get alias {
-    if (this.path.contains('/'))
-      return this.path.split('/').last.split('.').first;
-    else
-      return this.path.split('.').first;
-  }
-}
-
 class FileManagerPage extends StatefulWidget {
   final String title;
   final String rootDir;

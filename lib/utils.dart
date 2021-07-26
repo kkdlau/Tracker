@@ -38,9 +38,17 @@ class Utils {
   static int calculateCaptionDisplayTime(int wordLength) {
     return (wordLength ~/ (200 / 60)) * 1000 + 500;
   }
+
+  static String formatDuration(Duration d) {
+    String twoDigits(int n) => n.toString().padLeft(2, "0");
+    String twoDigitMinutes = twoDigits(d.inMinutes.remainder(60));
+    String twoDigitSeconds = twoDigits(d.inSeconds.remainder(60));
+
+    return "${twoDigits(d.inHours)}:$twoDigitMinutes:$twoDigitSeconds";
+  }
 }
 
-extension on File {
+extension FileAlias on File {
   /// trim off all prefix and keep file alias.
   String get alias {
     if (this.path.contains('/'))

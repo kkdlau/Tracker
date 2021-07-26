@@ -12,10 +12,12 @@ import 'package:Tracker/video_recording/camera_config.dart';
 import 'package:Tracker/video_recording/camera_viewer.dart';
 import 'package:Tracker/video_recording/time_count_text.dart';
 import 'package:Tracker/video_recording/top_tool_bar.dart';
+import 'package:Tracker/widgets/hightlighted_container.dart';
 import 'package:camera/camera.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:torch_controller/torch_controller.dart';
 import '../define.dart';
 
 // final FlutterFFmpeg _flutterFFmpeg = new FlutterFFmpeg();
@@ -33,9 +35,13 @@ class VideoRecordingPageState extends State<VideoRecordingPage> {
   CameraController controller;
   CameraConfiguration config;
   Future<void> _initializeCameraFuture;
+  TorchController torch;
   bool isRecording;
   ActionSheet selectedSheet;
-  GlobalKey<ScaffoldState> _scaffoldNode;
+  DateTime recordingStartTime;
+  DateTime currentRecordingTime;
+  Timer updateBadgeTimer;
+  Widget cameraWidget;
 
   @override
   void initState() {
@@ -49,8 +55,7 @@ class VideoRecordingPageState extends State<VideoRecordingPage> {
     SystemChrome.setPreferredOrientations(DeviceOrientation.values);
 
     _initializeCameraFuture = initializeCamera();
-
-    _scaffoldNode = GlobalKey<ScaffoldState>();
+    buildCameraPreview();
   }
 
   /// Initialize the camera according to [config].
@@ -64,6 +69,11 @@ class VideoRecordingPageState extends State<VideoRecordingPage> {
       enableAudio: config.enableAudio,
     );
 
+    torch = TorchController();
+    if (await torch.hasTorch) {
+      torch.initialize(intensity: 0.5);
+    }
+
     await controller.initialize();
   }
 
@@ -73,8 +83,8 @@ class VideoRecordingPageState extends State<VideoRecordingPage> {
             textAlign: TextAlign.center));
   }
 
-  Widget cameraPreview() {
-    return FutureBuilder(
+  void buildCameraPreview() {
+    cameraWidget = FutureBuilder(
       future: _initializeCameraFuture,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.done) {
@@ -92,10 +102,15 @@ class VideoRecordingPageState extends State<VideoRecordingPage> {
       if (isRecording) {
         try {
           controller.startVideoRecording();
+          recordingStartTime = DateTime.now();
+          currentRecordingTime = recordingStartTime;
+          updateBadgeTimer =
+              Timer.periodic(Duration(seconds: 1), updateCurrentRecordingTime);
         } catch (e) {
           print((e as CameraException).description);
         }
       } else {
+        updateBadgeTimer?.cancel();
         controller.stopVideoRecording().then((XFile f) {
           Utils.getDocumentRootPath().then((root) {
             final String fileAlias = f.path.split('/').last;
@@ -106,10 +121,16 @@ class VideoRecordingPageState extends State<VideoRecordingPage> {
     });
   }
 
+  void updateCurrentRecordingTime(_) {
+    setState(() {
+      currentRecordingTime = DateTime.now();
+    });
+  }
+
   void flashBtnHandler() {
     setState(() {
       config.enableFlash = !config.enableFlash;
-      // todo: enable flash light. (https://pub.dev/packages/lamp)
+      torch.toggle();
     });
   }
 
@@ -118,6 +139,7 @@ class VideoRecordingPageState extends State<VideoRecordingPage> {
           nextCamera();
           _initializeCameraFuture =
               initializeCamera(); // reinitialize after switching to new camera
+          buildCameraPreview();
         }));
   }
 
@@ -133,6 +155,7 @@ class VideoRecordingPageState extends State<VideoRecordingPage> {
       return SheetManagerPage();
     })).then((f) => setState(() {
           _initializeCameraFuture = initializeCamera();
+          buildCameraPreview();
           if (f != null) {
             updateSelectedSheet(f);
           }
@@ -141,8 +164,7 @@ class VideoRecordingPageState extends State<VideoRecordingPage> {
 
   void updateSelectedSheet(File f) {
     selectedFile = f;
-    selectedSheet =
-        ActionSheetDecoder.getInstance().decode(f.readAsStringSync());
+    selectedSheet = ActionSheetDecoder.getInstance().decode(f);
   }
 
   void openRecordingManager() {
@@ -153,24 +175,28 @@ class VideoRecordingPageState extends State<VideoRecordingPage> {
         .then((_) {
       setState(() {
         _initializeCameraFuture = initializeCamera();
+        buildCameraPreview();
       });
     });
   }
 
   Future<void> disposeCamera() async {
+    if (config.enableFlash) torch.toggle();
     await controller.dispose();
     controller = null;
   }
 
-  void openSetting() {
-    // controller.dispose();
-    // Navigator.push(context, MaterialPageRoute(builder: (_) => SettingPage()))
-    //     .then((value) {
-    //   setState(() {
-    //     initializeCamera();
-    //   });
-    // });
+  String badgeContent() {
+    if (isRecording) {
+      return Utils.formatDuration(
+          currentRecordingTime.difference(recordingStartTime));
+    } else if (selectedSheet != null) {
+      return selectedSheet.sheetName;
+    } else
+      return "";
+  }
 
+  void openSetting() {
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
       content: Container(
         decoration: BoxDecoration(
@@ -184,49 +210,67 @@ class VideoRecordingPageState extends State<VideoRecordingPage> {
         ),
       ),
       backgroundColor: Colors.transparent,
-      elevation: 1000,
+      elevation: 0,
       behavior: SnackBarBehavior.floating,
     ));
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        key: _scaffoldNode,
-        body: OrientationBuilder(
-          builder: (BuildContext context, Orientation orientation) {
-            return Stack(
-                fit: StackFit.loose,
-                alignment: Alignment.center,
-                children: <Widget>[
-                  Positioned.fill(child: cameraPreview()),
-                  SafeArea(
-                    child: TopToolBar(
-                      orientation: orientation,
-                      enableFlash: config.enableFlash,
-                      onFlashBtnPressed: flashBtnHandler,
-                      onSwitchBtnPressed: switchCameraHandler,
-                      onSettingBtnPressed: openSetting,
-                    ),
-                  ),
-                  SafeArea(
-                    child: Align(
-                        alignment: Alignment.topCenter,
-                        child: Padding(
-                            padding: EdgeInsets.only(top: 10.0),
-                            child: TimeCountText.fromDuration(
-                                Duration(seconds: 10000)))),
-                  ),
-                  SafeArea(
-                    child: BottomToolBar(
-                        orientation: orientation,
-                        isRecording: isRecording,
-                        onDocumentButtonPressed: openSheetManager,
-                        onRecordingButtonPressed: onRecordingBtnPressed,
-                        onMovieButtonPressed: openRecordingManager),
-                  ),
-                ]);
-          },
-        ));
+    return Scaffold(body: OrientationBuilder(
+      builder: (BuildContext context, Orientation orientation) {
+        return Stack(
+            fit: StackFit.loose,
+            alignment: Alignment.center,
+            children: <Widget>[
+              Positioned.fill(child: cameraWidget),
+              SafeArea(
+                bottom: false,
+                child: TopToolBar(
+                  orientation: orientation,
+                  enableFlash: config.enableFlash,
+                  onFlashBtnPressed: flashBtnHandler,
+                  onSwitchBtnPressed: switchCameraHandler,
+                  onSettingBtnPressed: openSetting,
+                ),
+              ),
+              AnimatedOpacity(
+                opacity: (selectedSheet != null || isRecording) ? 1.0 : 0.0,
+                duration: const Duration(milliseconds: 300),
+                child: SafeArea(
+                  child: Align(
+                      alignment: Alignment.topCenter,
+                      child: Padding(
+                          padding: EdgeInsets.only(top: 20.0),
+                          child: ConstrainedBox(
+                            constraints: BoxConstraints(
+                                maxWidth:
+                                    MediaQuery.of(context).size.width * 0.5),
+                            child: HighlightedContainer(
+                              highlightedColor: isRecording
+                                  ? Colors.red.withAlpha(150)
+                                  : null,
+                              child: Text(
+                                badgeContent(),
+                                softWrap: true,
+                                overflow: TextOverflow.ellipsis,
+                                style: Theme.of(context).textTheme.headline6,
+                              ),
+                            ),
+                          ))),
+                ),
+              ),
+              SafeArea(
+                bottom: false,
+                child: BottomToolBar(
+                    orientation: orientation,
+                    isRecording: isRecording,
+                    onDocumentButtonPressed: openSheetManager,
+                    onRecordingButtonPressed: onRecordingBtnPressed,
+                    onMovieButtonPressed: openRecordingManager),
+              ),
+            ]);
+      },
+    ));
   }
 }

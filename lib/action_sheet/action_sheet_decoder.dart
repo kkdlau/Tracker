@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:Tracker/action_sheet/action_description.dart';
+import 'package:Tracker/utils.dart';
 
 import 'action_sheet.dart';
 import 'dart:convert';
@@ -32,12 +35,16 @@ class ActionSheetDecoder {
   ///  Decode file data into [ActionSheet].
   ///
   /// [rawFileData] is the raw string data from the file.
-  ActionSheet decode(String rawFileData) {
-    if (rawFileData.isEmpty) return ActionSheet();
+  ActionSheet decode(File f) {
+    if (f == null) return ActionSheet();
+    String s = f.readAsStringSync();
+    print(s);
 
-    final Map<String, dynamic> mapped = json.decode(rawFileData);
+    final Map<String, dynamic> mapped = json.decode(s);
 
     _sheet = ActionSheet();
+
+    _sheet.sheetName = f.alias;
 
     mapped.forEach((key, value) {
       if (key == "actions") {
@@ -45,6 +52,6 @@ class ActionSheetDecoder {
       }
     });
 
-    return _sheet.clone();
+    return _sheet;
   }
 }

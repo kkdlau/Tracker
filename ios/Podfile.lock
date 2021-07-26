@@ -23,6 +23,8 @@ PODS:
     - Flutter
   - share (0.0.1):
     - Flutter
+  - torch_controller (0.1.2):
+    - Flutter
   - video_player (0.0.1):
     - Flutter
   - video_thumbnail (0.0.1):
@@ -37,6 +39,7 @@ DEPENDENCIES:
   - Flutter (from `Flutter`)
   - path_provider (from `.symlinks/plugins/path_provider/ios`)
   - share (from `.symlinks/plugins/share/ios`)
+  - torch_controller (from `.symlinks/plugins/torch_controller/ios`)
   - video_player (from `.symlinks/plugins/video_player/ios`)
   - video_thumbnail (from `.symlinks/plugins/video_thumbnail/ios`)
   - wakelock (from `.symlinks/plugins/wakelock/ios`)
@@ -59,6 +62,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/path_provider/ios"
   share:
     :path: ".symlinks/plugins/share/ios"
+  torch_controller:
+    :path: ".symlinks/plugins/torch_controller/ios"
   video_player:
     :path: ".symlinks/plugins/video_player/ios"
   video_thumbnail:
@@ -76,6 +81,7 @@ SPEC CHECKSUMS:
   libwebp: 946cb3063cea9236285f7e9a8505d806d30e07f3
   path_provider: abfe2b5c733d04e238b0d8691db0cfd63a27a93c
   share: 0b2c3e82132f5888bccca3351c504d0003b3b410
+  torch_controller: b9e6c3deaf9a6092aad39e48d3e0210e573f2505
   video_player: 9cc823b1d9da7e8427ee591e8438bfbcde500e6e
   video_thumbnail: c4e2a3c539e247d4de13cd545344fd2d26ffafd1
   wakelock: d0fc7c864128eac40eba1617cb5264d9c940b46f

@@ -37,7 +37,7 @@ class _SheetEditorState extends State<SheetEditor> {
   void initState() {
     super.initState();
     f = File(widget.filePath);
-    _sheet = ActionSheetDecoder.getInstance().decode(f.readAsStringSync());
+    _sheet = ActionSheetDecoder.getInstance().decode(f);
 
     if (_sheet.actions.length == 0) {
       insertNewAction(0,

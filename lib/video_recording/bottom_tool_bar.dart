@@ -77,6 +77,8 @@ class _BottomToolBarState extends State<BottomToolBar> {
 
   @override
   Widget build(BuildContext context) {
+    final Size screenSize = MediaQuery.of(context).size;
+
     return Align(
         alignment: widget.orientation == Orientation.landscape
             ? Alignment.centerRight
@@ -88,11 +90,14 @@ class _BottomToolBarState extends State<BottomToolBar> {
                 mainAxisSize: MainAxisSize.max,
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: _toolbuttons())
-            : Row(
-                // portrait
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisSize: MainAxisSize.max,
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: _toolbuttons()));
+            : Padding(
+                padding: EdgeInsets.only(bottom: screenSize.height * 0.05),
+                child: Row(
+                    // portrait
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisSize: MainAxisSize.max,
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: _toolbuttons()),
+              ));
   }
 }

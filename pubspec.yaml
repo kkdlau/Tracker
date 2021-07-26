@@ -40,6 +40,7 @@ dependencies:
   chewie: 
   video_player:
   better_player:
+  torch_controller: ^0.4.0
 
   
 
