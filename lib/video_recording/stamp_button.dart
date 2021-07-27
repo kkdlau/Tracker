@@ -42,7 +42,9 @@ class _StampButtonState extends State<StampButton> {
             height: holding ? StampButton.HOLDING_SIZE : StampButton.SIZE,
             duration: const Duration(milliseconds: 100),
             decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10.0), color: Colors.white),
+                boxShadow: [BoxShadow(blurRadius: 2.0)],
+                borderRadius: BorderRadius.circular(10.0),
+                color: Colors.white),
           ),
         ),
       ),
