@@ -239,6 +239,31 @@ class VideoRecordingPageState extends State<VideoRecordingPage> {
     ));
   }
 
+  void saveStamp() {
+    if (MediaQuery.of(context).orientation == Orientation.landscape) {
+      ScaffoldMessenger.of(context).hideCurrentSnackBar();
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: UnconstrainedBox(
+            alignment: Alignment.bottomLeft,
+            constrainedAxis: Axis.vertical,
+            child: Container(
+              decoration: BoxDecoration(
+                  color: Colors.green,
+                  borderRadius: BorderRadius.circular(10.0)),
+              margin: EdgeInsets.fromLTRB(0, 0, 0, 10),
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text('+1s'),
+              ),
+            )),
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        behavior: SnackBarBehavior.floating,
+        duration: const Duration(seconds: 2),
+      ));
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(body: OrientationBuilder(
@@ -296,7 +321,8 @@ class VideoRecordingPageState extends State<VideoRecordingPage> {
                     isRecording: isRecording,
                     onDocumentButtonPressed: openSheetManager,
                     onRecordingButtonPressed: onRecordingBtnPressed,
-                    onMovieButtonPressed: openRecordingManager),
+                    onMovieButtonPressed: openRecordingManager,
+                    onStampButtonPressed: saveStamp),
               ),
             ]);
       },

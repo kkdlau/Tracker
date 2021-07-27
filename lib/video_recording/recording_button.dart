@@ -97,8 +97,8 @@ class InnerButton extends StatelessWidget {
     return Center(
       child: UnconstrainedBox(
         child: AnimatedContainer(
-          width: isRecording ? 25.0 : 50.0,
-          height: isRecording ? 25.0 : 50.0,
+          width: isRecording ? 25.0 : 54.0,
+          height: isRecording ? 25.0 : 54.0,
           duration: const Duration(milliseconds: 100),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(isRecording ? 5.0 : 25.0),

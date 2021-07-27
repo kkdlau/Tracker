@@ -93,7 +93,9 @@ class _BottomToolBarState extends State<BottomToolBar> {
                             color: Colors.black)
                       ],
                     )
-                  : StampButton())),
+                  : StampButton(
+                      onPressed: widget.onStampButtonPressed,
+                    ))),
     ];
   }
 
