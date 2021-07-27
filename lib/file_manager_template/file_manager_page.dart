@@ -142,6 +142,7 @@ class FileManagerPageState extends State<FileManagerPage> {
                           icon: Icon(Icons.add),
                           onPressed: () {
                             openCreateFilePrompt().then((alias) {
+                              if (alias == null) return;
                               File f = File(dirFullPath +
                                   alias +
                                   ACTION_SHEET_FILE_EXTENSION);

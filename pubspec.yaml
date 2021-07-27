@@ -34,12 +34,10 @@ dependencies:
   provider:
   after_layout: ^1.0.7+2
   async: ^2.4.2
-  implicitly_animated_reorderable_list: ^0.3.2
   video_thumbnail: ^0.2.5+1
   share: ^0.6.5+4
   chewie: 
   video_player:
-  better_player:
   torch_controller: ^0.4.0
 
   

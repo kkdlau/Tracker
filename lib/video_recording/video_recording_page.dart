@@ -84,16 +84,34 @@ class VideoRecordingPageState extends State<VideoRecordingPage> {
   }
 
   void buildCameraPreview() {
-    cameraWidget = FutureBuilder(
-      future: _initializeCameraFuture,
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.done) {
-          return CameraViewer(controller);
-        } else {
-          return waitingCameraWidget();
-        }
-      },
-    );
+    if (controller == null || _initializeCameraFuture == null) {
+      /**
+       * while this page is not on screen (i.e. the user jumps to other pages),
+       * this page will dispose the camera temporarily to avoid the camera keeps opening.
+       * 
+       * However, Flutter still renders this page whatever any setState() is called,
+       * and cause the camera widget to rebuild.
+       * 
+       * Hence we need to put a empty widget for handling this case.
+       */
+      cameraWidget = SizedBox();
+    } else {
+      cameraWidget = FutureBuilder(
+        future: _initializeCameraFuture,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.done) {
+            return CameraViewer(controller, scaleCallback: (details) {
+              if (details.pointerCount == 1)
+                return; // don't handle if only a finger is used
+
+              // !todo: implement camera scaling
+            });
+          } else {
+            return waitingCameraWidget();
+          }
+        },
+      );
+    }
   }
 
   void onRecordingBtnPressed() {
@@ -101,9 +119,10 @@ class VideoRecordingPageState extends State<VideoRecordingPage> {
       isRecording = !isRecording;
       if (isRecording) {
         try {
-          controller.startVideoRecording();
+          // controller.startVideoRecording();
           recordingStartTime = DateTime.now();
           currentRecordingTime = recordingStartTime;
+
           updateBadgeTimer =
               Timer.periodic(Duration(seconds: 1), updateCurrentRecordingTime);
         } catch (e) {
@@ -111,6 +130,7 @@ class VideoRecordingPageState extends State<VideoRecordingPage> {
         }
       } else {
         updateBadgeTimer?.cancel();
+        return;
         controller.stopVideoRecording().then((XFile f) {
           Utils.getDocumentRootPath().then((root) {
             final String fileAlias = f.path.split('/').last;
@@ -148,8 +168,8 @@ class VideoRecordingPageState extends State<VideoRecordingPage> {
         (config.cameraIndex + 1) % widget.availableCameras.length;
   }
 
-  void openSheetManager() {
-    disposeCamera();
+  void openSheetManager() async {
+    await disposeCamera();
     Navigator.push<File>(context,
         MaterialPageRoute(builder: (BuildContext context) {
       return SheetManagerPage();
@@ -167,8 +187,8 @@ class VideoRecordingPageState extends State<VideoRecordingPage> {
     selectedSheet = ActionSheetDecoder.getInstance().decode(f);
   }
 
-  void openRecordingManager() {
-    disposeCamera();
+  void openRecordingManager() async {
+    await disposeCamera();
 
     Navigator.push(
             context, MaterialPageRoute(builder: (_) => RecordingManagerPage()))
@@ -183,7 +203,11 @@ class VideoRecordingPageState extends State<VideoRecordingPage> {
   Future<void> disposeCamera() async {
     if (config.enableFlash) torch.toggle();
     await controller.dispose();
-    controller = null;
+    setState(() {
+      controller = null;
+      _initializeCameraFuture = null;
+      cameraWidget = SizedBox.shrink();
+    });
   }
 
   String badgeContent() {
@@ -226,12 +250,17 @@ class VideoRecordingPageState extends State<VideoRecordingPage> {
               Positioned.fill(child: cameraWidget),
               SafeArea(
                 bottom: false,
-                child: TopToolBar(
-                  orientation: orientation,
-                  enableFlash: config.enableFlash,
-                  onFlashBtnPressed: flashBtnHandler,
-                  onSwitchBtnPressed: switchCameraHandler,
-                  onSettingBtnPressed: openSetting,
+                child: AnimatedSwitcher(
+                  duration: const Duration(milliseconds: 200),
+                  child: !isRecording
+                      ? TopToolBar(
+                          orientation: orientation,
+                          enableFlash: config.enableFlash,
+                          onFlashBtnPressed: flashBtnHandler,
+                          onSwitchBtnPressed: switchCameraHandler,
+                          onSettingBtnPressed: openSetting,
+                        )
+                      : SizedBox.shrink(),
                 ),
               ),
               AnimatedOpacity(
@@ -241,7 +270,7 @@ class VideoRecordingPageState extends State<VideoRecordingPage> {
                   child: Align(
                       alignment: Alignment.topCenter,
                       child: Padding(
-                          padding: EdgeInsets.only(top: 20.0),
+                          padding: EdgeInsets.only(top: 12.0),
                           child: ConstrainedBox(
                             constraints: BoxConstraints(
                                 maxWidth:

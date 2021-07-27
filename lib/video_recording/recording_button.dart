@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class _CustomBoxShadow extends BoxShadow {
   final BlurStyle blurStyle;
@@ -48,7 +49,10 @@ class _RecordingButtonState extends State<RecordingButton> {
   Widget build(BuildContext context) {
     return UnconstrainedBox(
       child: GestureDetector(
-          onTap: widget.onPressed,
+          onTap: () {
+            HapticFeedback.selectionClick();
+            if (widget.onPressed != null) widget.onPressed();
+          },
           onTapDown: (_) {
             setState(() {
               isHolding = true;

@@ -7,7 +7,9 @@ import 'package:flutter/material.dart';
 /// The widget doesn't has the responsibility to maintain the life cycle of camera controller.
 class CameraViewer extends StatefulWidget {
   final CameraController controller;
-  CameraViewer(this.controller, {Key key}) : super(key: key);
+  final void Function(ScaleUpdateDetails) scaleCallback;
+  CameraViewer(this.controller, {Key key, this.scaleCallback})
+      : super(key: key);
 
   @override
   _CameraViewerState createState() => _CameraViewerState();
@@ -44,14 +46,18 @@ class _CameraViewerState extends State<CameraViewer> {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-        child: FittedBox(
-      clipBehavior: Clip.hardEdge,
-      fit: BoxFit.cover,
-      child: SizedBox(
-          width: cameraWidth,
-          height: cameraHeight,
-          child: CameraPreview(_controller)),
-    ));
+    if (_controller == null)
+      return SizedBox();
+    else
+      return GestureDetector(
+          onScaleUpdate: widget.scaleCallback,
+          child: FittedBox(
+            clipBehavior: Clip.hardEdge,
+            fit: BoxFit.cover,
+            child: SizedBox(
+                width: cameraWidth,
+                height: cameraHeight,
+                child: CameraPreview(_controller)),
+          ));
   }
 }

@@ -7,7 +7,6 @@ import 'package:Tracker/sheet_editor/action_edit_dialog.dart';
 import 'package:Tracker/sheet_editor/confirm_quit_dialog.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:implicitly_animated_reorderable_list/implicitly_animated_reorderable_list.dart';
 
 extension SwappableList<T> on List<T> {
   void swap(int oldIndex, int newIndex) {

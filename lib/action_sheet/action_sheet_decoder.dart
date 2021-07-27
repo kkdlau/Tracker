@@ -36,7 +36,7 @@ class ActionSheetDecoder {
   ActionSheet decode(File f) {
     if (f == null) return ActionSheet();
     String s = f.readAsStringSync();
-    print(s);
+    if (s.isEmpty) return ActionSheet(sheetName: f.alias);
 
     final Map<String, dynamic> mapped = json.decode(s);
 
