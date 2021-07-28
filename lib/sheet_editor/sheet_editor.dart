@@ -162,6 +162,38 @@ class _SheetEditorState extends State<SheetEditor> {
     return true;
   }
 
+  Future<void> askForMergingTime() async {
+    bool merge = await showCupertinoDialog(
+        context: context,
+        builder: (_) {
+          return CupertinoAlertDialog(
+            title: Text('Time Merging'),
+            content: Text(
+                'Target time and time difference will be merged together.'),
+            actions: [
+              CupertinoButton(
+                  child: Text('Ok'),
+                  onPressed: () {
+                    Navigator.pop(context, true);
+                  }),
+              CupertinoTheme(
+                data: CupertinoThemeData(primaryColor: Colors.red),
+                child: CupertinoButton(
+                    child: Text('Cancel'),
+                    onPressed: () {
+                      Navigator.pop(context, false);
+                    }),
+              )
+            ],
+          );
+        });
+
+    if (merge) {
+      _sheet.actions.forEach((element) => element.mergeTimeDifference());
+      setState(() {});
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
@@ -175,6 +207,11 @@ class _SheetEditorState extends State<SheetEditor> {
           elevation: 0.0,
           title: Text(f.path.split('/').last.split('.').first),
           actions: [
+            Padding(
+              padding: const EdgeInsets.only(right: 10.0),
+              child: IconButton(
+                  icon: Icon(Icons.schedule), onPressed: askForMergingTime),
+            ),
             Padding(
               padding: const EdgeInsets.only(right: 15.0),
               child:

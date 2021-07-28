@@ -1,8 +1,10 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:Tracker/action_sheet/action_description.dart';
 import 'package:Tracker/action_sheet/action_sheet.dart';
 import 'package:Tracker/action_sheet/action_sheet_decoder.dart';
+import 'package:Tracker/action_sheet/action_text.dart';
 import 'package:Tracker/recording_manager/recording_manager_page.dart';
 import 'package:Tracker/setting/setting_page.dart';
 import 'package:Tracker/sheet_manager/sheet_magaer_page.dart';
@@ -31,15 +33,14 @@ class VideoRecordingPage extends StatefulWidget {
 }
 
 class VideoRecordingPageState extends State<VideoRecordingPage> {
-  File selectedFile;
-  CameraController controller;
-  CameraConfiguration config;
+  CameraController controller; // camera controller
+  CameraConfiguration config; // camera configuration
   Future<void> _initializeCameraFuture;
   TorchController torch;
   bool isRecording;
   ActionSheet selectedSheet;
+  int recordedStamp; // count of recorded stamp, should not exceed the length of [selectedSheet]'s actions
   DateTime recordingStartTime;
-  DateTime currentRecordingTime;
   Timer updateBadgeTimer;
   Widget cameraWidget;
 
@@ -121,7 +122,7 @@ class VideoRecordingPageState extends State<VideoRecordingPage> {
         try {
           // controller.startVideoRecording();
           recordingStartTime = DateTime.now();
-          currentRecordingTime = recordingStartTime;
+          recordedStamp = 0;
 
           updateBadgeTimer =
               Timer.periodic(Duration(seconds: 1), updateCurrentRecordingTime);
@@ -143,7 +144,7 @@ class VideoRecordingPageState extends State<VideoRecordingPage> {
 
   void updateCurrentRecordingTime(_) {
     setState(() {
-      currentRecordingTime = DateTime.now();
+      badgeContent(); // dummy function call
     });
   }
 
@@ -183,7 +184,6 @@ class VideoRecordingPageState extends State<VideoRecordingPage> {
   }
 
   void updateSelectedSheet(File f) {
-    selectedFile = f;
     selectedSheet = ActionSheetDecoder.getInstance().decode(f);
   }
 
@@ -210,10 +210,15 @@ class VideoRecordingPageState extends State<VideoRecordingPage> {
     });
   }
 
+  Duration get recordingDuration {
+    return isRecording
+        ? DateTime.now().difference(recordingStartTime)
+        : Duration.zero;
+  }
+
   String badgeContent() {
     if (isRecording) {
-      return Utils.formatDuration(
-          currentRecordingTime.difference(recordingStartTime));
+      return Utils.formatDuration(recordingDuration);
     } else if (selectedSheet != null) {
       return selectedSheet.sheetName;
     } else
@@ -240,22 +245,22 @@ class VideoRecordingPageState extends State<VideoRecordingPage> {
   }
 
   void saveStamp() {
+    if (recordedStamp >= selectedSheet.actions.length)
+      return; // no more stamps for recording
+
+    final ActionDescription act = selectedSheet.actions[recordedStamp++];
+
+    Duration d = recordingDuration;
+
+    act.timeDiff = d - act.targetTime;
+
     if (MediaQuery.of(context).orientation == Orientation.landscape) {
       ScaffoldMessenger.of(context).hideCurrentSnackBar();
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: UnconstrainedBox(
             alignment: Alignment.bottomLeft,
             constrainedAxis: Axis.vertical,
-            child: Container(
-              decoration: BoxDecoration(
-                  color: Colors.green,
-                  borderRadius: BorderRadius.circular(10.0)),
-              margin: EdgeInsets.fromLTRB(0, 0, 0, 10),
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text('+1s'),
-              ),
-            )),
+            child: ActionText.fromAction(act)),
         backgroundColor: Colors.transparent,
         elevation: 0,
         behavior: SnackBarBehavior.floating,

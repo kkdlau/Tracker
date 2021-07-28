@@ -94,12 +94,17 @@ class ActionDescription {
     return '0 ms';
   }
 
-  Color timeDiffColor() {
-    if (timeDiff.inSeconds > 0) {
-      return Colors.green;
-    } else if (timeDiff.inSeconds < 0) {
+  Color get timeDiffColor {
+    if (timeDiff.inMilliseconds > 0) {
       return Colors.red;
+    } else if (timeDiff.inMilliseconds < 0) {
+      return Colors.green;
     }
     return Colors.grey;
+  }
+
+  void mergeTimeDifference() {
+    targetTime += timeDiff;
+    timeDiff = Duration.zero;
   }
 }

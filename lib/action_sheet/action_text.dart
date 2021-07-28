@@ -6,25 +6,21 @@ class ActionText extends StatelessWidget {
   final Duration time;
   final Duration timeDiff;
   final String data;
+  final Color color;
 
   const ActionText(
       {Key key,
       @required this.time,
       @required this.timeDiff,
-      @required this.data})
+      @required this.data,
+      @required this.color})
       : super(key: key);
 
   TextSpan timeDiffText() {
     final String sign = timeDiff.isNegative ? '-' : '+';
     final int ms = timeDiff.inMilliseconds;
     return TextSpan(
-        style: TextStyle(
-            color: ms == 0
-                ? Colors.grey
-                : ms > 0
-                    ? Colors.green
-                    : Colors.red),
-        text: '[$sign${ms.abs()}\ms]\n');
+        style: TextStyle(color: color), text: '[$sign${ms.abs()}\ms]\n');
   }
 
   @override
@@ -48,5 +44,6 @@ class ActionText extends StatelessWidget {
   ActionText.fromAction(ActionDescription action)
       : time = action.targetTime,
         timeDiff = action.timeDiff,
-        data = action.description;
+        data = action.description,
+        color = action.timeDiffColor;
 }

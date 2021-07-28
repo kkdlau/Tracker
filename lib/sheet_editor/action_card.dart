@@ -101,8 +101,7 @@ class ActionCard extends StatelessWidget {
                                 TextSpan(
                                     text: '   Time difference: ' +
                                         act.timeDiffString(),
-                                    style:
-                                        TextStyle(color: act.timeDiffColor()))
+                                    style: TextStyle(color: act.timeDiffColor))
                               ]),
                         )
                       ],
