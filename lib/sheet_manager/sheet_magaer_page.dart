@@ -31,7 +31,7 @@ class _SheetManagerPageState extends State<SheetManagerPage> {
   Widget build(BuildContext context) {
     return FileManagerPage(
       key: _pageNode,
-      title: 'Action Sheet',
+      title: 'Sheet Manager',
       rootDir: ACTION_SHEET_DIR,
       actionhandler: infoCardPressedHandler,
       headingBuilder: (_) => Padding(

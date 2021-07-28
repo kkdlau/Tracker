@@ -75,19 +75,22 @@ class ActionSheet {
   /// If you pass the string without converting it, you will everntually print some weird on the screen.
   /// So don't forget to convert the string back to [ActionDescription].
   Subtitles toSubtitles() {
-    return Subtitles(List.generate(actions.length, (i) {
-      ActionDescription act = actions[i];
-      Duration happenedTime = act.targetTime - act.timeDiff;
-      Duration endTime = happenedTime +
-          Duration(
-              milliseconds:
-                  Utils.calculateCaptionDisplayTime(act.description.length));
+    if (actions.length == 0)
+      return Subtitles([]);
+    else
+      return Subtitles(List.generate(actions.length, (i) {
+        ActionDescription act = actions[i];
+        Duration happenedTime = act.targetTime - act.timeDiff;
+        Duration endTime = happenedTime +
+            Duration(
+                milliseconds:
+                    Utils.calculateCaptionDisplayTime(act.description.length));
 
-      return Subtitle(
-          index: i,
-          start: happenedTime,
-          end: endTime,
-          text: json.encode(act.toMap()));
-    }));
+        return Subtitle(
+            index: i,
+            start: happenedTime,
+            end: endTime,
+            text: json.encode(act.toMap()));
+      }));
   }
 }

@@ -219,18 +219,22 @@ class _SheetEditorState extends State<SheetEditor> {
             )
           ],
         ),
-        body: AnimatedList(
-          key: _listNode,
-          initialItemCount: _sheet.actions.length,
-          itemBuilder:
-              (BuildContext context, int index, Animation<double> animation) {
-            return SizeTransition(
-                sizeFactor: Tween<double>(
-                  begin: 0,
-                  end: 1,
-                ).animate(animation),
-                child: editableActionCard(_sheet.actions[index], index + 1));
-          },
+        body: SafeArea(
+          top: false,
+          bottom: false,
+          child: AnimatedList(
+            key: _listNode,
+            initialItemCount: _sheet.actions.length,
+            itemBuilder: (BuildContext context, int index,
+                    Animation<double> animation) =>
+                SizeTransition(
+                    sizeFactor: Tween<double>(
+                      begin: 0,
+                      end: 1,
+                    ).animate(animation),
+                    child:
+                        editableActionCard(_sheet.actions[index], index + 1)),
+          ),
         ),
       ),
     );

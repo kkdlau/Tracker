@@ -47,7 +47,7 @@ class _CameraViewerState extends State<CameraViewer> {
   @override
   Widget build(BuildContext context) {
     if (_controller == null)
-      return SizedBox();
+      return Container(color: Theme.of(context).primaryColorDark);
     else
       return GestureDetector(
           onScaleUpdate: widget.scaleCallback,

@@ -12,7 +12,6 @@ import 'package:Tracker/utils.dart';
 import 'package:Tracker/video_recording/bottom_tool_bar.dart';
 import 'package:Tracker/video_recording/camera_config.dart';
 import 'package:Tracker/video_recording/camera_viewer.dart';
-import 'package:Tracker/video_recording/time_count_text.dart';
 import 'package:Tracker/video_recording/top_tool_bar.dart';
 import 'package:Tracker/widgets/hightlighted_container.dart';
 import 'package:camera/camera.dart';
@@ -38,6 +37,7 @@ class VideoRecordingPageState extends State<VideoRecordingPage> {
   Future<void> _initializeCameraFuture;
   TorchController torch;
   bool isRecording;
+  File selectedFile;
   ActionSheet selectedSheet;
   ActionSheet tmpSheet;
   int recordedStamp; // count of recorded stamp, should not exceed the length of [selectedSheet]'s actions
@@ -108,7 +108,7 @@ class VideoRecordingPageState extends State<VideoRecordingPage> {
               if (details.pointerCount == 1)
                 return; // don't handle if only a finger is used
 
-              // !todo: implement camera scaling
+              // TODO: implement camera scaling
             });
           } else {
             return waitingCameraWidget();
@@ -123,7 +123,7 @@ class VideoRecordingPageState extends State<VideoRecordingPage> {
       isRecording = !isRecording;
       if (isRecording) {
         try {
-          // controller.startVideoRecording();
+          controller.startVideoRecording();
           recordingStartTime = DateTime.now();
           recordedStamp = 0;
           tmpSheet = ActionSheet();
@@ -136,16 +136,17 @@ class VideoRecordingPageState extends State<VideoRecordingPage> {
       } else {
         updateBadgeTimer?.cancel();
 
-        return;
         controller.stopVideoRecording().then((XFile f) {
           Utils.getDocumentRootPath().then((root) {
-            final String fileAlias = f.path.split('/').last;
-            File(f.path).copy('$root/$RECORDING_DIR' + fileAlias);
-
-            tmpSheet.sheetName = fileAlias;
-            tmpSheet.saveTo('$root/$ACTION_SHEET_DIR' +
-                tmpSheet.sheetName +
-                ACTION_SHEET_FILE_EXTENSION);
+            final String fileAliasWithExtension = f.path.split('/').last;
+            File(f.path).copy('$root/$RECORDING_DIR' + fileAliasWithExtension);
+            if (selectedSheet != null) {
+              tmpSheet.sheetName =
+                  fileAliasWithExtension.split('.').first; // remove extension
+              tmpSheet.saveTo('$root/$ACTION_SHEET_DIR' +
+                  tmpSheet.sheetName +
+                  ACTION_SHEET_FILE_EXTENSION);
+            }
           });
         });
       }
@@ -189,11 +190,17 @@ class VideoRecordingPageState extends State<VideoRecordingPage> {
           buildCameraPreview();
           if (f != null) {
             updateSelectedSheet(f);
+          } else if (selectedFile != null && !selectedFile.existsSync()) {
+            setState(() {
+              selectedFile = null;
+              selectedSheet = null;
+            });
           }
         }));
   }
 
   void updateSelectedSheet(File f) {
+    selectedFile = f;
     selectedSheet = ActionSheetDecoder.getInstance().decode(f);
   }
 
@@ -228,8 +235,10 @@ class VideoRecordingPageState extends State<VideoRecordingPage> {
 
   String badgeContent() {
     if (isRecording) {
+      // print recording duration is prioritized
       return Utils.formatDuration(recordingDuration);
     } else if (selectedSheet != null) {
+      // print selected sheet
       return selectedSheet.sheetName;
     } else
       return "";
@@ -237,18 +246,8 @@ class VideoRecordingPageState extends State<VideoRecordingPage> {
 
   void openSetting() {
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-      content: Container(
-        decoration: BoxDecoration(
-            color: Colors.white,
-            border: Border.all(width: 2.0, color: Colors.black),
-            borderRadius: BorderRadius.circular(20)),
-        margin: EdgeInsets.fromLTRB(0, 0, 0, 75),
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Text('Yay! A SnackBar!'),
-        ),
-      ),
-      backgroundColor: Colors.transparent,
+      content: Text('Setting is currently unavailable.'),
+      backgroundColor: Colors.grey,
       elevation: 0,
       behavior: SnackBarBehavior.floating,
     ));
@@ -320,7 +319,7 @@ class VideoRecordingPageState extends State<VideoRecordingPage> {
                           child: ConstrainedBox(
                             constraints: BoxConstraints(
                                 maxWidth:
-                                    MediaQuery.of(context).size.width * 0.5),
+                                    MediaQuery.of(context).size.width * 0.4),
                             child: HighlightedContainer(
                               highlightedColor: isRecording
                                   ? Colors.red.withAlpha(150)

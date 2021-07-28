@@ -65,11 +65,8 @@ class _RecordingManagerPageState extends State<RecordingManagerPage> {
     );
   }
 
-  Future<String> _tempActionSheet() async {
-    Directory d = await Utils.openFolder(ACTION_SHEET_DIR);
-    print(d.path);
-
-    return d.path + 'robocon 2021.json';
+  Future<String> getSheetPath(String videoAlias) async {
+    return Utils.fullPathToSheet(videoAlias);
   }
 
   void videoCardHandler(INFO_CARD_ACTION actionType, File file) {
@@ -78,7 +75,7 @@ class _RecordingManagerPageState extends State<RecordingManagerPage> {
         Share.shareFiles([file.path]);
         break;
       case INFO_CARD_ACTION.DELETE:
-        // todo: delete video with sheet record
+        // TODO: delete video with sheet record
         removeVideoFile(file);
         break;
       case INFO_CARD_ACTION.SELECT:
@@ -88,12 +85,12 @@ class _RecordingManagerPageState extends State<RecordingManagerPage> {
                 if (snapshot.connectionState == ConnectionState.done) {
                   return ActionVideoPlayer(
                     videoPath: file.path,
-                    sheetPath: snapshot.data,
+                    sheetPath: snapshot.data, // path to sheet
                   );
                 } else
                   return Container();
               },
-              future: _tempActionSheet());
+              future: getSheetPath(file.alias));
         }));
         break;
       default:

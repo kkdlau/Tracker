@@ -109,18 +109,14 @@ class FileManagerPageState extends State<FileManagerPage> {
   Widget _fileCard(File f) {
     Widget headingWidget =
         widget.headingBuilder != null ? widget.headingBuilder(f) : null;
-    return SafeArea(
-      top: false,
-      bottom: false,
-      child: InfoCard(
-        config: widget.config.cardConfig,
-        heading: headingWidget,
-        onActionSelected: (actionType) {
-          widget.actionhandler(actionType, f);
-        },
-        fullPath: f.path,
-        date: f.lastModifiedSync(),
-      ),
+    return InfoCard(
+      config: widget.config.cardConfig,
+      heading: headingWidget,
+      onActionSelected: (actionType) {
+        widget.actionhandler(actionType, f);
+      },
+      fullPath: f.path,
+      date: f.lastModifiedSync(),
     );
   }
 
@@ -163,17 +159,21 @@ class FileManagerPageState extends State<FileManagerPage> {
           future: _dirFuture,
           builder: (context, asyncSnapshot) {
             if (asyncSnapshot.connectionState == ConnectionState.done) {
-              return AnimatedList(
-                key: _fileListNode,
-                initialItemCount: _availableFiles.length,
-                itemBuilder: (context, idx, animation) {
-                  return SizeTransition(
-                      sizeFactor: Tween<double>(
-                        begin: 0,
-                        end: 1,
-                      ).animate(animation),
-                      child: _fileCard(_availableFiles[idx]));
-                },
+              return SafeArea(
+                top: false,
+                bottom: false,
+                child: AnimatedList(
+                  key: _fileListNode,
+                  initialItemCount: _availableFiles.length,
+                  itemBuilder: (context, idx, animation) {
+                    return SizeTransition(
+                        sizeFactor: Tween<double>(
+                          begin: 0,
+                          end: 1,
+                        ).animate(animation),
+                        child: _fileCard(_availableFiles[idx]));
+                  },
+                ),
               );
             } else {
               return Container();

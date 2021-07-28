@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:Tracker/action_sheet/action_description.dart';
 import 'package:Tracker/action_sheet/action_sheet.dart';
+import 'package:Tracker/action_sheet/action_sheet_decoder.dart';
 import 'package:Tracker/action_sheet/action_text.dart';
 import 'package:chewie/chewie.dart';
 import 'package:flutter/material.dart';
@@ -28,13 +29,14 @@ class ActionVideoPlayerState extends State<ActionVideoPlayer> {
   @override
   void initState() {
     super.initState();
-    _sheet = ActionSheet(actions: [
-      ActionDescription(
-          'lmao', Duration(seconds: 1), Duration(milliseconds: 100))
-    ]);
+    File f = File(widget.sheetPath);
+
+    _sheet = ActionSheetDecoder.getInstance().decode(f);
 
     videoPlayerController = VideoPlayerController.file(File(widget.videoPath));
     chewieController = ChewieController(
+        allowFullScreen: false,
+        playbackSpeeds: [0.1, 0.25, 0.5, 1.0, 1.5, 2.0],
         videoPlayerController: videoPlayerController,
         subtitle: _sheet.toSubtitles(),
         subtitleBuilder: (context, text) {

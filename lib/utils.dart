@@ -2,6 +2,8 @@ import 'dart:io';
 
 import 'package:path_provider/path_provider.dart';
 
+import 'define.dart';
+
 class Utils {
   /// Returns path of Application Document Directory.
   static Future<String> getDocumentRootPath() async {
@@ -45,6 +47,11 @@ class Utils {
     String twoDigitSeconds = twoDigits(d.inSeconds.remainder(60));
 
     return "${twoDigits(d.inHours)}:$twoDigitMinutes:$twoDigitSeconds";
+  }
+
+  static Future<String> fullPathToSheet(String alias) async {
+    final String root = await getDocumentRootPath();
+    return '$root/$ACTION_SHEET_DIR' + alias + ACTION_SHEET_FILE_EXTENSION;
   }
 }
 

@@ -33,8 +33,11 @@ class ActionSheetDecoder {
   }
 
   ///  Decode file data into [ActionSheet].
+  ///
+  /// If the given file is not exist, the file consist of empty content,
+  /// an empty sheet is returned.
   ActionSheet decode(File f) {
-    if (f == null) return ActionSheet();
+    if (f == null || !f.existsSync()) return ActionSheet();
     String s = f.readAsStringSync();
     if (s.isEmpty) return ActionSheet(sheetName: f.alias);
 
