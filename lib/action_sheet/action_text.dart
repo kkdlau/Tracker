@@ -33,7 +33,8 @@ class ActionText extends StatelessWidget {
                   style: Theme.of(context).textTheme.bodyText1,
                   children: <TextSpan>[
             TextSpan(
-                text: ActionDescription.durationToString(time, omitMS: true),
+                text: ActionDescription.durationToString(time + timeDiff,
+                    omitMS: true),
                 style: TextStyle(fontWeight: FontWeight.bold)),
             timeDiffText(),
             TextSpan(text: data)

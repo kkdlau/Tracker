@@ -49,6 +49,16 @@ class _BottomToolBarState extends State<BottomToolBar> {
   List<Widget> _toolbuttons() {
     final double ICON_SIZE = Theme.of(context).textTheme.headline3.fontSize;
 
+    // if onStampButtonPressed is null, don't render stamp button and render a blank box instead.
+    Widget stampPlaceHolder = widget.onStampButtonPressed != null
+        ? StampButton(
+            onPressed: widget.onStampButtonPressed,
+          )
+        : SizedBox(
+            width: StampButton.SIZE,
+            height: StampButton.SIZE,
+          );
+
     return [
       // Document Button
       UnconstrainedBox(
@@ -93,9 +103,7 @@ class _BottomToolBarState extends State<BottomToolBar> {
                             color: Colors.black)
                       ],
                     )
-                  : StampButton(
-                      onPressed: widget.onStampButtonPressed,
-                    ))),
+                  : stampPlaceHolder)),
     ];
   }
 

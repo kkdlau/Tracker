@@ -39,6 +39,7 @@ class VideoRecordingPageState extends State<VideoRecordingPage> {
   TorchController torch;
   bool isRecording;
   ActionSheet selectedSheet;
+  ActionSheet tmpSheet;
   int recordedStamp; // count of recorded stamp, should not exceed the length of [selectedSheet]'s actions
   DateTime recordingStartTime;
   Timer updateBadgeTimer;
@@ -47,6 +48,8 @@ class VideoRecordingPageState extends State<VideoRecordingPage> {
   @override
   void initState() {
     super.initState();
+
+    recordedStamp = 0;
 
     config = CameraConfiguration(
         cameraIndex: 0, enableFlash: false, enableAudio: true);
@@ -123,6 +126,7 @@ class VideoRecordingPageState extends State<VideoRecordingPage> {
           // controller.startVideoRecording();
           recordingStartTime = DateTime.now();
           recordedStamp = 0;
+          tmpSheet = ActionSheet();
 
           updateBadgeTimer =
               Timer.periodic(Duration(seconds: 1), updateCurrentRecordingTime);
@@ -131,11 +135,17 @@ class VideoRecordingPageState extends State<VideoRecordingPage> {
         }
       } else {
         updateBadgeTimer?.cancel();
+
         return;
         controller.stopVideoRecording().then((XFile f) {
           Utils.getDocumentRootPath().then((root) {
             final String fileAlias = f.path.split('/').last;
             File(f.path).copy('$root/$RECORDING_DIR' + fileAlias);
+
+            tmpSheet.sheetName = fileAlias;
+            tmpSheet.saveTo('$root/$ACTION_SHEET_DIR' +
+                tmpSheet.sheetName +
+                ACTION_SHEET_FILE_EXTENSION);
           });
         });
       }
@@ -248,11 +258,11 @@ class VideoRecordingPageState extends State<VideoRecordingPage> {
     if (recordedStamp >= selectedSheet.actions.length)
       return; // no more stamps for recording
 
-    final ActionDescription act = selectedSheet.actions[recordedStamp++];
-
+    final ActionDescription act =
+        selectedSheet.actions[recordedStamp++].clone();
     Duration d = recordingDuration;
-
     act.timeDiff = d - act.targetTime;
+    tmpSheet.actions.add(act);
 
     if (MediaQuery.of(context).orientation == Orientation.landscape) {
       ScaffoldMessenger.of(context).hideCurrentSnackBar();
@@ -267,6 +277,12 @@ class VideoRecordingPageState extends State<VideoRecordingPage> {
         duration: const Duration(seconds: 2),
       ));
     }
+  }
+
+  bool hasStampToMark() {
+    return selectedSheet != null &&
+        selectedSheet.actions.length > 0 &&
+        recordedStamp < selectedSheet.actions.length;
   }
 
   @override
@@ -327,7 +343,7 @@ class VideoRecordingPageState extends State<VideoRecordingPage> {
                     onDocumentButtonPressed: openSheetManager,
                     onRecordingButtonPressed: onRecordingBtnPressed,
                     onMovieButtonPressed: openRecordingManager,
-                    onStampButtonPressed: saveStamp),
+                    onStampButtonPressed: hasStampToMark() ? saveStamp : null),
               ),
             ]);
       },

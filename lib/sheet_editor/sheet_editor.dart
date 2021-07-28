@@ -52,7 +52,7 @@ class _SheetEditorState extends State<SheetEditor> {
 
   ActionDescription insertNewAction(int index, {ActionDescription item}) {
     if (item == null) {
-      item = ActionDescription.EmptyTemplate;
+      item = ActionDescription.EmptyTemplate();
     }
 
     _sheet.actions.insert(index, item);
@@ -94,7 +94,7 @@ class _SheetEditorState extends State<SheetEditor> {
 
             insertNewAction(_sheet.actions.indexOf(selectedAction));
             Future.delayed(Duration(milliseconds: 200)).then((value) =>
-                openEditDialog(ActionDescription.EmptyTemplate, indexToSave));
+                openEditDialog(ActionDescription.EmptyTemplate(), indexToSave));
             break;
           case ACIONCARD_ACION.INSERT_BELOW:
             _hasSaved = false;
@@ -103,7 +103,7 @@ class _SheetEditorState extends State<SheetEditor> {
             insertNewAction(_sheet.actions.indexOf(selectedAction) + 1);
             Future.delayed(Duration(milliseconds: 200)).then((value) =>
                 openEditDialog(
-                    ActionDescription.EmptyTemplate, indexToSave + 1));
+                    ActionDescription.EmptyTemplate(), indexToSave + 1));
             break;
           case ACIONCARD_ACION.DELETE:
             _hasSaved = false;

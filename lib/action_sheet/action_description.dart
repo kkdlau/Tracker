@@ -6,8 +6,8 @@ class ActionDescription {
   Duration targetTime;
   Duration timeDiff;
 
-  static ActionDescription get EmptyTemplate {
-    return ActionDescription('', const Duration(), const Duration());
+  static ActionDescription EmptyTemplate() {
+    return ActionDescription('', Duration.zero, Duration.zero);
   }
 
   ActionDescription(String description, Duration targetTime, Duration timeDiff)
@@ -106,5 +106,9 @@ class ActionDescription {
   void mergeTimeDifference() {
     targetTime += timeDiff;
     timeDiff = Duration.zero;
+  }
+
+  ActionDescription clone() {
+    return ActionDescription(description, targetTime, timeDiff);
   }
 }
