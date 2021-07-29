@@ -15,8 +15,7 @@ class _ActionEditDialogState extends State<ActionEditDialog> {
   TextEditingController _descriptionController;
   TextEditingController _targetMinController;
   TextEditingController _targetSecController;
-  TextEditingController _diffMinController;
-  TextEditingController _diffSecController;
+  TextEditingController _diffMSController;
   String _errorMsg;
 
   @override
@@ -33,10 +32,8 @@ class _ActionEditDialogState extends State<ActionEditDialog> {
     _targetSecController = TextEditingController(
         text: (widget.action.targetTime.inSeconds % 60).toString());
 
-    _diffMinController = TextEditingController(
-        text: widget.action.timeDiff.inMinutes.toString());
-    _diffSecController = TextEditingController(
-        text: (widget.action.timeDiff.inSeconds % 60).toString());
+    _diffMSController = TextEditingController(
+        text: (widget.action.timeDiff.inMilliseconds).toString());
   }
 
   ActionDescription constructAction() {
@@ -45,9 +42,7 @@ class _ActionEditDialogState extends State<ActionEditDialog> {
         Duration(
             seconds: int.parse(_targetMinController.text) * 60 +
                 int.parse(_targetSecController.text)),
-        Duration(
-            seconds: int.parse(_diffMinController.text) * 60 +
-                int.parse(_diffSecController.text)));
+        Duration(milliseconds: int.parse(_diffMSController.text)));
   }
 
   Widget _errorText() {
@@ -88,9 +83,6 @@ class _ActionEditDialogState extends State<ActionEditDialog> {
     textfieldAssert(int.parse(_targetSecController.text) >= 0,
         "Target time(Sec) must be a positive number.");
 
-    textfieldAssert(int.parse(_diffSecController.text) >= 0,
-        "Difference time(Sec) must be a positive number.");
-
     return _errorMsg.isEmpty;
   }
 
@@ -103,9 +95,7 @@ class _ActionEditDialogState extends State<ActionEditDialog> {
               Duration(
                   seconds: _calculateSeconds(
                       _targetMinController, _targetSecController)),
-              Duration(
-                  seconds: _calculateSeconds(
-                      _diffMinController, _diffSecController))));
+              Duration(milliseconds: int.parse(_diffMSController.text))));
     }
   }
 
@@ -173,7 +163,8 @@ class _ActionEditDialogState extends State<ActionEditDialog> {
                       )),
                       SizedBox(
                           child: CupertinoTextField(
-                            controller: _diffMinController,
+                            textAlign: TextAlign.end,
+                            controller: _diffMSController,
                             inputFormatters: [
                               FilteringTextInputFormatter.allow(
                                   RegExp('[0-9-]'))
@@ -181,24 +172,10 @@ class _ActionEditDialogState extends State<ActionEditDialog> {
                             keyboardType:
                                 TextInputType.numberWithOptions(signed: true),
                           ),
-                          width: 40.0),
-                      Padding(
-                          padding: EdgeInsets.only(left: 5.0, right: 5.0),
-                          child: Text('m :')),
-                      SizedBox(
-                          child: CupertinoTextField(
-                            controller: _diffSecController,
-                            inputFormatters: [
-                              FilteringTextInputFormatter.allow(
-                                  RegExp('[0-9-]'))
-                            ],
-                            keyboardType:
-                                TextInputType.numberWithOptions(signed: true),
-                          ),
-                          width: 40.0),
+                          width: 100.0),
                       Padding(
                           padding: EdgeInsets.only(left: 5.0),
-                          child: Text('s')),
+                          child: Text('ms')),
                     ],
                   )
                 ],

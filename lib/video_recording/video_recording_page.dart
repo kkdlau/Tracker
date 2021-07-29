@@ -58,7 +58,8 @@ class VideoRecordingPageState extends State<VideoRecordingPage> with Guideline {
 
     isRecording = false;
 
-    SystemChrome.setPreferredOrientations(DeviceOrientation.values);
+    // SystemChrome.setPreferredOrientations(
+    //     [DeviceOrientation.landscapeLeft, DeviceOrientation.landscapeRight]);
 
     _initializeCameraFuture = initializeCamera();
     buildCameraPreview();
@@ -144,6 +145,7 @@ class VideoRecordingPageState extends State<VideoRecordingPage> with Guideline {
             final String fileAliasWithExtension = f.path.split('/').last;
             File(f.path).copy('$root/$RECORDING_DIR' + fileAliasWithExtension);
             if (selectedSheet != null) {
+              tmpSheet.linked = true;
               tmpSheet.sheetName =
                   fileAliasWithExtension.split('.').first; // remove extension
               tmpSheet.saveTo('$root/$ACTION_SHEET_DIR' +
@@ -351,5 +353,11 @@ class VideoRecordingPageState extends State<VideoRecordingPage> with Guideline {
             ]);
       },
     ));
+  }
+
+  @override
+  void dispose() {
+    SystemChrome.setPreferredOrientations(DeviceOrientation.values);
+    super.dispose();
   }
 }

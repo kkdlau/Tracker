@@ -13,7 +13,9 @@ class ActionSheet {
   // action list.
   List<ActionDescription> actions;
 
-  ActionSheet({this.actions, this.sheetName = ""}) {
+  bool linked;
+
+  ActionSheet({this.actions, this.sheetName = "", this.linked = false}) {
     if (actions == null) actions = [];
   }
 
@@ -29,7 +31,11 @@ class ActionSheet {
 
   /// Convert the whole sheet (including action) to [Map].
   Map<String, dynamic> toMap() {
-    return {'sheetName': sheetName, 'actions': getPlainActionList()};
+    return {
+      'sheetName': sheetName,
+      'actions': getPlainActionList(),
+      "linked": this.linked
+    };
   }
 
   /// Export the whole sheet into plain text format.

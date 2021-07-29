@@ -51,6 +51,9 @@ class ActionSheetDecoder {
       if (key == "actions") {
         _decodeActions(value);
       }
+      if (key == "linked") {
+        _sheet.linked = value as bool;
+      }
     });
 
     return _sheet;

@@ -88,7 +88,7 @@ class ActionDescription {
   String timeDiffString() {
     if (timeDiff.inMilliseconds > 0) {
       return '+${timeDiff.inMilliseconds} ms';
-    } else if (timeDiff.inSeconds < 0) {
+    } else if (timeDiff.inMilliseconds < 0) {
       return '${timeDiff.inMilliseconds} ms';
     }
     return '0 ms';

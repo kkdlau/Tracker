@@ -7,6 +7,7 @@ import 'package:Tracker/file_manager_template/file_manager_page.dart';
 import 'package:Tracker/file_manager_template/info_card/info_card.dart';
 import 'package:Tracker/sheet_editor/sheet_editor.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:share/share.dart';
 
 class SheetManagerPage extends StatefulWidget {
@@ -22,7 +23,7 @@ class _SheetManagerPageState extends State<SheetManagerPage> {
   @override
   void initState() {
     super.initState();
-
+    SystemChrome.setPreferredOrientations(DeviceOrientation.values);
     _pageNode = GlobalKey<FileManagerPageState>();
   }
 
@@ -98,5 +99,10 @@ class _SheetManagerPageState extends State<SheetManagerPage> {
   void exportAsTextMsg(File f) {
     ActionSheet sheet = ActionSheetDecoder.getInstance().decode(f);
     Share.share(sheet.toShareMsg(), subject: 'Share an Action Sheet');
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
   }
 }
