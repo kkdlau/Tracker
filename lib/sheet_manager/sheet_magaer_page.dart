@@ -8,7 +8,6 @@ import 'package:Tracker/file_manager_template/info_card/info_card.dart';
 import 'package:Tracker/sheet_editor/sheet_editor.dart';
 import 'package:flutter/material.dart';
 import 'package:share/share.dart';
-import 'dart:math';
 
 class SheetManagerPage extends StatefulWidget {
   const SheetManagerPage({Key key}) : super(key: key);

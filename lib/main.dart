@@ -1,11 +1,8 @@
-import 'package:Tracker/recording_manager/recording_manager_page.dart';
-import 'package:Tracker/sheet_manager/sheet_magaer_page.dart';
 import 'package:Tracker/video_recording/video_recording_page.dart';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:flutter/services.dart';
-import 'package:video_player/video_player.dart';
 
 List<CameraDescription> cameras = [];
 Future<void> main() async {

@@ -1,4 +1,4 @@
-import 'package:Tracker/action_sheet/action_text.dart';
+import 'package:Tracker/action_sheet/caption.dart';
 import 'package:flutter/material.dart';
 
 class ActionDescription {
@@ -6,7 +6,7 @@ class ActionDescription {
   Duration targetTime;
   Duration timeDiff;
 
-  static ActionDescription EmptyTemplate() {
+  factory ActionDescription.emptyTemplate() {
     return ActionDescription('', Duration.zero, Duration.zero);
   }
 
@@ -81,8 +81,8 @@ class ActionDescription {
     return '$indexHeader$aliveTime$captionBody';
   }
 
-  ActionText buildCaptionWidget() {
-    return ActionText.fromAction(this);
+  Caption buildCaptionWidget() {
+    return Caption.fromAction(this);
   }
 
   String timeDiffString() {

@@ -4,7 +4,7 @@ import 'dart:io';
 import 'package:Tracker/action_sheet/action_description.dart';
 import 'package:Tracker/action_sheet/action_sheet.dart';
 import 'package:Tracker/action_sheet/action_sheet_decoder.dart';
-import 'package:Tracker/action_sheet/action_text.dart';
+import 'package:Tracker/action_sheet/caption.dart' as StampCaption;
 import 'package:chewie/chewie.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -41,7 +41,7 @@ class ActionVideoPlayerState extends State<ActionVideoPlayer> {
         subtitle: _sheet.toSubtitles(),
         subtitleBuilder: (context, text) {
           // text is in JSON format. For details, please refer to ActionShett.toSubtitles().
-          return ActionText.fromAction(
+          return StampCaption.Caption.fromAction(
               ActionDescription.fromMap(json.decode(text)));
         });
     controllerInitializationFuture = videoPlayerController.initialize();

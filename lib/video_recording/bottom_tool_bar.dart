@@ -47,7 +47,7 @@ class _BottomToolBarState extends State<BottomToolBar> {
 
   /// Generate a list of tool bar buttons.
   List<Widget> _toolbuttons() {
-    final double ICON_SIZE = Theme.of(context).textTheme.headline3.fontSize;
+    final double iconSize = Theme.of(context).textTheme.headline3.fontSize;
 
     // if onStampButtonPressed is null, don't render stamp button and render a blank box instead.
     Widget stampPlaceHolder = widget.onStampButtonPressed != null
@@ -69,7 +69,7 @@ class _BottomToolBarState extends State<BottomToolBar> {
             ? ShadowIconButton(
                 onPressed: widget.onDocumentButtonPressed,
                 icon: Icons.description,
-                size: ICON_SIZE,
+                size: iconSize,
                 color: Colors.white,
                 shadows: [
                   BoxShadow(
@@ -77,8 +77,8 @@ class _BottomToolBarState extends State<BottomToolBar> {
                 ],
               )
             : SizedBox(
-                width: ICON_SIZE,
-                height: ICON_SIZE), // show nothing if it's recording
+                width: iconSize,
+                height: iconSize), // show nothing if it's recording
       )),
       // Recording Button
       RecordingButton(
@@ -94,7 +94,7 @@ class _BottomToolBarState extends State<BottomToolBar> {
                   ? ShadowIconButton(
                       onPressed: widget.onMovieButtonPressed,
                       icon: Icons.movie,
-                      size: ICON_SIZE,
+                      size: iconSize,
                       color: Colors.white,
                       shadows: [
                         BoxShadow(

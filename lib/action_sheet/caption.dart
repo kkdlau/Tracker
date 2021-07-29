@@ -2,13 +2,13 @@ import 'package:Tracker/widgets/hightlighted_container.dart';
 import 'package:flutter/material.dart';
 import 'action_description.dart';
 
-class ActionText extends StatelessWidget {
+class Caption extends StatelessWidget {
   final Duration time;
   final Duration timeDiff;
   final String data;
   final Color color;
 
-  const ActionText(
+  const Caption(
       {Key key,
       @required this.time,
       @required this.timeDiff,
@@ -42,7 +42,7 @@ class ActionText extends StatelessWidget {
     );
   }
 
-  ActionText.fromAction(ActionDescription action)
+  Caption.fromAction(ActionDescription action)
       : time = action.targetTime,
         timeDiff = action.timeDiff,
         data = action.description,

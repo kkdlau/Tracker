@@ -4,7 +4,7 @@ import 'dart:io';
 import 'package:Tracker/action_sheet/action_description.dart';
 import 'package:Tracker/action_sheet/action_sheet.dart';
 import 'package:Tracker/action_sheet/action_sheet_decoder.dart';
-import 'package:Tracker/action_sheet/action_text.dart';
+import 'package:Tracker/action_sheet/caption.dart';
 import 'package:Tracker/recording_manager/recording_manager_page.dart';
 import 'package:Tracker/setting/setting_page.dart';
 import 'package:Tracker/sheet_manager/sheet_magaer_page.dart';
@@ -269,7 +269,7 @@ class VideoRecordingPageState extends State<VideoRecordingPage> {
         content: UnconstrainedBox(
             alignment: Alignment.bottomLeft,
             constrainedAxis: Axis.vertical,
-            child: ActionText.fromAction(act)),
+            child: Caption.fromAction(act)),
         backgroundColor: Colors.transparent,
         elevation: 0,
         behavior: SnackBarBehavior.floating,
