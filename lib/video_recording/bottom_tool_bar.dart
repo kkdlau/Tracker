@@ -18,6 +18,7 @@ class BottomToolBar extends StatefulWidget {
   final void Function() onDocumentButtonPressed;
   final void Function() onMovieButtonPressed;
   final void Function() onStampButtonPressed;
+  final int stampCount;
   const BottomToolBar(
       {Key key,
       @required this.isRecording,
@@ -25,7 +26,8 @@ class BottomToolBar extends StatefulWidget {
       @required this.orientation,
       this.onDocumentButtonPressed,
       this.onMovieButtonPressed,
-      this.onStampButtonPressed})
+      this.onStampButtonPressed,
+      this.stampCount})
       : super(key: key);
 
   @override
@@ -53,6 +55,7 @@ class _BottomToolBarState extends State<BottomToolBar> {
     Widget stampPlaceHolder = widget.onStampButtonPressed != null
         ? StampButton(
             onPressed: widget.onStampButtonPressed,
+            count: widget.stampCount,
           )
         : SizedBox(
             width: StampButton.SIZE,

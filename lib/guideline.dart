@@ -5,11 +5,12 @@ import 'package:flutter/services.dart';
 import 'package:showcaseview/showcaseview.dart';
 
 mixin Guideline<T extends StatefulWidget> on State<T> {
-  static final ValueKey<String> recordingButtonKey = ValueKey("record_btn");
-  static final ValueKey<String> sheetManagerKey = ValueKey("sheet_mangaer");
-  static final ValueKey<String> recordingManagerKey =
-      ValueKey("recording_manager");
-  static final ValueKey<String> topToolBarKey = ValueKey("top_tool_bar");
+  static GlobalObjectKey recordingButtonKey = GlobalObjectKey("record_btn");
+  static final GlobalObjectKey sheetManagerKey =
+      GlobalObjectKey("sheet_mangaer");
+  static final GlobalObjectKey recordingManagerKey =
+      GlobalObjectKey("recording_manager");
+  static final GlobalObjectKey topToolBarKey = GlobalObjectKey("top_tool_bar");
   static final List<Key> videoRecordingNodes = [
     recordingButtonKey,
     sheetManagerKey,
@@ -17,9 +18,9 @@ mixin Guideline<T extends StatefulWidget> on State<T> {
     topToolBarKey
   ];
 
-  Map<String, String> instruction;
+  static Map<String, dynamic> instruction;
 
-  void loadInstructions(String assetPath) async {
+  static Future<void> loadInstructions(String assetPath) async {
     instruction =
         jsonDecode(await rootBundle.loadString(assetPath, cache: false));
   }

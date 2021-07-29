@@ -1,3 +1,6 @@
 {
-    "record_btn": "Press to start / stop recording"
+    "record_btn": "Start / stop recording",
+    "sheet_mangaer": "Manage all sheets, including review, edit, etc",
+    "recording_manager": "Manage all videos, and watch videos with timestamp support",
+    "top_tool_bar": "Setting, torch toggling and camera switching"
 }

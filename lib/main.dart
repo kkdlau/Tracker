@@ -1,3 +1,5 @@
+import 'package:Tracker/define.dart';
+import 'package:Tracker/guideline.dart';
 import 'package:Tracker/video_recording/video_recording_page.dart';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
@@ -7,6 +9,8 @@ import 'package:flutter/services.dart';
 List<CameraDescription> cameras = [];
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  await Guideline.loadInstructions(INSTRUCTION_PATH);
 
   // SystemChrome.setEnabledSystemUIOverlays([]);
 

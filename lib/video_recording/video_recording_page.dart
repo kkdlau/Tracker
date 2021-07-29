@@ -18,6 +18,7 @@ import 'package:camera/camera.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:showcaseview/showcaseview.dart';
 import 'package:torch_controller/torch_controller.dart';
 import '../define.dart';
 import '../guideline.dart';
@@ -124,7 +125,7 @@ class VideoRecordingPageState extends State<VideoRecordingPage> with Guideline {
       isRecording = !isRecording;
       if (isRecording) {
         try {
-          controller.startVideoRecording();
+          // controller.startVideoRecording();
           recordingStartTime = DateTime.now();
           recordedStamp = 0;
           tmpSheet = ActionSheet();
@@ -136,6 +137,7 @@ class VideoRecordingPageState extends State<VideoRecordingPage> with Guideline {
         }
       } else {
         updateBadgeTimer?.cancel();
+        return;
 
         controller.stopVideoRecording().then((XFile f) {
           Utils.getDocumentRootPath().then((root) {
@@ -277,6 +279,7 @@ class VideoRecordingPageState extends State<VideoRecordingPage> with Guideline {
         duration: const Duration(seconds: 2),
       ));
     }
+    setState(() {});
   }
 
   bool hasStampToMark() {
@@ -295,20 +298,19 @@ class VideoRecordingPageState extends State<VideoRecordingPage> with Guideline {
             children: <Widget>[
               Positioned.fill(child: cameraWidget),
               SafeArea(
-                bottom: false,
-                child: AnimatedSwitcher(
-                  duration: const Duration(milliseconds: 200),
-                  child: !isRecording
-                      ? TopToolBar(
-                          orientation: orientation,
-                          enableFlash: config.enableFlash,
-                          onFlashBtnPressed: flashBtnHandler,
-                          onSwitchBtnPressed: switchCameraHandler,
-                          onSettingBtnPressed: openSetting,
-                        )
-                      : SizedBox.shrink(),
-                ),
-              ),
+                  bottom: false,
+                  child: AnimatedSwitcher(
+                    duration: const Duration(milliseconds: 200),
+                    child: !isRecording
+                        ? TopToolBar(
+                            orientation: orientation,
+                            enableFlash: config.enableFlash,
+                            onFlashBtnPressed: flashBtnHandler,
+                            onSwitchBtnPressed: switchCameraHandler,
+                            onSettingBtnPressed: openSetting,
+                          )
+                        : SizedBox.shrink(),
+                  )),
               AnimatedOpacity(
                 opacity: (selectedSheet != null || isRecording) ? 1.0 : 0.0,
                 duration: const Duration(milliseconds: 300),
@@ -340,6 +342,7 @@ class VideoRecordingPageState extends State<VideoRecordingPage> with Guideline {
                 child: BottomToolBar(
                     orientation: orientation,
                     isRecording: isRecording,
+                    stampCount: recordedStamp,
                     onDocumentButtonPressed: openSheetManager,
                     onRecordingButtonPressed: onRecordingBtnPressed,
                     onMovieButtonPressed: openRecordingManager,

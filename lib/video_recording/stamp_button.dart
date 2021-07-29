@@ -6,8 +6,9 @@ class StampButton extends StatefulWidget {
   static const double HOLDING_SIZE = 30;
 
   final void Function() onPressed;
+  final int count;
 
-  StampButton({Key key, this.onPressed}) : super(key: key);
+  StampButton({Key key, this.onPressed, this.count}) : super(key: key);
 
   @override
   _StampButtonState createState() => _StampButtonState();
@@ -38,6 +39,14 @@ class _StampButtonState extends State<StampButton> {
         onTapCancel: tapHandler,
         child: Center(
           child: AnimatedContainer(
+            child: Center(
+              child: Text(
+                widget.count.toString(),
+                style: TextStyle(
+                    fontSize: StampButton.HOLDING_SIZE * 0.6,
+                    color: Colors.black),
+              ),
+            ),
             width: holding ? StampButton.HOLDING_SIZE : StampButton.SIZE,
             height: holding ? StampButton.HOLDING_SIZE : StampButton.SIZE,
             duration: const Duration(milliseconds: 100),
