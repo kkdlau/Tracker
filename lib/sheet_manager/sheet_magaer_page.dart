@@ -98,7 +98,7 @@ class _SheetManagerPageState extends State<SheetManagerPage> {
 
   void exportAsTextMsg(File f) {
     ActionSheet sheet = ActionSheetDecoder.getInstance().decode(f);
-    Share.share(sheet.toShareMsg(), subject: 'Share an Action Sheet');
+    Share.share(sheet.toShareMsg(), subject: 'Share a sheet');
   }
 
   @override

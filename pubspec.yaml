@@ -39,6 +39,7 @@ dependencies:
   chewie: 
   video_player:
   torch_controller: ^0.4.0
+  torch_compat: ^1.0.2
   showcaseview: ^1.1.0
 
   

@@ -7,6 +7,7 @@ import 'package:Tracker/action_sheet/action_sheet_decoder.dart';
 import 'package:Tracker/action_video_player/caption.dart';
 import 'package:Tracker/recording_manager/recording_manager_page.dart';
 import 'package:Tracker/setting/setting_page.dart';
+import 'package:torch_compat/torch_compat.dart';
 import 'package:Tracker/sheet_manager/sheet_magaer_page.dart';
 import 'package:Tracker/utils.dart';
 import 'package:Tracker/video_recording/bottom_tool_bar.dart';
@@ -77,16 +78,16 @@ class VideoRecordingPageState extends State<VideoRecordingPage> with Guideline {
     );
 
     torch = TorchController();
-    if (await torch.hasTorch) {
-      torch.initialize(intensity: 0.5);
-    }
+    // if (await torch.hasTorch) {
+    //   torch.initialize(intensity: 0.5);
+    // }
 
     await controller.initialize();
   }
 
   Widget waitingCameraWidget() {
     return Center(
-        child: Text('Opening camera...\nPlease allow Camera+ to access camera.',
+        child: Text('Opening camera...\nPlease allow Tracker to access camera.',
             textAlign: TextAlign.center));
   }
 
@@ -126,7 +127,7 @@ class VideoRecordingPageState extends State<VideoRecordingPage> with Guideline {
       isRecording = !isRecording;
       if (isRecording) {
         try {
-          // controller.startVideoRecording();
+          controller.startVideoRecording();
           recordingStartTime = DateTime.now();
           recordedStamp = 0;
           tmpSheet = ActionSheet();
@@ -138,7 +139,6 @@ class VideoRecordingPageState extends State<VideoRecordingPage> with Guideline {
         }
       } else {
         updateBadgeTimer?.cancel();
-        return;
 
         controller.stopVideoRecording().then((XFile f) {
           Utils.getDocumentRootPath().then((root) {
@@ -167,7 +167,11 @@ class VideoRecordingPageState extends State<VideoRecordingPage> with Guideline {
   void flashBtnHandler() {
     setState(() {
       config.enableFlash = !config.enableFlash;
-      torch.toggle();
+      // torch.toggle();
+      if (config.enableFlash) {
+        TorchCompat.turnOn();
+      } else
+        TorchCompat.turnOff();
     });
   }
 
@@ -223,7 +227,10 @@ class VideoRecordingPageState extends State<VideoRecordingPage> with Guideline {
   }
 
   Future<void> disposeCamera() async {
-    if (config.enableFlash) torch.toggle();
+    if (config.enableFlash) {
+      // torch.toggle();
+      await TorchCompat.turnOff();
+    }
     await controller.dispose();
     setState(() {
       controller = null;
