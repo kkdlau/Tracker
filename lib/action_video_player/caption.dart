@@ -1,6 +1,6 @@
 import 'package:Tracker/widgets/hightlighted_container.dart';
 import 'package:flutter/material.dart';
-import 'action_description.dart';
+import '../action_sheet/action_description.dart';
 
 class Caption extends StatelessWidget {
   final Duration time;

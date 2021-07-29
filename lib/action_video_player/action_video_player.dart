@@ -4,7 +4,7 @@ import 'dart:io';
 import 'package:Tracker/action_sheet/action_description.dart';
 import 'package:Tracker/action_sheet/action_sheet.dart';
 import 'package:Tracker/action_sheet/action_sheet_decoder.dart';
-import 'package:Tracker/action_sheet/caption.dart' as StampCaption;
+import 'package:Tracker/action_video_player/caption.dart' as StampCaption;
 import 'package:chewie/chewie.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';

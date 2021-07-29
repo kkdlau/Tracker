@@ -4,7 +4,7 @@ import 'dart:io';
 import 'package:Tracker/action_sheet/action_description.dart';
 import 'package:Tracker/action_sheet/action_sheet.dart';
 import 'package:Tracker/action_sheet/action_sheet_decoder.dart';
-import 'package:Tracker/action_sheet/caption.dart';
+import 'package:Tracker/action_video_player/caption.dart';
 import 'package:Tracker/recording_manager/recording_manager_page.dart';
 import 'package:Tracker/setting/setting_page.dart';
 import 'package:Tracker/sheet_manager/sheet_magaer_page.dart';

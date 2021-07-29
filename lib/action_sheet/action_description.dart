@@ -1,4 +1,4 @@
-import 'package:Tracker/action_sheet/caption.dart';
+import 'package:Tracker/action_video_player/caption.dart';
 import 'package:flutter/material.dart';
 
 class ActionDescription {
