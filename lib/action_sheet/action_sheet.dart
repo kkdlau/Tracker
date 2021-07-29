@@ -86,7 +86,7 @@ class ActionSheet {
     else
       return Subtitles(List.generate(actions.length, (i) {
         ActionDescription act = actions[i];
-        Duration happenedTime = act.targetTime - act.timeDiff;
+        Duration happenedTime = act.targetTime + act.timeDiff;
         Duration endTime = happenedTime +
             Duration(
                 milliseconds:
