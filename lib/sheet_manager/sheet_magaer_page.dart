@@ -6,6 +6,7 @@ import 'package:Tracker/define.dart';
 import 'package:Tracker/file_manager_template/file_manager_page.dart';
 import 'package:Tracker/file_manager_template/info_card/info_card.dart';
 import 'package:Tracker/sheet_editor/sheet_editor.dart';
+import 'package:Tracker/video_recording/video_recording_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:share/share.dart';
@@ -103,6 +104,8 @@ class _SheetManagerPageState extends State<SheetManagerPage> {
 
   @override
   void dispose() {
+    SystemChrome.setPreferredOrientations(
+        VideoRecordingPage.perferedOrientations);
     super.dispose();
   }
 }

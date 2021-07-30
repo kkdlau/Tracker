@@ -22,10 +22,23 @@
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>NSAppTransportSecurity</key>
+	<dict>
+		<key>NSAllowsArbitraryLoads</key>
+		<true/>
+	</dict>
+	<key>NSCameraUsageDescription</key>
+	<string>Tracker requests camera access for taking videos.</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Tracker requests mic access for audio recording.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Tracker requests Photos access for saving videos.</string>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>
 	<string>Main</string>
+	<key>UIRequiresFullScreen</key>
+	<true/>
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
@@ -41,27 +54,7 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
-
-	<key>NSCameraUsageDescription</key>
-	<string>Tracker requests camera access for taking videos.</string>
-	<key>NSMicrophoneUsageDescription</key>
-	<string>Tracker requests mic access for audio recording.</string>
-	<key>NSPhotoLibraryUsageDescription</key>
-	<string>Tracker requests Photos access for saving videos.</string>
-
-	<key>NSAppTransportSecurity</key>
-	<dict>
-		<key>NSAllowsArbitraryLoads</key>
-		<true/>
-	</dict>
-
 	<key>io.flutter.embedded_views_preview</key>
 	<true/>
-
-	<key>NSAppTransportSecurity</key>
-	<dict>
-	<key>NSAllowsArbitraryLoads</key>
-	<true/>
-	</dict>
 </dict>
 </plist>

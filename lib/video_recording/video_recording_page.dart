@@ -23,6 +23,12 @@ import '../guideline.dart';
 // final FlutterFFmpeg _flutterFFmpeg = new FlutterFFmpeg();
 
 class VideoRecordingPage extends StatefulWidget {
+  static const List<DeviceOrientation> perferedOrientations = [
+    DeviceOrientation.landscapeLeft,
+    DeviceOrientation.landscapeRight,
+    DeviceOrientation.portraitUp,
+  ];
+
   final List<CameraDescription> availableCameras;
   VideoRecordingPage({Key key, this.availableCameras}) : super(key: key);
 
@@ -54,8 +60,8 @@ class VideoRecordingPageState extends State<VideoRecordingPage> with Guideline {
 
     isRecording = false;
 
-    // SystemChrome.setPreferredOrientations(
-    //     [DeviceOrientation.landscapeLeft, DeviceOrientation.landscapeRight]);
+    SystemChrome.setPreferredOrientations(
+        VideoRecordingPage.perferedOrientations);
 
     _initializeCameraFuture = initializeCamera();
     buildCameraPreview();
@@ -120,6 +126,7 @@ class VideoRecordingPageState extends State<VideoRecordingPage> with Guideline {
       if (isRecording) {
         try {
           controller.startVideoRecording();
+          controller.lockCaptureOrientation();
           recordingStartTime = DateTime.now();
           recordedStamp = 0;
           tmpSheet = ActionSheet();
@@ -133,6 +140,7 @@ class VideoRecordingPageState extends State<VideoRecordingPage> with Guideline {
         updateBadgeTimer?.cancel();
 
         controller.stopVideoRecording().then((XFile f) {
+          controller.unlockCaptureOrientation();
           Utils.getDocumentRootPath().then((root) {
             final String fileAliasWithExtension = f.path.split('/').last;
             File(f.path).copy('$root/$RECORDING_DIR' + fileAliasWithExtension);

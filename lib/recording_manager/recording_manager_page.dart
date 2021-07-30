@@ -7,7 +7,9 @@ import 'package:Tracker/file_manager_template/info_card/card_config.dart';
 import 'package:Tracker/file_manager_template/info_card/info_card.dart';
 import 'package:Tracker/file_manager_template/manger_config.dart';
 import 'package:Tracker/utils.dart';
+import 'package:Tracker/video_recording/video_recording_page.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:share/share.dart';
 import 'package:video_thumbnail/video_thumbnail.dart';
 
@@ -26,6 +28,7 @@ class _RecordingManagerPageState extends State<RecordingManagerPage> {
   @override
   void initState() {
     super.initState();
+    SystemChrome.setPreferredOrientations(DeviceOrientation.values);
     _listNode = GlobalKey();
   }
 
@@ -99,5 +102,12 @@ class _RecordingManagerPageState extends State<RecordingManagerPage> {
 
   void removeVideoFile(File f) {
     _listNode.currentState.removeFile(f);
+  }
+
+  @override
+  void dispose() {
+    SystemChrome.setPreferredOrientations(
+        VideoRecordingPage.perferedOrientations);
+    super.dispose();
   }
 }
