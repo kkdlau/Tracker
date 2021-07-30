@@ -80,7 +80,7 @@ class VideoRecordingPageState extends State<VideoRecordingPage> with Guideline {
 
     await controller.initialize();
 
-    setFlash(config.enableFlash);
+    setFlash();
   }
 
   Widget waitingCameraWidget() {
@@ -167,19 +167,23 @@ class VideoRecordingPageState extends State<VideoRecordingPage> with Guideline {
   void flashBtnHandler() {
     setState(() {
       config.enableFlash = !config.enableFlash;
-      setFlash(config.enableFlash);
     });
+    setFlash();
   }
 
-  void setFlash(bool on) {
-    final FlashMode mode = on ? FlashMode.torch : FlashMode.off;
+  void setFlash() {
+    final FlashMode mode = config.enableFlash ? FlashMode.torch : FlashMode.off;
     controller.setFlashMode(mode).catchError((e) {
       print(e.toString());
+      setState(() {
+        config.enableFlash = !config.enableFlash;
+      }); // if there is any error, go back to previous status
     });
   }
 
   void switchCameraHandler() {
     disposeCamera().then((value) => setState(() {
+          config.enableFlash = false;
           nextCamera();
           _initializeCameraFuture =
               initializeCamera(); // reinitialize after switching to new camera
