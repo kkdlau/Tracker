@@ -328,13 +328,13 @@ class VideoRecordingPageState extends State<VideoRecordingPage> with Guideline {
             'lockOrientation: unhandled case ' + orienation.toString());
     }
 
-    // controller.lockCaptureOrientation();
+    controller.lockCaptureOrientation();
   }
 
   void releaseOrientation() {
     SystemChrome.setPreferredOrientations(
         VideoRecordingPage.perferedOrientations);
-    // controller.unlockCaptureOrientation();
+    controller.unlockCaptureOrientation();
   }
 
   @override
