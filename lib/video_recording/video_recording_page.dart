@@ -48,6 +48,8 @@ class VideoRecordingPageState extends State<VideoRecordingPage> with Guideline {
   DateTime recordingStartTime;
   Timer updateBadgeTimer;
   Widget cameraWidget;
+  Orientation
+      lastUpdatedOrientation; // for locking orientation during recording
 
   @override
   void initState() {
@@ -83,10 +85,10 @@ class VideoRecordingPageState extends State<VideoRecordingPage> with Guideline {
     setFlash();
   }
 
-  Widget waitingCameraWidget() {
-    return Center(
-        child: Text('Opening camera...\nPlease allow Tracker to access camera.',
-            textAlign: TextAlign.center));
+  Widget waitingCameraWidget(
+      {String caption =
+          'Opening camera...\nPlease allow Tracker to access camera.'}) {
+    return Center(child: Text(caption, textAlign: TextAlign.center));
   }
 
   void buildCameraPreview() {
@@ -112,6 +114,11 @@ class VideoRecordingPageState extends State<VideoRecordingPage> with Guideline {
 
               // TODO: implement camera scaling
             });
+          } else if (snapshot.hasError) {
+            return waitingCameraWidget(
+                caption:
+                    'Unable to open camera, please switch to different cameras, or relaunch Tracker.\n Error message: ' +
+                        snapshot.error.toString());
           } else {
             return waitingCameraWidget();
           }
@@ -126,7 +133,7 @@ class VideoRecordingPageState extends State<VideoRecordingPage> with Guideline {
       if (isRecording) {
         try {
           controller.startVideoRecording();
-          controller.lockCaptureOrientation();
+          lockOrientation(lastUpdatedOrientation);
           recordingStartTime = DateTime.now();
           recordedStamp = 0;
           tmpSheet = ActionSheet();
@@ -140,7 +147,7 @@ class VideoRecordingPageState extends State<VideoRecordingPage> with Guideline {
         updateBadgeTimer?.cancel();
 
         controller.stopVideoRecording().then((XFile f) {
-          controller.unlockCaptureOrientation();
+          releaseOrientation();
           Utils.getDocumentRootPath().then((root) {
             final String fileAliasWithExtension = f.path.split('/').last;
             File(f.path).copy('$root/$RECORDING_DIR' + fileAliasWithExtension);
@@ -300,10 +307,41 @@ class VideoRecordingPageState extends State<VideoRecordingPage> with Guideline {
         recordedStamp < selectedSheet.actions.length;
   }
 
+  void lockOrientation(Orientation orienation) {
+    switch (orienation) {
+      case Orientation.portrait:
+        {
+          SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+        }
+        break;
+      case Orientation.landscape:
+        {
+          SystemChrome.setPreferredOrientations([
+            DeviceOrientation.landscapeLeft,
+            DeviceOrientation.landscapeRight
+          ]);
+        }
+        break;
+
+      default:
+        throw Exception(
+            'lockOrientation: unhandled case ' + orienation.toString());
+    }
+
+    // controller.lockCaptureOrientation();
+  }
+
+  void releaseOrientation() {
+    SystemChrome.setPreferredOrientations(
+        VideoRecordingPage.perferedOrientations);
+    // controller.unlockCaptureOrientation();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(body: OrientationBuilder(
       builder: (BuildContext context, Orientation orientation) {
+        lastUpdatedOrientation = orientation;
         return Stack(
             fit: StackFit.loose,
             alignment: Alignment.center,
