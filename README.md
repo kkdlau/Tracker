@@ -1,6 +1,5 @@
-# Tracker
+<img src="https://i.imgur.com/cSERYPW.png" width="100%"/>
 
-Tracker is an app which spports recording videos with timestamps.
 ## UI Development
 
 ### Video Recording Page
