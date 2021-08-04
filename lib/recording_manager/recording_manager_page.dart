@@ -24,12 +24,14 @@ class RecordingManagerPage extends StatefulWidget {
 
 class _RecordingManagerPageState extends State<RecordingManagerPage> {
   GlobalKey<FileManagerPageState> _listNode;
+  Map<File, Uint8List> _thumbnailCache;
 
   @override
   void initState() {
     super.initState();
     SystemChrome.setPreferredOrientations(DeviceOrientation.values);
     _listNode = GlobalKey();
+    _thumbnailCache = {};
   }
 
   Widget videoCardBuilder(File f) {
@@ -56,7 +58,18 @@ class _RecordingManagerPageState extends State<RecordingManagerPage> {
   }
 
   Widget videoThumbnail(f) {
-    Future<Uint8List> future = VideoThumbnail.thumbnailData(video: f.path);
+    if (_thumbnailCache.containsKey(f)) {
+      return Padding(
+        padding: EdgeInsets.only(left: 15.0, right: 15.0),
+        child: Image.memory(
+          _thumbnailCache[f],
+          height: 30.0,
+        ),
+      );
+    }
+    Future<Uint8List> future = VideoThumbnail.thumbnailData(
+        video: f.path, imageFormat: ImageFormat.JPEG);
+
     return FutureBuilder<Uint8List>(
       builder: (context, snapshot) {
         // it's possible that cannot get thumbnail because the video format is not supported by the plugin,
@@ -65,6 +78,9 @@ class _RecordingManagerPageState extends State<RecordingManagerPage> {
         bool hasReceivedData =
             snapshot.connectionState == ConnectionState.done &&
                 snapshot.hasData;
+        if (hasReceivedData) {
+          _thumbnailCache[f] = snapshot.data;
+        }
         return Padding(
             padding: EdgeInsets.only(left: 15.0, right: 15.0),
             child: hasReceivedData
@@ -113,6 +129,7 @@ class _RecordingManagerPageState extends State<RecordingManagerPage> {
   void removeVideoAndLinkedFile(File f) {
     _listNode.currentState.removeFile(f);
     ActionSheet.removeFromDisk(f.alias); // also delete the linked file
+    _thumbnailCache.remove(f); // remove useless image cache
   }
 
   @override

@@ -21,7 +21,7 @@ class ActionSheet {
   }
 
   /// Removes the sheet from file system.
-  static removeFromDisk(String alias) async {
+  static Future<void> removeFromDisk(String alias) async {
     String path = await Utils.fullPathToSheet(alias);
     var file = File(path);
     if (file.existsSync()) {
