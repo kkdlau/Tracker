@@ -6,7 +6,7 @@ Features include:
  - Video Recording with timestamp
  - Replay stamped videos supported built-in video player
  - Export timestamps into JSON
- - Create, edit, cloen stamp sheet
+ - Create, edit, clone stamp sheets
  - Share your stamp sheet to different media, including Whatsapp, Signals, Telegram
 
 ---
