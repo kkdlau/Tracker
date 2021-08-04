@@ -60,6 +60,11 @@ class Utils {
     final String root = await getDocumentRootPath();
     return '$root/$ACTION_SHEET_DIR' + alias + ACTION_SHEET_FILE_EXTENSION;
   }
+
+  static Future<String> fullPathToVideo(String alias) async {
+    final String root = await getDocumentRootPath();
+    return '$root/$RECORDING_DIR' + alias + VIDEO_EXTENSION;
+  }
 }
 
 extension FileAlias on File {

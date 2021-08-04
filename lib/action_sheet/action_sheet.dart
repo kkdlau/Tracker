@@ -2,8 +2,6 @@ import 'dart:io';
 
 import 'package:Tracker/utils.dart';
 import 'package:chewie/chewie.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-
 import 'action_description.dart';
 import 'dart:convert';
 
@@ -26,8 +24,13 @@ class ActionSheet {
     var file = File(path);
     if (file.existsSync()) {
       file.delete();
-      Utils.prefs.remove(alias);
+      unlink(alias);
     }
+  }
+
+  /// Unlink an [ActionSheet] by given file alias.
+  static unlink(String alias) {
+    Utils.prefs.remove(alias);
   }
 
   /// Returns [ActionDescription] list in Plain Map foramt.

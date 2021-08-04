@@ -6,6 +6,7 @@ import 'package:Tracker/action_video_player/action_video_player.dart';
 import 'package:Tracker/file_manager/file_manager_page.dart';
 import 'package:Tracker/file_manager/info_card/card_config.dart';
 import 'package:Tracker/file_manager/info_card/info_card.dart';
+import 'package:Tracker/setting/setting_page.dart';
 import 'package:Tracker/utils.dart';
 import 'package:Tracker/video_recording/video_recording_page.dart';
 import 'package:flutter/material.dart';
@@ -24,14 +25,14 @@ class RecordingManagerPage extends StatefulWidget {
 
 class _RecordingManagerPageState extends State<RecordingManagerPage> {
   GlobalKey<FileManagerPageState> _listNode;
-  Map<File, Uint8List> _thumbnailCache;
+  Map<File, Uint8List> _thumbnailCaches; // for saving thumbnail cache
 
   @override
   void initState() {
     super.initState();
     SystemChrome.setPreferredOrientations(DeviceOrientation.values);
     _listNode = GlobalKey();
-    _thumbnailCache = {};
+    _thumbnailCaches = {};
   }
 
   Widget videoCardBuilder(File f) {
@@ -58,17 +59,17 @@ class _RecordingManagerPageState extends State<RecordingManagerPage> {
   }
 
   Widget videoThumbnail(f) {
-    if (_thumbnailCache.containsKey(f)) {
+    if (_thumbnailCaches.containsKey(f)) {
       return Padding(
         padding: EdgeInsets.only(left: 15.0, right: 15.0),
         child: Image.memory(
-          _thumbnailCache[f],
+          _thumbnailCaches[f],
           height: 30.0,
         ),
       );
     }
     Future<Uint8List> future = VideoThumbnail.thumbnailData(
-        video: f.path, imageFormat: ImageFormat.JPEG);
+        video: f.path, imageFormat: ImageFormat.JPEG, maxHeight: 30);
 
     return FutureBuilder<Uint8List>(
       builder: (context, snapshot) {
@@ -79,7 +80,7 @@ class _RecordingManagerPageState extends State<RecordingManagerPage> {
             snapshot.connectionState == ConnectionState.done &&
                 snapshot.hasData;
         if (hasReceivedData) {
-          _thumbnailCache[f] = snapshot.data;
+          _thumbnailCaches[f] = snapshot.data; // save the cache
         }
         return Padding(
             padding: EdgeInsets.only(left: 15.0, right: 15.0),
@@ -105,7 +106,7 @@ class _RecordingManagerPageState extends State<RecordingManagerPage> {
         break;
       case INFO_CARD_ACTION.DELETE:
         // TODO: delete video with sheet record
-        removeVideoAndLinkedFile(file);
+        removeVideoAndLinkedSheet(file);
         break;
       case INFO_CARD_ACTION.SELECT:
         Navigator.push(context, MaterialPageRoute(builder: (_) {
@@ -126,10 +127,16 @@ class _RecordingManagerPageState extends State<RecordingManagerPage> {
     }
   }
 
-  void removeVideoAndLinkedFile(File f) {
+  void removeVideoAndLinkedSheet(File f) {
     _listNode.currentState.removeFile(f);
-    ActionSheet.removeFromDisk(f.alias); // also delete the linked file
-    _thumbnailCache.remove(f); // remove useless image cache
+    _thumbnailCaches.remove(f); // remove useless image cache
+
+    if (BooleanSetting.DELETE_SHEET.savedValue) {
+      ActionSheet.removeFromDisk(f.alias); // also delete the linked file
+    } else {
+      ActionSheet.unlink(
+          f.alias); // unlink the file if the file doesn't delete together
+    }
   }
 
   @override

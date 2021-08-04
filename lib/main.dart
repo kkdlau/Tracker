@@ -1,5 +1,3 @@
-import 'package:Tracker/define.dart';
-import 'package:Tracker/guideline.dart';
 import 'package:Tracker/utils.dart';
 import 'package:Tracker/video_recording/video_recording_page.dart';
 import 'package:camera/camera.dart';

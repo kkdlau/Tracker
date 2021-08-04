@@ -40,6 +40,7 @@ dependencies:
   video_player:
   showcaseview: ^1.1.0
   shared_preferences: ^2.0.6
+  settings_ui: ^1.0.0
 
   
 

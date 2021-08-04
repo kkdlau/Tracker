@@ -6,6 +6,7 @@ import 'package:Tracker/action_sheet/action_sheet.dart';
 import 'package:Tracker/action_sheet/action_sheet_decoder.dart';
 import 'package:Tracker/action_video_player/caption.dart';
 import 'package:Tracker/recording_manager/recording_manager_page.dart';
+import 'package:Tracker/setting/setting_page.dart';
 import 'package:Tracker/sheet_manager/sheet_magaer_page.dart';
 import 'package:Tracker/utils.dart';
 import 'package:Tracker/video_recording/bottom_tool_bar.dart';
@@ -266,13 +267,16 @@ class VideoRecordingPageState extends State<VideoRecordingPage> with Guideline {
       return "";
   }
 
-  void openSetting() {
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-      content: Text('Setting is currently unavailable.'),
-      backgroundColor: Colors.grey,
-      elevation: 0,
-      behavior: SnackBarBehavior.floating,
-    ));
+  void openSetting() async {
+    await disposeCamera();
+    Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+      return SettingPage();
+    })).then((value) {
+      setState(() {
+        _initializeCameraFuture = initializeCamera();
+        buildCameraPreview();
+      });
+    });
   }
 
   void saveStamp() {
