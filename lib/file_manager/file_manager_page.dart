@@ -1,9 +1,7 @@
 import 'dart:io';
 
 import 'package:Tracker/define.dart';
-import 'package:Tracker/file_manager_template/create_file_dialog.dart';
-import 'package:Tracker/file_manager_template/info_card/info_card.dart';
-import 'package:Tracker/file_manager_template/manger_config.dart';
+import 'package:Tracker/file_manager/create_file_dialog.dart';
 import 'package:Tracker/utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -12,17 +10,18 @@ class FileManagerPage extends StatefulWidget {
   final String title;
   final String rootDir;
   final String fileType;
-  final Widget Function(File) headingBuilder;
-  final void Function(INFO_CARD_ACTION, File) actionhandler;
-  final FileManagerConfiguration config;
+  final Widget Function(File) fileItemBuilder;
+  final bool allowCreateFile;
+  final void Function(File) createdFileCallback;
+
   FileManagerPage(
       {Key key,
       @required this.title,
       @required this.rootDir,
       this.fileType = "file",
-      this.headingBuilder,
-      this.actionhandler,
-      this.config = const FileManagerConfiguration()})
+      @required this.fileItemBuilder,
+      this.allowCreateFile = false,
+      this.createdFileCallback})
       : super(key: key);
 
   @override
@@ -75,7 +74,7 @@ class FileManagerPageState extends State<FileManagerPage> {
 
     _fileListNode.currentState.removeItem(index, (context, animation) {
       Widget transitionWidget = SizeTransition(
-        child: _fileCard(f),
+        child: widget.fileItemBuilder(f),
         sizeFactor: Tween<double>(
           begin: 0,
           end: 1,
@@ -106,20 +105,6 @@ class FileManagerPageState extends State<FileManagerPage> {
         });
   }
 
-  Widget _fileCard(File f) {
-    Widget headingWidget =
-        widget.headingBuilder != null ? widget.headingBuilder(f) : null;
-    return InfoCard(
-      config: widget.config.cardConfig,
-      heading: headingWidget,
-      onActionSelected: (actionType) {
-        widget.actionhandler(actionType, f);
-      },
-      fullPath: f.path,
-      date: f.lastModifiedSync(),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -128,7 +113,7 @@ class FileManagerPageState extends State<FileManagerPage> {
           backgroundColor: Theme.of(context).scaffoldBackgroundColor,
           elevation: 0.0,
           title: Text(widget.title),
-          actions: widget.config.allowAddFile
+          actions: widget.allowCreateFile
               ? [
                   Padding(
                     padding: const EdgeInsets.only(right: 8.0),
@@ -145,8 +130,10 @@ class FileManagerPageState extends State<FileManagerPage> {
                               f.create().then((value) {
                                 insertFileToDirectory(f);
                                 Future.delayed(Duration(milliseconds: 300))
-                                    .then((value) => widget.actionhandler(
-                                        INFO_CARD_ACTION.EDIT, f));
+                                    .then((value) =>
+                                        widget.createdFileCallback != null
+                                            ? widget.createdFileCallback(f)
+                                            : null);
                               });
                             });
                           }),
@@ -171,7 +158,7 @@ class FileManagerPageState extends State<FileManagerPage> {
                           begin: 0,
                           end: 1,
                         ).animate(animation),
-                        child: _fileCard(_availableFiles[idx]));
+                        child: widget.fileItemBuilder(_availableFiles[idx]));
                   },
                 ),
               );

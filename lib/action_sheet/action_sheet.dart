@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:Tracker/utils.dart';
 import 'package:chewie/chewie.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'action_description.dart';
 import 'dart:convert';
@@ -68,7 +69,15 @@ class ActionSheet {
     return ActionSheet(sheetName: sheetName, actions: clone);
   }
 
-  Future<File> saveTo(String path) {
+  /// save the sheet into given path.
+  ///
+  /// If the sheet is linked to another video file (i.e. [linked] is true),
+  /// then inside SharedPreferences the path will be used as a key to mark this sheet as linked.
+  Future<File> saveTo(String path) async {
+    if (this.linked) {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      prefs.setBool(path, true);
+    }
     return File(path).writeAsString(json.encode(this.toMap()));
   }
 

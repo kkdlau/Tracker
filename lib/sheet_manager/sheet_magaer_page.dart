@@ -3,8 +3,9 @@ import 'dart:io';
 import 'package:Tracker/action_sheet/action_sheet.dart';
 import 'package:Tracker/action_sheet/action_sheet_decoder.dart';
 import 'package:Tracker/define.dart';
-import 'package:Tracker/file_manager_template/file_manager_page.dart';
-import 'package:Tracker/file_manager_template/info_card/info_card.dart';
+import 'package:Tracker/file_manager/file_manager_page.dart';
+import 'package:Tracker/file_manager/info_card/card_config.dart';
+import 'package:Tracker/file_manager/info_card/info_card.dart';
 import 'package:Tracker/sheet_editor/sheet_editor.dart';
 import 'package:Tracker/video_recording/video_recording_page.dart';
 import 'package:flutter/material.dart';
@@ -28,19 +29,32 @@ class _SheetManagerPageState extends State<SheetManagerPage> {
     _pageNode = GlobalKey<FileManagerPageState>();
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return FileManagerPage(
-      key: _pageNode,
-      title: 'Sheet Manager',
-      rootDir: ACTION_SHEET_DIR,
-      actionhandler: infoCardPressedHandler,
-      headingBuilder: (_) => Padding(
+  Widget _fileCard(File f) {
+    return InfoCard(
+      config: const CardConfiguration(),
+      heading: Padding(
         padding: const EdgeInsets.only(right: 15.0, left: 15.0),
         child: Icon(Icons.description,
             color: Colors.lightGreen,
             size: Theme.of(context).textTheme.headline4.fontSize),
       ),
+      onActionSelected: (actionType) {
+        infoCardPressedHandler(actionType, f);
+      },
+      fullPath: f.path,
+      date: f.lastModifiedSync(),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return FileManagerPage(
+      key: _pageNode,
+      title: 'Sheet Manager',
+      allowCreateFile: true,
+      rootDir: ACTION_SHEET_DIR,
+      fileItemBuilder: (File f) => _fileCard(f),
+      createdFileCallback: openSheetEditor,
     );
   }
 
