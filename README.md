@@ -8,5 +8,3 @@
 
 ### Video player
 - Add a button for leaving video player
-
-### Stamp Sheet Editor
