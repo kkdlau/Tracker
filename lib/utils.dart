@@ -1,10 +1,17 @@
 import 'dart:io';
 
 import 'package:path_provider/path_provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'define.dart';
 
 class Utils {
+  static SharedPreferences prefs;
+
+  static Future<void> initialize() async {
+    prefs = await SharedPreferences.getInstance();
+  }
+
   /// Returns path of Application Document Directory.
   static Future<String> getDocumentRootPath() async {
     return (await getApplicationDocumentsDirectory()).path;

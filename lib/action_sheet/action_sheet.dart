@@ -20,6 +20,16 @@ class ActionSheet {
     if (actions == null) actions = [];
   }
 
+  /// Removes the sheet from file system.
+  static removeFromDisk(String alias) async {
+    String path = await Utils.fullPathToSheet(alias);
+    var file = File(path);
+    if (file.existsSync()) {
+      file.delete();
+      Utils.prefs.remove(alias);
+    }
+  }
+
   /// Returns [ActionDescription] list in Plain Map foramt.
   List<Map<String, String>> getPlainActionList() {
     List<Map<String, String>> actionList = [];
@@ -74,11 +84,13 @@ class ActionSheet {
   /// If the sheet is linked to another video file (i.e. [linked] is true),
   /// then inside SharedPreferences the path will be used as a key to mark this sheet as linked.
   Future<File> saveTo(String path) async {
+    File f = File(path);
+
     if (this.linked) {
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      prefs.setBool(path, true);
+      Utils.prefs.setBool(f.alias, true);
     }
-    return File(path).writeAsString(json.encode(this.toMap()));
+
+    return f.writeAsString(json.encode(this.toMap()));
   }
 
   /// Convert the whole action sheet into subtitle format.

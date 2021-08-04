@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:math';
 
 import 'package:Tracker/action_sheet/action_sheet.dart';
 import 'package:Tracker/action_sheet/action_sheet_decoder.dart';
@@ -7,10 +8,12 @@ import 'package:Tracker/file_manager/file_manager_page.dart';
 import 'package:Tracker/file_manager/info_card/card_config.dart';
 import 'package:Tracker/file_manager/info_card/info_card.dart';
 import 'package:Tracker/sheet_editor/sheet_editor.dart';
+import 'package:Tracker/utils.dart';
 import 'package:Tracker/video_recording/video_recording_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:share/share.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SheetManagerPage extends StatefulWidget {
   const SheetManagerPage({Key key}) : super(key: key);
@@ -34,9 +37,9 @@ class _SheetManagerPageState extends State<SheetManagerPage> {
       config: const CardConfiguration(),
       heading: Padding(
         padding: const EdgeInsets.only(right: 15.0, left: 15.0),
-        child: Icon(Icons.description,
-            color: Colors.lightGreen,
-            size: Theme.of(context).textTheme.headline4.fontSize),
+        child: Utils.prefs.containsKey(f.alias)
+            ? linkedDocumentIcon(Colors.lightBlue)
+            : documentIcon(Colors.lightGreen),
       ),
       onActionSelected: (actionType) {
         infoCardPressedHandler(actionType, f);
@@ -45,6 +48,28 @@ class _SheetManagerPageState extends State<SheetManagerPage> {
       date: f.lastModifiedSync(),
     );
   }
+
+  /// Returns a colored document icon with a link logo.
+  Widget linkedDocumentIcon(Color color) {
+    return Stack(
+      children: [
+        documentIcon(color),
+        Transform.translate(
+          offset: const Offset(15, -10),
+          child: Transform.rotate(
+            angle: pi / 4,
+            child: Icon(Icons.link,
+                color: Theme.of(context).textTheme.headline6.color,
+                size: Theme.of(context).textTheme.headline5.fontSize),
+          ),
+        ),
+      ],
+    );
+  }
+
+  /// Returns a document icon with given [color].
+  Widget documentIcon(Color color) => Icon(Icons.description,
+      color: color, size: Theme.of(context).textTheme.headline4.fontSize);
 
   @override
   Widget build(BuildContext context) {

@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:typed_data';
 
+import 'package:Tracker/action_sheet/action_sheet.dart';
 import 'package:Tracker/action_video_player/action_video_player.dart';
 import 'package:Tracker/file_manager/file_manager_page.dart';
 import 'package:Tracker/file_manager/info_card/card_config.dart';
@@ -88,7 +89,7 @@ class _RecordingManagerPageState extends State<RecordingManagerPage> {
         break;
       case INFO_CARD_ACTION.DELETE:
         // TODO: delete video with sheet record
-        removeVideoFile(file);
+        removeVideoAndLinkedFile(file);
         break;
       case INFO_CARD_ACTION.SELECT:
         Navigator.push(context, MaterialPageRoute(builder: (_) {
@@ -109,8 +110,9 @@ class _RecordingManagerPageState extends State<RecordingManagerPage> {
     }
   }
 
-  void removeVideoFile(File f) {
+  void removeVideoAndLinkedFile(File f) {
     _listNode.currentState.removeFile(f);
+    ActionSheet.removeFromDisk(f.alias); // also delete the linked file
   }
 
   @override
