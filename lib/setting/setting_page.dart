@@ -1,4 +1,5 @@
 import 'package:Tracker/setting/boolean_setting.dart';
+import 'package:Tracker/setting/option_setting.dart';
 import 'package:Tracker/theme_notifier.dart';
 import 'package:Tracker/utils.dart';
 import 'package:flutter/material.dart';
@@ -77,6 +78,10 @@ class _SettingPageState extends State<SettingPage> {
             SettingsSection(
               title: 'When deleting stamp sheets:',
               tiles: [booleanSeetingTile(BooleanSetting.DELETE_VIDEO)],
+            ),
+            SettingsSection(
+              title: 'Test section',
+              tiles: [OptionSettingTile(OptionSetting.CAMERA_QUALITY)],
             )
           ],
         ));

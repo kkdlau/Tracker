@@ -2,7 +2,7 @@ import 'package:Tracker/utils.dart';
 
 enum BooleanSetting { DELETE_SHEET, DELETE_VIDEO, USE_LIGHT_THEME }
 
-extension BooleanSettingExtension on BooleanSetting {
+extension BooleanSettingMethod on BooleanSetting {
   /// Gets default value of the setting.
   ///
   /// The value should be used only if the setting haven't been saved in [SharedPreferences].
