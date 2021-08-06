@@ -7,7 +7,7 @@
         {
             "name": "tracker",
             "request": "launch",
-            "type": "dart"
+            "type": "dart",
         }
     ]
 }

@@ -16,6 +16,13 @@ Features include:
 ### Video Recording Page
 - Add camera focus
 - Add Zoom In / Out
+- dis-select file
+- preview the upcoming stamp
+- dispose camera controller when user temporarily leave the application
 
 ### Video player
 - Add a button for leaving video player
+
+
+### Recording Manager
+- display estimated time and recording date
