@@ -6,6 +6,7 @@ import 'package:Tracker/action_sheet/action_sheet.dart';
 import 'package:Tracker/action_sheet/action_sheet_decoder.dart';
 import 'package:Tracker/action_video_player/caption.dart';
 import 'package:Tracker/recording_manager/recording_manager_page.dart';
+import 'package:Tracker/setting/option_setting.dart';
 import 'package:Tracker/setting/setting_page.dart';
 import 'package:Tracker/sheet_manager/sheet_magaer_page.dart';
 import 'package:Tracker/utils.dart';
@@ -74,9 +75,12 @@ class VideoRecordingPageState extends State<VideoRecordingPage> with Guideline {
   ///
   /// some initialization invokes calling platform-specific methods and thereby this function has to be a async function.
   Future<void> initializeCamera() async {
+    int index = OptionSetting.CAMERA_QUALITY.options
+        .indexOf(OptionSetting.CAMERA_QUALITY.savedValue);
+
     controller = CameraController(
       widget.availableCameras[config.cameraIndex],
-      ResolutionPreset.ultraHigh,
+      ResolutionPreset.values[index],
       imageFormatGroup: ImageFormatGroup.jpeg,
       enableAudio: config.enableAudio,
     );

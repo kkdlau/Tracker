@@ -20,7 +20,7 @@ extension OptionSettingMethod on OptionSetting {
   List<String> get options {
     switch (this) {
       case OptionSetting.CAMERA_QUALITY:
-        return ["Low", "Medium", "High", "Ultra high"];
+        return ["Low", "Medium", "High", "Very high", "Ultra high"];
       default:
         throw Exception(
             "OptionSetting - ${this.toString()} does not have options.");
@@ -30,7 +30,7 @@ extension OptionSettingMethod on OptionSetting {
   String get defaultValue {
     switch (this) {
       case OptionSetting.CAMERA_QUALITY:
-        return this.options.last; // ultra high
+        return this.options.last;
       default:
         throw Exception(
             "OptionSetting - ${this.toString()} does not have default value.");
