@@ -1,5 +1,18 @@
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+
+extension on DeviceOrientation {
+  Orientation get inFlutterOrientation {
+    switch (this) {
+      case DeviceOrientation.portraitUp:
+      case DeviceOrientation.portraitDown:
+        return Orientation.portrait;
+      default:
+        return Orientation.landscape;
+    }
+  }
+}
 
 /// Full screen camera view with orientation support.
 ///
@@ -29,7 +42,8 @@ class _CameraViewerState extends State<CameraViewer> {
   /// In different orientation, the height will be swapped with [width],
   /// hence you should always use this getter to handle orientation changes.
   double get cameraHeight {
-    return MediaQuery.of(context).orientation == Orientation.portrait
+    return _controller.value.deviceOrientation.inFlutterOrientation ==
+            Orientation.portrait
         ? _controller.value.previewSize.width
         : _controller.value.previewSize.height;
   }
@@ -39,7 +53,8 @@ class _CameraViewerState extends State<CameraViewer> {
   /// In different orientation, the width will be swapped with [height],
   /// hence you should always use this getter to handle orientation changes.
   double get cameraWidth {
-    return MediaQuery.of(context).orientation == Orientation.portrait
+    return _controller.value.deviceOrientation.inFlutterOrientation ==
+            Orientation.portrait
         ? _controller.value.previewSize.height
         : _controller.value.previewSize.width;
   }
@@ -52,12 +67,15 @@ class _CameraViewerState extends State<CameraViewer> {
       return GestureDetector(
           onScaleUpdate: widget.scaleCallback,
           child: FittedBox(
-            clipBehavior: Clip.hardEdge,
-            fit: BoxFit.cover,
-            child: SizedBox(
-                width: cameraWidth,
-                height: cameraHeight,
-                child: CameraPreview(_controller)),
-          ));
+              clipBehavior: Clip.hardEdge,
+              fit: BoxFit.cover,
+              child: ValueListenableBuilder(
+                builder: (BuildContext context, value, Widget child) =>
+                    SizedBox(
+                        width: cameraWidth,
+                        height: cameraHeight,
+                        child: CameraPreview(_controller)),
+                valueListenable: _controller,
+              )));
   }
 }
