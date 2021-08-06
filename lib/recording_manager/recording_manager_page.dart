@@ -6,6 +6,7 @@ import 'package:Tracker/action_video_player/action_video_player.dart';
 import 'package:Tracker/file_manager/file_manager_page.dart';
 import 'package:Tracker/file_manager/info_card/card_config.dart';
 import 'package:Tracker/file_manager/info_card/info_card.dart';
+import 'package:Tracker/setting/boolean_setting.dart';
 import 'package:Tracker/setting/setting_page.dart';
 import 'package:Tracker/utils.dart';
 import 'package:Tracker/video_recording/video_recording_page.dart';

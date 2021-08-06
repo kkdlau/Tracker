@@ -130,7 +130,7 @@ class _BottomToolBarState extends State<BottomToolBar> {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: List.from(_toolbuttons().reversed))
             : Padding(
-                padding: EdgeInsets.only(bottom: screenSize.height * 0.05),
+                padding: EdgeInsets.only(bottom: screenSize.height * 0.1),
                 child: Row(
                     // portrait
                     crossAxisAlignment: CrossAxisAlignment.center,

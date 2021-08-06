@@ -109,8 +109,6 @@ class FileManagerPageState extends State<FileManagerPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          brightness: Theme.of(context).brightness,
-          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
           elevation: 0.0,
           title: Text(widget.title),
           actions: widget.allowCreateFile
