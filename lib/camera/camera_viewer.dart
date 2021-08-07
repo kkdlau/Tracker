@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:Tracker/camera/focus_point.dart';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
@@ -36,11 +38,18 @@ class CameraViewer extends StatefulWidget {
 class CameraViewerState extends State<CameraViewer> {
   CameraController _controller;
   Widget focus;
+  double _cameraMinScale;
+  double _cameraMaxScale;
 
   @override
   void initState() {
     super.initState();
     _controller = widget.controller;
+
+    _controller.getMinZoomLevel().then((value) => _cameraMinScale = value);
+    _controller
+        .getMaxZoomLevel()
+        .then((value) => _cameraMaxScale = max(value, 5));
   }
 
   void showFocusPoint(Offset pos) {
@@ -99,9 +108,18 @@ class CameraViewerState extends State<CameraViewer> {
                 child: ValueListenableBuilder(
                   builder: (BuildContext context, value, Widget child) =>
                       GestureDetector(
-                    onTapDown: (TapDownDetails details) {
+                    onTapUp: (TapUpDetails details) {
                       showFocusPoint(details.globalPosition);
                       setFocus(details.localPosition);
+                    },
+                    onScaleUpdate: (ScaleUpdateDetails details) {
+                      if (details.pointerCount != 2 ||
+                          _cameraMinScale == null ||
+                          _cameraMaxScale == null) return;
+
+                      _controller.setZoomLevel(min(
+                          max(details.scale, _cameraMinScale),
+                          _cameraMaxScale));
                     },
                     child: SizedBox(
                         width: cameraWidth,

@@ -48,6 +48,10 @@ class _RippleState extends State<Ripple> with SingleTickerProviderStateMixin {
   }
 }
 
+/// Camera Focus Point that shows when the user taps on the screen.
+///
+/// This widget is auto animated, and the whole widget will be hidden after the whole animation is done.
+/// [onAnimationCompleted] is called when the whole animation is done.
 class FocusPoint extends StatefulWidget {
   static const double MIN_DIAMETER = 50.0;
   static const double MAX_DIAMETER = 70.0;
