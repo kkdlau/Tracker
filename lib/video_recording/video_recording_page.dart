@@ -20,7 +20,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../define.dart';
-import '../guideline.dart';
 
 // final FlutterFFmpeg _flutterFFmpeg = new FlutterFFmpeg();
 
@@ -38,7 +37,7 @@ class VideoRecordingPage extends StatefulWidget {
   VideoRecordingPageState createState() => VideoRecordingPageState();
 }
 
-class VideoRecordingPageState extends State<VideoRecordingPage> with Guideline {
+class VideoRecordingPageState extends State<VideoRecordingPage> {
   CameraController controller; // camera controller
   CameraConfiguration config; // camera configuration
   Future<void> _initializeCameraFuture;

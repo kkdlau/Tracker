@@ -1,3 +1,4 @@
+import 'package:Tracker/camera/focus_point.dart';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -25,16 +26,41 @@ class CameraViewer extends StatefulWidget {
       : super(key: key);
 
   @override
-  _CameraViewerState createState() => _CameraViewerState();
+  CameraViewerState createState() => CameraViewerState();
+
+  static CameraViewerState of(BuildContext context) {
+    return context.findAncestorStateOfType<CameraViewerState>();
+  }
 }
 
-class _CameraViewerState extends State<CameraViewer> {
+class CameraViewerState extends State<CameraViewer> {
   CameraController _controller;
+  Widget focus;
 
   @override
   void initState() {
-    _controller = widget.controller;
     super.initState();
+    _controller = widget.controller;
+  }
+
+  void showFocusPoint(Offset pos) {
+    setState(() {
+      focus = FocusPoint(
+          key: UniqueKey(),
+          position: pos,
+          onAnimationCompleted: removeFocusPoint);
+    });
+  }
+
+  void setFocus(Offset pos) {
+    _controller
+        .setFocusPoint(Offset(pos.dx / cameraWidth, pos.dy / cameraHeight));
+  }
+
+  void removeFocusPoint() {
+    setState(() {
+      focus = null;
+    });
   }
 
   /// Returns the height of camera preview.
@@ -63,19 +89,31 @@ class _CameraViewerState extends State<CameraViewer> {
   Widget build(BuildContext context) {
     if (_controller == null)
       return Container(color: Theme.of(context).primaryColorDark);
-    else
-      return GestureDetector(
-          onScaleUpdate: widget.scaleCallback,
-          child: FittedBox(
-              clipBehavior: Clip.hardEdge,
-              fit: BoxFit.cover,
-              child: ValueListenableBuilder(
-                builder: (BuildContext context, value, Widget child) =>
-                    SizedBox(
+    else {
+      return Stack(
+        children: [
+          Positioned.fill(
+            child: FittedBox(
+                clipBehavior: Clip.hardEdge,
+                fit: BoxFit.cover,
+                child: ValueListenableBuilder(
+                  builder: (BuildContext context, value, Widget child) =>
+                      GestureDetector(
+                    onTapDown: (TapDownDetails details) {
+                      showFocusPoint(details.globalPosition);
+                      setFocus(details.localPosition);
+                    },
+                    child: SizedBox(
                         width: cameraWidth,
                         height: cameraHeight,
                         child: CameraPreview(_controller)),
-                valueListenable: _controller,
-              )));
+                  ),
+                  valueListenable: _controller,
+                )),
+          ),
+          focus
+        ].where((e) => e != null).toList(),
+      );
+    }
   }
 }
