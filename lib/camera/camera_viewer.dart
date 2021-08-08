@@ -50,7 +50,7 @@ class CameraViewerState extends State<CameraViewer> {
     _controller.getMinZoomLevel().then((value) => _cameraMinScale = value);
     _controller
         .getMaxZoomLevel()
-        .then((value) => _cameraMaxScale = max(value, 5));
+        .then((value) => _cameraMaxScale = max(value, 5.0));
   }
 
   /// Displays [FocusPoint] on [pos].
