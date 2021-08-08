@@ -7,7 +7,6 @@ import 'package:Tracker/file_manager/file_manager_page.dart';
 import 'package:Tracker/file_manager/info_card/card_config.dart';
 import 'package:Tracker/file_manager/info_card/info_card.dart';
 import 'package:Tracker/setting/boolean_setting.dart';
-import 'package:Tracker/setting/setting_page.dart';
 import 'package:Tracker/utils.dart';
 import 'package:Tracker/video_recording/video_recording_page.dart';
 import 'package:flutter/material.dart';
@@ -106,7 +105,6 @@ class _RecordingManagerPageState extends State<RecordingManagerPage> {
         Share.shareFiles([file.path]);
         break;
       case INFO_CARD_ACTION.DELETE:
-        // TODO: delete video with sheet record
         removeVideoAndLinkedSheet(file);
         break;
       case INFO_CARD_ACTION.SELECT:

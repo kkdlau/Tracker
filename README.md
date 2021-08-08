@@ -14,8 +14,8 @@ Features include:
 ## Todo list
 
 ### Video Recording Page
-- Add camera focus
-- Add Zoom In / Out
+- [X] Add camera focus
+- [X] Add Zoom In / Out
 - dis-select file
 - preview the upcoming stamp
 - dispose camera controller when user temporarily leave the application

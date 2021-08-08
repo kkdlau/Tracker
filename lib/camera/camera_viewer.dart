@@ -23,9 +23,7 @@ extension on DeviceOrientation {
 /// The widget doesn't has the responsibility to maintain the life cycle of camera controller.
 class CameraViewer extends StatefulWidget {
   final CameraController controller;
-  final void Function(ScaleUpdateDetails) scaleCallback;
-  CameraViewer(this.controller, {Key key, this.scaleCallback})
-      : super(key: key);
+  CameraViewer(this.controller, {Key key}) : super(key: key);
 
   @override
   CameraViewerState createState() => CameraViewerState();

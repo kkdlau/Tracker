@@ -8,14 +8,12 @@ import 'package:Tracker/file_manager/file_manager_page.dart';
 import 'package:Tracker/file_manager/info_card/card_config.dart';
 import 'package:Tracker/file_manager/info_card/info_card.dart';
 import 'package:Tracker/setting/boolean_setting.dart';
-import 'package:Tracker/setting/setting_page.dart';
 import 'package:Tracker/sheet_editor/sheet_editor.dart';
 import 'package:Tracker/utils.dart';
 import 'package:Tracker/video_recording/video_recording_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:share/share.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class SheetManagerPage extends StatefulWidget {
   const SheetManagerPage({Key key}) : super(key: key);

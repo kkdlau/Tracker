@@ -112,12 +112,7 @@ class VideoRecordingPageState extends State<VideoRecordingPage> {
         future: _initializeCameraFuture,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
-            return CameraViewer(controller, scaleCallback: (details) {
-              if (details.pointerCount == 1)
-                return; // don't handle if only a finger is used
-
-              // TODO: implement camera scaling
-            });
+            return CameraViewer(controller);
           } else if (snapshot.hasError) {
             return waitingCameraWidget(
                 caption:
