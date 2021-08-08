@@ -40,10 +40,13 @@ class CameraViewerState extends State<CameraViewer> {
   Widget focus;
   double _cameraMinScale;
   double _cameraMaxScale;
+  double _lastUpdatedScale;
+  double _currentScale;
 
   @override
   void initState() {
     super.initState();
+    _lastUpdatedScale = 1.0;
     _controller = widget.controller;
 
     _controller.getMinZoomLevel().then((value) => _cameraMinScale = value);
@@ -52,6 +55,9 @@ class CameraViewerState extends State<CameraViewer> {
         .then((value) => _cameraMaxScale = max(value, 5));
   }
 
+  /// Displays [FocusPoint] on [pos].
+  ///
+  /// [pos] should global position / position relative to screen.
   void showFocusPoint(Offset pos) {
     setState(() {
       focus = FocusPoint(
@@ -61,11 +67,15 @@ class CameraViewerState extends State<CameraViewer> {
     });
   }
 
+  /// Sets camera focus point.
+  ///
+  /// [pos] should be local location / position relative to camera preview.
   void setFocus(Offset pos) {
     _controller
         .setFocusPoint(Offset(pos.dx / cameraWidth, pos.dy / cameraHeight));
   }
 
+  /// Removes [FocusPoint] from the screen.
   void removeFocusPoint() {
     setState(() {
       focus = null;
@@ -113,13 +123,13 @@ class CameraViewerState extends State<CameraViewer> {
                       setFocus(details.localPosition);
                     },
                     onScaleUpdate: (ScaleUpdateDetails details) {
-                      if (details.pointerCount != 2 ||
-                          _cameraMinScale == null ||
-                          _cameraMaxScale == null) return;
+                      if (!canPerformScaling(details)) return;
 
-                      _controller.setZoomLevel(min(
-                          max(details.scale, _cameraMinScale),
-                          _cameraMaxScale));
+                      _currentScale = calculateScale(details);
+                      _controller.setZoomLevel(_currentScale);
+                    },
+                    onScaleEnd: (ScaleEndDetails details) {
+                      _lastUpdatedScale = _currentScale;
                     },
                     child: SizedBox(
                         width: cameraWidth,
@@ -133,5 +143,16 @@ class CameraViewerState extends State<CameraViewer> {
         ].where((e) => e != null).toList(),
       );
     }
+  }
+
+  bool canPerformScaling(ScaleUpdateDetails details) {
+    return details.pointerCount == 2 &&
+        _cameraMinScale != null &&
+        _cameraMaxScale != null;
+  }
+
+  double calculateScale(ScaleUpdateDetails details) {
+    return min(max(details.scale - 1.0 + _lastUpdatedScale, _cameraMinScale),
+        _cameraMaxScale);
   }
 }

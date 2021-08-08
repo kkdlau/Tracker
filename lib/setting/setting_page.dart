@@ -59,31 +59,35 @@ class _SettingPageState extends State<SettingPage> {
           elevation: 0.0,
           title: Text('Setting'),
         ),
-        body: SettingsList(
-          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-          sections: [
-            SettingsSection(
-              title: 'General:',
-              tiles: [
-                booleanSeetingTile(BooleanSetting.USE_LIGHT_THEME,
-                    onToggle: (v) {
-                  informThemeChanges(v);
-                })
-              ],
-            ),
-            SettingsSection(
-              title: 'When deleting video recordings:',
-              tiles: [booleanSeetingTile(BooleanSetting.DELETE_SHEET)],
-            ),
-            SettingsSection(
-              title: 'When deleting stamp sheets:',
-              tiles: [booleanSeetingTile(BooleanSetting.DELETE_VIDEO)],
-            ),
-            SettingsSection(
-              title: 'Test section',
-              tiles: [OptionSettingTile(OptionSetting.CAMERA_QUALITY)],
-            )
-          ],
+        body: SafeArea(
+          top: false,
+          bottom: false,
+          child: SettingsList(
+            backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+            sections: [
+              SettingsSection(
+                title: 'General:',
+                tiles: [
+                  booleanSeetingTile(BooleanSetting.USE_LIGHT_THEME,
+                      onToggle: (v) {
+                    informThemeChanges(v);
+                  })
+                ],
+              ),
+              SettingsSection(
+                title: 'When deleting video recordings:',
+                tiles: [booleanSeetingTile(BooleanSetting.DELETE_SHEET)],
+              ),
+              SettingsSection(
+                title: 'When deleting stamp sheets:',
+                tiles: [booleanSeetingTile(BooleanSetting.DELETE_VIDEO)],
+              ),
+              SettingsSection(
+                title: 'Test section',
+                tiles: [OptionSettingTile(OptionSetting.CAMERA_QUALITY)],
+              )
+            ],
+          ),
         ));
   }
 }
