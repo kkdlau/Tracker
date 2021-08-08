@@ -188,7 +188,7 @@ class VideoRecordingPageState extends State<VideoRecordingPage> {
   }
 
   void switchCameraHandler() {
-    disposeCamera().then((value) => setState(() {
+    disposeCamera(disposeInNextFrame: false).then((value) => setState(() {
           config.enableFlash = false;
           nextCamera();
           _initializeCameraFuture =
@@ -239,13 +239,21 @@ class VideoRecordingPageState extends State<VideoRecordingPage> {
     });
   }
 
-  Future<void> disposeCamera() async {
-    await controller.dispose();
+  Future<void> disposeCamera({bool disposeInNextFrame = true}) async {
     setState(() {
-      controller = null;
       _initializeCameraFuture = null;
       cameraWidget = SizedBox.shrink();
     });
+    if (disposeInNextFrame) {
+      WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+        controller.dispose().then((value) {
+          controller = null;
+        });
+      });
+    } else {
+      await controller.dispose();
+      controller = null;
+    }
   }
 
   Duration get recordingDuration {
