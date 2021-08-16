@@ -10,14 +10,13 @@ class ConfirmDeleteDialog extends StatelessWidget {
       title: Text('Delete File'),
       content: Text('The linked sheet will be also deleted'),
       actions: [
-        CupertinoButton(
-            child: Text('OK'),
-            onPressed: () => Navigator.of(context).pop(true)),
         CupertinoTheme(
             data: CupertinoThemeData(primaryColor: Colors.red),
             child: CupertinoButton(
-                child: Text('NO'),
-                onPressed: () => Navigator.of(context).pop(false)))
+                child: Text('Cancel'),
+                onPressed: () => Navigator.of(context).pop(false))),
+        CupertinoButton(
+            child: Text('OK'), onPressed: () => Navigator.of(context).pop(true))
       ],
     );
   }

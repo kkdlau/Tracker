@@ -15,6 +15,7 @@ import 'package:Tracker/camera/camera_config.dart';
 import 'package:Tracker/camera/camera_viewer.dart';
 import 'package:Tracker/video_recording/top_tool_bar.dart';
 import 'package:Tracker/widgets/hightlighted_container.dart';
+import 'package:Tracker/widgets/messanger.dart';
 import 'package:camera/camera.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -51,12 +52,14 @@ class VideoRecordingPageState extends State<VideoRecordingPage> {
   Widget cameraWidget;
   Orientation
       lastUpdatedOrientation; // for locking orientation during recording
+  GlobalKey<MessengerState> messengerController;
 
   @override
   void initState() {
     super.initState();
 
     recordedStamp = 0;
+    messengerController = GlobalKey();
 
     config = CameraConfiguration(
         cameraIndex: 0, enableFlash: false, enableAudio: true);
@@ -136,6 +139,7 @@ class VideoRecordingPageState extends State<VideoRecordingPage> {
           recordingStartTime = DateTime.now();
           recordedStamp = 0;
           tmpSheet = ActionSheet();
+          messengerShowNextStamp();
 
           updateBadgeTimer =
               Timer.periodic(Duration(seconds: 1), updateCurrentRecordingTime);
@@ -144,6 +148,7 @@ class VideoRecordingPageState extends State<VideoRecordingPage> {
         }
       } else {
         updateBadgeTimer?.cancel();
+        messengerController.currentState.hideMessage();
 
         controller.stopVideoRecording().then((XFile f) {
           releaseOrientation();
@@ -162,6 +167,15 @@ class VideoRecordingPageState extends State<VideoRecordingPage> {
         });
       }
     });
+  }
+
+  void messengerShowNextStamp() {
+    ActionDescription act = this.nextStampContent;
+    if (act.isEmpty) {
+      messengerController.currentState.hideMessage();
+    } else {
+      messengerController.currentState.showMessage(act.description);
+    }
   }
 
   void updateCurrentRecordingTime(_) {
@@ -285,15 +299,22 @@ class VideoRecordingPageState extends State<VideoRecordingPage> {
     });
   }
 
+  ActionDescription get nextStampContent {
+    if (recordedStamp >= selectedSheet.actions.length)
+      return ActionDescription.emptyTemplate();
+    else
+      return selectedSheet.actions[recordedStamp];
+  }
+
   void saveStamp() {
     if (recordedStamp >= selectedSheet.actions.length)
       return; // no more stamps for recording
 
-    final ActionDescription act =
-        selectedSheet.actions[recordedStamp++].clone();
+    final ActionDescription act = this.nextStampContent.clone();
     Duration d = recordingDuration;
     act.timeDiff = d - act.targetTime;
     tmpSheet.actions.add(act);
+    recordedStamp++;
 
     if (MediaQuery.of(context).orientation == Orientation.landscape) {
       ScaffoldMessenger.of(context).hideCurrentSnackBar();
@@ -308,7 +329,9 @@ class VideoRecordingPageState extends State<VideoRecordingPage> {
         duration: const Duration(seconds: 2),
       ));
     }
-    setState(() {});
+    setState(() {
+      messengerShowNextStamp();
+    });
   }
 
   bool hasStampToMark() {
@@ -357,6 +380,7 @@ class VideoRecordingPageState extends State<VideoRecordingPage> {
             alignment: Alignment.center,
             children: <Widget>[
               Positioned.fill(child: cameraWidget),
+              Messenger(key: messengerController),
               SafeArea(
                   bottom: false,
                   child: AnimatedSwitcher(

@@ -110,8 +110,8 @@ class _BottomToolBarState extends State<BottomToolBar> {
     ];
   }
 
-  Widget scalingTransitionBuilder(Widget widget, Animation<double> aniamtion) =>
-      ScaleTransition(scale: aniamtion, child: widget);
+  Widget scalingTransitionBuilder(Widget widget, Animation<double> animation) =>
+      ScaleTransition(scale: animation, child: widget);
 
   @override
   Widget build(BuildContext context) {

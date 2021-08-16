@@ -104,7 +104,7 @@ class _CreateFileDialogState extends State<CreateFileDialog> {
         content: Column(
           children: [_erroMsgWidget(), _fileAliasTextField()],
         ),
-        actions: [_doneButton(), _cancelButton()],
+        actions: [_cancelButton(), _doneButton()],
       ),
     );
   }

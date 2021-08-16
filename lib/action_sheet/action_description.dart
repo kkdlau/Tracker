@@ -30,6 +30,12 @@ class ActionDescription {
     return targetTime - time;
   }
 
+  bool get isEmpty {
+    return description == '' &&
+        targetTime == Duration.zero &&
+        timeDiff == Duration.zero;
+  }
+
   /// Returns string representation of current [ActionDescription] object.
   String toString() {
     return description +
