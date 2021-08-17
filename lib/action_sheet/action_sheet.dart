@@ -105,6 +105,19 @@ class ActionSheet {
 
     await f.writeAsString('');
 
+    f.writeAsStringSync("""
+1
+00:00:00,021 --> 00:00:04,000
+Colosseum or Coliseum is an oval amphitheatre in the centre of the city of Rome, Italy.
+
+2
+00:00:04,001 --> 00:00:06,927
+The Great Pyramid of Giza is the oldest and largest of the three pyramids in the Giza pyramid complex bordering what is now El Giza, Egypt.
+
+    """);
+
+    return f;
+
     List<String> contents = toSrt();
     // print('SRT content:');
     contents.forEach((element) {

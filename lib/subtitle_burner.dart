@@ -24,7 +24,7 @@ class SubtitleBurner {
     }
 
     String cmd =
-        "-y -i $videoPath -vf subtitles=$subtitlePath$forceStyleArgs -c:v mpeg4 $outputPath";
+        "-y -i $videoPath -vf subtitles=$subtitlePath -c:v mpeg4 $outputPath";
 
     final int code = await _ffmpeg.execute(cmd);
 

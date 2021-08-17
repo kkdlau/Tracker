@@ -134,6 +134,8 @@ class _RecordingManagerPageState extends State<RecordingManagerPage> {
 
     File srtFile = await sheet.createTemporarySrtFile();
 
+    // print(srtFile.readAsStringSync());
+
     File burned = await SubtitleBurner.instance.burnSubtitle(
         subtitlePath: srtFile.path,
         videoPath: video.path,
