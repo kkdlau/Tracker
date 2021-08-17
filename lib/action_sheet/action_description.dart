@@ -71,10 +71,12 @@ class ActionDescription {
   /// https://en.wikipedia.org/wiki/SubRip#File_format
   String toSRTFormat(
       {int index = 0, Duration displayTime = const Duration(seconds: 2)}) {
-    String startTime = durationToString(targetTime);
-    String endTime = durationToString(targetTime + displayTime);
+    final Duration actual = targetTime + timeDiff;
 
-    String indexHeader = index != 0 ? '' : '$index\n';
+    String startTime = durationToString(actual);
+    String endTime = durationToString(actual + displayTime);
+
+    String indexHeader = index == 0 ? '' : '$index\n';
     String aliveTime = '$startTime --> $endTime\n';
     String captionBody = '[${durationToString(targetTime)}] $description\n';
 

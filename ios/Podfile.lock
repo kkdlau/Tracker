@@ -2,6 +2,9 @@ PODS:
   - camera (0.0.1):
     - Flutter
   - Flutter (1.0.0)
+  - flutter_ffmpeg/video (0.4.2):
+    - Flutter
+    - mobile-ffmpeg-video (= 4.4)
   - libwebp (1.1.0):
     - libwebp/demux (= 1.1.0)
     - libwebp/mux (= 1.1.0)
@@ -11,6 +14,7 @@ PODS:
   - libwebp/mux (1.1.0):
     - libwebp/demux
   - libwebp/webp (1.1.0)
+  - mobile-ffmpeg-video (4.4)
   - path_provider (0.0.1):
     - Flutter
   - share (0.0.1):
@@ -28,6 +32,7 @@ PODS:
 DEPENDENCIES:
   - camera (from `.symlinks/plugins/camera/ios`)
   - Flutter (from `Flutter`)
+  - flutter_ffmpeg/video (from `.symlinks/plugins/flutter_ffmpeg/ios`)
   - path_provider (from `.symlinks/plugins/path_provider/ios`)
   - share (from `.symlinks/plugins/share/ios`)
   - shared_preferences (from `.symlinks/plugins/shared_preferences/ios`)
@@ -38,12 +43,15 @@ DEPENDENCIES:
 SPEC REPOS:
   trunk:
     - libwebp
+    - mobile-ffmpeg-video
 
 EXTERNAL SOURCES:
   camera:
     :path: ".symlinks/plugins/camera/ios"
   Flutter:
     :path: Flutter
+  flutter_ffmpeg:
+    :path: ".symlinks/plugins/flutter_ffmpeg/ios"
   path_provider:
     :path: ".symlinks/plugins/path_provider/ios"
   share:
@@ -60,7 +68,9 @@ EXTERNAL SOURCES:
 SPEC CHECKSUMS:
   camera: 3164201dc344383e62282964016528c4f5a9ad50
   Flutter: 434fef37c0980e73bb6479ef766c45957d4b510c
+  flutter_ffmpeg: 3ec3912c74649851e6c3b1885511eef78142ac4f
   libwebp: 946cb3063cea9236285f7e9a8505d806d30e07f3
+  mobile-ffmpeg-video: 106a02633f3771f558b4cadd3e8bbfe6b756c61b
   path_provider: abfe2b5c733d04e238b0d8691db0cfd63a27a93c
   share: 0b2c3e82132f5888bccca3351c504d0003b3b410
   shared_preferences: af6bfa751691cdc24be3045c43ec037377ada40d
@@ -68,6 +78,6 @@ SPEC CHECKSUMS:
   video_thumbnail: c4e2a3c539e247d4de13cd545344fd2d26ffafd1
   wakelock: d0fc7c864128eac40eba1617cb5264d9c940b46f
 
-PODFILE CHECKSUM: d8c2070bed064035224764e38e61e88322209264
+PODFILE CHECKSUM: 2ed6eec4d2bf050107a3c2290862f76393ff4c48
 
 COCOAPODS: 1.10.1

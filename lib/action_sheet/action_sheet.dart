@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:Tracker/define.dart';
 import 'package:Tracker/utils.dart';
 import 'package:chewie/chewie.dart';
 import 'action_description.dart';
@@ -94,6 +95,29 @@ class ActionSheet {
     }
 
     return f.writeAsString(json.encode(this.toMap()));
+  }
+
+  Future<File> createTemporarySrtFile() async {
+    File f = File(
+        '${await Utils.getDocumentRootPath()}/$TMP_DIR' + sheetName + '.srt');
+
+    f = await f.create(recursive: true);
+
+    await f.writeAsString('');
+
+    List<String> contents = toSrt();
+    // print('SRT content:');
+    contents.forEach((element) {
+      // print(element);
+      f.writeAsStringSync(element + '\n', mode: FileMode.append);
+    });
+
+    return f;
+  }
+
+  List<String> toSrt() {
+    return List.generate(actions.length,
+        (index) => actions[index].toSRTFormat(index: (index + 1)));
   }
 
   /// Convert the whole action sheet into subtitle format.

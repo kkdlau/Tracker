@@ -20,8 +20,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../define.dart';
+import 'package:flutter_ffmpeg/flutter_ffmpeg.dart';
 
-// final FlutterFFmpeg _flutterFFmpeg = new FlutterFFmpeg();
+final FlutterFFmpeg _flutterFFmpeg = new FlutterFFmpeg();
 
 class VideoRecordingPage extends StatefulWidget {
   static const List<DeviceOrientation> perferedOrientations = [
@@ -55,6 +56,8 @@ class VideoRecordingPageState extends State<VideoRecordingPage> {
   @override
   void initState() {
     super.initState();
+
+    _flutterFFmpeg.executeWithArguments(["-version"]);
 
     recordedStamp = 0;
 

@@ -2,11 +2,13 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:Tracker/action_sheet/action_sheet.dart';
+import 'package:Tracker/action_sheet/action_sheet_decoder.dart';
 import 'package:Tracker/action_video_player/action_video_player.dart';
 import 'package:Tracker/file_manager/file_manager_page.dart';
 import 'package:Tracker/file_manager/info_card/card_config.dart';
 import 'package:Tracker/file_manager/info_card/info_card.dart';
 import 'package:Tracker/setting/boolean_setting.dart';
+import 'package:Tracker/subtitle_burner.dart';
 import 'package:Tracker/utils.dart';
 import 'package:Tracker/video_recording/video_recording_page.dart';
 import 'package:flutter/material.dart';
@@ -102,7 +104,7 @@ class _RecordingManagerPageState extends State<RecordingManagerPage> {
   void videoCardHandler(INFO_CARD_ACTION actionType, File file) {
     switch (actionType) {
       case INFO_CARD_ACTION.EXPORT:
-        Share.shareFiles([file.path]);
+        shareSubtitleBurnedVideo(file);
         break;
       case INFO_CARD_ACTION.DELETE:
         removeVideoAndLinkedSheet(file);
@@ -124,6 +126,20 @@ class _RecordingManagerPageState extends State<RecordingManagerPage> {
         break;
       default:
     }
+  }
+
+  void shareSubtitleBurnedVideo(File video) async {
+    ActionSheet sheet = ActionSheetDecoder.getInstance()
+        .decode(File(await Utils.fullPathToSheet(video.alias)));
+
+    File srtFile = await sheet.createTemporarySrtFile();
+
+    File burned = await SubtitleBurner.instance.burnSubtitle(
+        subtitlePath: srtFile.path,
+        videoPath: video.path,
+        outputPath: video.directory + 'BURN_' + video.alias + '.mp4');
+
+    // Share.shareFiles([burned.path]);
   }
 
   void removeVideoAndLinkedSheet(File f) {

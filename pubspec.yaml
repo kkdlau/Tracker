@@ -38,6 +38,7 @@ dependencies:
   video_player:
   shared_preferences: ^2.0.6
   settings_ui: ^1.0.0
+  flutter_ffmpeg: ^0.4.2
 
   
 

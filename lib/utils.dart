@@ -75,4 +75,11 @@ extension FileAlias on File {
     else
       return this.path.split('.').first;
   }
+
+  String get directory {
+    if (this.path.contains('/'))
+      return this.path.split(this.alias).first;
+    else
+      return '';
+  }
 }
