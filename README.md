@@ -20,12 +20,12 @@ Currently only android version is available.
 ## Todo list
 
 ### Video Recording Page
-- [] dis-select file
-- [] close camera when user temporarily leave the application (This related to an issue on Android, but works fine in iOS)
+- [ ] dis-select file
+- [ ] close camera when user temporarily leave the application (This related to an issue on Android, but works fine in iOS)
 
 ### Video player
-- [] Add a button for leaving video player
+- [ ] Add a button for leaving video player
 
 ### Recording Manager
-- [] display estimated time and recording date
-- [] Support subtitle burning (checkout branch: `feature/in-lin-subtitle` if you're interested)
+- [ ] display estimated time and recording date
+- [ ] Support subtitle burning (checkout branch: `feature/in-lin-subtitle` if you're interested)
