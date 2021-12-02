@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:Tracker/action_sheet/action_sheet_decoder.dart';
 import 'package:Tracker/utils.dart';
 import 'package:chewie/chewie.dart';
 import 'action_description.dart';
@@ -31,6 +32,11 @@ class ActionSheet {
   /// Unlink an [ActionSheet] by given file alias.
   static unlink(String alias) {
     Utils.prefs.remove(alias);
+  }
+
+  static load(String alias) async {
+    return ActionSheetDecoder.getInstance()
+        .decode(File(await Utils.fullPathToSheet(alias)));
   }
 
   /// Returns [ActionDescription] list in Plain Map foramt.
